@@ -1,4 +1,22 @@
 <?php
+// ══════════════════════════════════════════════════════════
+// [PROFESSION ADAPTER] — يقرأ إعدادات المهنة ويُعدّ المتغيرات
+// ══════════════════════════════════════════════════════════
+if (!isset($data) || empty($data)) { http_response_code(404); exit; }
+
+$lang       = $_GET['lang'] ?? $data['site']['default_lang'] ?? 'ar';
+$dir        = ($lang === 'ar') ? 'rtl' : 'ltr';
+$profession = $data['site']['profession_type'] ?? 'developer';
+
+require_once __DIR__ . '/../../../app/Config/ProfessionConfig.php';
+$labels       = ProfessionConfig::getLabels($profession, $lang);
+$cssVars      = ProfessionConfig::getCssVariables($profession);
+$showLevelBar = ProfessionConfig::showLevelBar($profession);
+$heroIcon     = ProfessionConfig::getHeroIcon($profession);
+// ══════════════════════════════════════════════════════════
+// [/PROFESSION ADAPTER]
+// ══════════════════════════════════════════════════════════
+
 use App\Services\BilingualHelper;
 
 // Helper function to map platforms to correct Font Awesome icons
@@ -37,6 +55,8 @@ if (!function_exists('getSocialIconClass')) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="<?= BASE_URL ?>/templates/template-developer/style.css?v=<?= time() ?>">
+    <!-- [PROFESSION COLORS] — CSS Variable Override per Profession -->
+    <style>:root { <?= $cssVars ?> }</style>
 </head>
 <body>
 
@@ -90,7 +110,7 @@ if (!function_exists('getSocialIconClass')) {
                 <div class="header-content hero-mobile-reverse">
                     <!-- Right Side: Text -->
                     <div class="hero-text-content">
-                        <div class="hero-welcome-badge"><?= $lang === 'en' ? 'Welcome' : 'مرحباً' ?></div>
+                        <div class="hero-welcome-badge"><i class="fas <?= $heroIcon ?>"></i> <?= htmlspecialchars($labels['hero_badge']) ?></div>
                         <h2><?= $lang === 'en' ? 'I am' : 'أنا' ?> <span class="highlight-text"><?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang)) ?></span></h2>
 
                         <div class="job-title-wrapper">
@@ -110,12 +130,12 @@ if (!function_exists('getSocialIconClass')) {
                         </p>
 
                         <div class="hero-buttons">
-                            <a href="#contact" class="hero-btn btn-primary"><?= $lang === 'en' ? 'Get In Touch' : 'تواصل معي' ?></a>
-                            <?php if (!empty($data['profile']['cv_url'])): ?>
-                                <a href="<?= BASE_URL ?>/<?= htmlspecialchars(ltrim($data['profile']['cv_url'], '/')) ?>" download class="hero-btn btn-secondary">
-                                    <i class="fas fa-file-download"></i> <?= $lang === 'en' ? 'Download CV' : 'تحميل السيرة الذاتية' ?>
-                                </a>
-                            <?php endif; ?>
+                             <a href="#contact" class="hero-btn btn-primary"><?= htmlspecialchars($labels['cta_primary']) ?></a>
+                             <?php if (!empty($data['profile']['cv_url'])): ?>
+                                 <a href="<?= BASE_URL ?>/<?= htmlspecialchars(ltrim($data['profile']['cv_url'], '/')) ?>" download class="hero-btn btn-secondary">
+                                     <i class="fas fa-file-download"></i> <?= htmlspecialchars($labels['cta_cv']) ?>
+                                 </a>
+                             <?php endif; ?>
                         </div>
                     </div>
 

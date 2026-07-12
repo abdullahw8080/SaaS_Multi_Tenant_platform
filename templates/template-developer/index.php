@@ -1,4 +1,24 @@
 <?php
+// ══════════════════════════════════════════════════════════
+// [PROFESSION ADAPTER] — يقرأ إعدادات المهنة ويُعدّ المتغيرات
+// ══════════════════════════════════════════════════════════
+if (!isset($data) || empty($data)) { http_response_code(404); exit; }
+
+$lang       = $_GET['lang'] ?? $data['site']['default_lang'] ?? 'ar';
+$dir        = ($lang === 'ar') ? 'rtl' : 'ltr';
+$profession = $data['site']['profession_type'] ?? 'developer';
+
+require_once __DIR__ . '/../../app/Config/ProfessionConfig.php';
+$labels       = ProfessionConfig::getLabels($profession, $lang);
+$cssVars      = ProfessionConfig::getCssVariables($profession);
+$showLevelBar = ProfessionConfig::showLevelBar($profession);
+$heroIcon     = ProfessionConfig::getHeroIcon($profession);
+$sectionIcons = ProfessionConfig::getSectionIcons($profession);
+$extraCss     = ProfessionConfig::getExtraCss($profession);
+// ══════════════════════════════════════════════════════════
+// [/PROFESSION ADAPTER]
+// ══════════════════════════════════════════════════════════
+
 use App\Services\BilingualHelper;
 
 // Helper function to map platforms to correct Font Awesome icons
@@ -37,6 +57,8 @@ if (!function_exists('getSocialIconClass')) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="<?= BASE_URL ?>/templates/template-developer/style.css?v=<?= time() ?>">
+    <!-- [PROFESSION COLORS] — CSS Variable Override per Profession -->
+    <style>:root { <?= $cssVars ?> } <?= $extraCss ?></style>
 </head>
 <body>
 
@@ -56,7 +78,9 @@ if (!function_exists('getSocialIconClass')) {
                 <?php
                     $available = [];
                     foreach ($data['sections'] as $s) {
-                        if ($s['is_visible']) $available[$s['type_key']] = BilingualHelper::get($s, 'title', $lang);
+                        if ($s['is_visible']) {
+                            $available[$s['type_key']] = $labels[$s['type_key']] ?? BilingualHelper::get($s, 'title', $lang);
+                        }
                     }
                 ?>
                 <?php if(isset($available['education'])): ?><a href="#education"><?= htmlspecialchars($available['education']) ?></a><?php endif; ?>
@@ -90,7 +114,7 @@ if (!function_exists('getSocialIconClass')) {
                 <div class="header-content hero-mobile-reverse">
                     <!-- Right Side: Text -->
                     <div class="hero-text-content">
-                        <div class="hero-welcome-badge"><?= $lang === 'en' ? 'Welcome' : 'مرحباً' ?></div>
+                        <div class="hero-welcome-badge"><i class="fas <?= $heroIcon ?>"></i> <?= htmlspecialchars($labels['hero_badge']) ?></div>
                         <h2><?= $lang === 'en' ? 'I am' : 'أنا' ?> <span class="highlight-text"><?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang)) ?></span></h2>
 
                         <div class="job-title-wrapper">
@@ -110,12 +134,12 @@ if (!function_exists('getSocialIconClass')) {
                         </p>
 
                         <div class="hero-buttons">
-                            <a href="#contact" class="hero-btn btn-primary"><?= $lang === 'en' ? 'Get In Touch' : 'تواصل معي' ?></a>
-                            <?php if (!empty($data['profile']['cv_url'])): ?>
-                                <a href="<?= BASE_URL ?>/<?= htmlspecialchars(ltrim($data['profile']['cv_url'], '/')) ?>" download class="hero-btn btn-secondary">
-                                    <i class="fas fa-file-download"></i> <?= $lang === 'en' ? 'Download CV' : 'تحميل السيرة الذاتية' ?>
-                                </a>
-                            <?php endif; ?>
+                             <a href="#contact" class="hero-btn btn-primary"><?= htmlspecialchars($labels['cta_primary']) ?></a>
+                             <?php if (!empty($data['profile']['cv_url'])): ?>
+                                 <a href="<?= BASE_URL ?>/<?= htmlspecialchars(ltrim($data['profile']['cv_url'], '/')) ?>" download class="hero-btn btn-secondary">
+                                     <i class="fas fa-file-download"></i> <?= htmlspecialchars($labels['cta_cv']) ?>
+                                 </a>
+                             <?php endif; ?>
                         </div>
                     </div>
 
@@ -153,8 +177,8 @@ if (!function_exists('getSocialIconClass')) {
         <?php if(isset($secData['education']) && $secData['education']['is_visible']): ?>
             <section class="section" id="education" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-graduation-cap"></i>
-                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['education'], 'title', $lang)) ?></h2>
+                    <i class="fas <?= $sectionIcons['education'] ?>"></i>
+                    <h2><?= htmlspecialchars($labels['education'] ?? BilingualHelper::get($secData['education'], 'title', $lang)) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/education.php"; ?>
             </section>
@@ -164,8 +188,8 @@ if (!function_exists('getSocialIconClass')) {
         <?php if(isset($secData['certificates']) && $secData['certificates']['is_visible']): ?>
             <section class="section" id="certificates" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-certificate"></i>
-                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['certificates'], 'title', $lang)) ?></h2>
+                    <i class="fas <?= $sectionIcons['certificates'] ?>"></i>
+                    <h2><?= htmlspecialchars($labels['certificates'] ?? BilingualHelper::get($secData['certificates'], 'title', $lang)) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/certificates.php"; ?>
             </section>
@@ -175,8 +199,8 @@ if (!function_exists('getSocialIconClass')) {
         <?php if(isset($secData['skills']) && $secData['skills']['is_visible']): ?>
             <section class="section" id="skills" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-laptop-code"></i>
-                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['skills'], 'title', $lang)) ?></h2>
+                    <i class="fas <?= $sectionIcons['skills'] ?>"></i>
+                    <h2><?= htmlspecialchars($labels['skills'] ?? BilingualHelper::get($secData['skills'], 'title', $lang)) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/skills.php"; ?>
             </section>
@@ -186,8 +210,8 @@ if (!function_exists('getSocialIconClass')) {
         <?php if(isset($secData['projects']) && $secData['projects']['is_visible']): ?>
             <section class="section" id="projects" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-folder-open"></i>
-                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['projects'], 'title', $lang)) ?></h2>
+                    <i class="fas <?= $sectionIcons['projects'] ?>"></i>
+                    <h2><?= htmlspecialchars($labels['projects'] ?? BilingualHelper::get($secData['projects'], 'title', $lang)) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/projects.php"; ?>
             </section>
@@ -197,8 +221,8 @@ if (!function_exists('getSocialIconClass')) {
         <?php if(isset($secData['experiences']) && $secData['experiences']['is_visible']): ?>
             <section class="section" id="experiences" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-briefcase"></i>
-                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['experiences'], 'title', $lang)) ?></h2>
+                    <i class="fas <?= $sectionIcons['experiences'] ?>"></i>
+                    <h2><?= htmlspecialchars($labels['experiences'] ?? BilingualHelper::get($secData['experiences'], 'title', $lang)) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/experiences.php"; ?>
             </section>
@@ -228,8 +252,8 @@ if (!function_exists('getSocialIconClass')) {
         <?php if(isset($secData['languages']) && $secData['languages']['is_visible']): ?>
             <section class="section" id="languages" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-language"></i>
-                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['languages'], 'title', $lang)) ?></h2>
+                    <i class="fas <?= $sectionIcons['languages'] ?>"></i>
+                    <h2><?= htmlspecialchars($labels['languages'] ?? BilingualHelper::get($secData['languages'], 'title', $lang)) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/languages.php"; ?>
             </section>

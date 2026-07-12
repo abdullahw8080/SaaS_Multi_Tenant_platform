@@ -552,6 +552,29 @@
                                 </label>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label no-badge">مهنتك (تُغيّر ألوان ونصوص الموقع)</label>
+                            <select name="profession_type" class="form-input" style="margin-top: 12px;">
+                                <?php
+                                $profOptions = [
+                                    'developer'  => 'مطور برمجيات',
+                                    'engineer'   => 'مهندس',
+                                    'doctor'     => 'طبيب',
+                                    'pharmacist' => 'صيدلي',
+                                    'lawyer'     => 'محامي',
+                                    'teacher'    => 'مدرس / أستاذ',
+                                    'executive'  => 'مدير أعمال / تنفيذي',
+                                    'accountant' => 'محاسب',
+                                    'student'    => 'طالب',
+                                    'other'      => 'مهنة أخرى',
+                                ];
+                                $currentProf = $siteData['site']['profession_type'] ?? 'developer';
+                                foreach ($profOptions as $key => $name): ?>
+                                    <option value="<?= $key ?>" <?= $currentProf === $key ? 'selected' : '' ?>><?= $name ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small style="color: var(--text-muted); display: block; margin-top: 6px; font-size: 0.8rem;">مستقلة عن القالب — تُحدد لون الثيم والنصوص التلقائية</small>
+                        </div>
                     </div>
 
                     <div class="grid grid-2" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">

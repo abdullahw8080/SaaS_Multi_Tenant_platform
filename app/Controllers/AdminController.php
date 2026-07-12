@@ -136,8 +136,33 @@ class AdminController extends BaseController {
     }
 
     /**
-     * Admin manually creates a new client user and site.
+     * Assign a profession type to a site (INDEPENDENT from template_id).
+     * Does NOT reset sections, does NOT change the template.
      */
+    public function assignProfession(array $params): void {
+        $this->verifyCsrf();
+        $siteId = (int)($params['id'] ?? 0);
+        $allowedProfessions = ['developer','engineer','doctor','pharmacist','lawyer','teacher','executive','accountant','student','other'];
+        $profession = in_array($_POST['profession_type'] ?? '', $allowedProfessions) ? $_POST['profession_type'] : 'developer';
+
+        $siteModel = new Site();
+        $site = $siteModel->find($siteId);
+
+        if ($site) {
+            $siteModel->update($siteId, [
+                'profession_type' => $profession
+            ]);
+
+            // Invalidate cache so next render shows new profession colors
+            \App\Services\ApprovalService::invalidateCache($site['slug']);
+
+            $_SESSION['flash_success'] = "تم تغيير مهنة الموقع بنجاح.";
+        } else {
+            $_SESSION['flash_error'] = "الموقع غير موجود.";
+        }
+        $this->redirect('/admin');
+    }
+
     public function createClient(): void {
         $this->verifyCsrf();
 
@@ -178,10 +203,13 @@ class AdminController extends BaseController {
         }
 
         // 3. Create site (Approved and published immediately since it's created by Admin)
+        $allowedProfessions = ['developer','engineer','doctor','pharmacist','lawyer','teacher','executive','accountant','student','other'];
+        $professionType = in_array($_POST['profession_type'] ?? '', $allowedProfessions) ? $_POST['profession_type'] : 'developer';
         $siteId = $siteModel->create([
             'user_id'         => $userId,
             'slug'            => $slug,
             'template_id'     => $templateId,
+            'profession_type' => $professionType,
             'is_published'    => 1,
             'approval_status' => 'approved'
         ]);

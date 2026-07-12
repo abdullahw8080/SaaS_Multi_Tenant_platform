@@ -58,6 +58,7 @@ $router->get('/admin/approve/{id}', 'AdminController@approve', $adminMiddlewares
 $router->post('/admin/reject/{id}', 'AdminController@reject', $adminMiddlewares);
 $router->get('/admin/toggle-status/{id}', 'AdminController@toggleUserStatus', $adminMiddlewares);
 $router->post('/admin/assign-template/{id}', 'AdminController@assignTemplate', $adminMiddlewares);
+$router->post('/admin/assign-profession/{id}', 'AdminController@assignProfession', $adminMiddlewares);
 $router->post('/admin/create-client', 'AdminController@createClient', $adminMiddlewares);
 $router->get('/admin/impersonate/{id}', 'AdminController@impersonate', $adminMiddlewares);
 $router->get('/admin/stop-impersonating', 'AdminController@stopImpersonating', [AuthMiddleware::class]);

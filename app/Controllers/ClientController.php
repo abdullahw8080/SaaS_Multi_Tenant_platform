@@ -264,11 +264,13 @@ class ClientController extends BaseController {
                 ]);
             }
 
-            // Update site settings: default language & bilingual support
+            // Update site settings: default language, bilingual support, and profession type (independent)
             $siteModel = new Site();
+            $allowedProfessions = ['developer','engineer','doctor','pharmacist','lawyer','teacher','executive','accountant','student','other'];
             $siteModel->update($siteId, [
-                'default_lang' => in_array($_POST['default_lang'] ?? '', ['ar', 'en']) ? $_POST['default_lang'] : 'ar',
-                'is_bilingual' => isset($_POST['is_bilingual']) ? 1 : 0,
+                'default_lang'    => in_array($_POST['default_lang'] ?? '', ['ar', 'en']) ? $_POST['default_lang'] : 'ar',
+                'is_bilingual'    => isset($_POST['is_bilingual']) ? 1 : 0,
+                'profession_type' => in_array($_POST['profession_type'] ?? '', $allowedProfessions) ? $_POST['profession_type'] : 'developer',
                 // Automatically transition site status to draft on edit so they can re-submit
                 'approval_status' => ($_POST['approval_status'] ?? '') === 'approved' ? 'approved' : 'draft'
             ]);
