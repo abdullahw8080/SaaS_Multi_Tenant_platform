@@ -1,0 +1,12 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Ensure the request isn't for an actual physical file or directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route everything else through index.php
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+# ✅ CHECKPOINT: .htaccess — COMPLETE (المرحلة 8 من 8)
+# التالي: index.php (في جذر المشروع كتحويل تلقائي لـ public/)

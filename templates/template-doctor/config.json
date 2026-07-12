@@ -1,0 +1,16 @@
+{
+  "name": "Doctor Prestige",
+  "name_ar": "الطبيب الفاخر",
+  "category": "doctor",
+  "version": "1.0.0",
+  "preview_image": "preview.jpg",
+  "default_sections": [
+    "profile", "social_links", "skills",
+    "experiences", "education", "certificates",
+    "projects", "languages"
+  ],
+  "supports_bilingual": true,
+  "supports_dark_mode": false,
+  "primary_color": "#00D4FF",
+  "accent_color": "#A78BFA"
+}
