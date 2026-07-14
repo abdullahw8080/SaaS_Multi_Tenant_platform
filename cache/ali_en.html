@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Ali Al-Sharif | Consultant Orthopedic &amp; Joint Surgeon</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons & Animations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="/SaaS_Multi_Tenant_platform/templates/template-developer/style.css?v=1784040370">
+    <!-- [PROFESSION COLORS] — CSS Variable Override per Profession -->
+    <style>:root { 
+            --bg-primary: #F4F9FF;
+            --bg-secondary: #FFFFFF;
+            --text-primary: #0D1F3C;
+            --text-secondary: #4A6FA5;
+            --accent-glow: #0066CC;
+            --accent-glow-secondary: #00A8E8;
+            --border-color: rgba(0, 102, 204, 0.15);
+         } 
+                /* --- أنميشن ألوان متدرجة متحركة (Gradient Animation) --- */
+                @keyframes doctorGradientMove {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+
+                .highlight-text, .btn-primary {
+                    background-size: 200% 200% !important;
+                    animation: doctorGradientMove 6s ease infinite !important;
+                }
+
+                /* --- الأشكال الخلفية المتحركة --- */
+                body:not(.light-theme) .shape-1 {
+                    background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%) !important;
+                }
+                body:not(.light-theme) .shape-2 {
+                    background: radial-gradient(circle, rgba(167, 139, 250, 0.15) 0%, transparent 70%) !important;
+                }
+                body.light-theme .shape-1 {
+                    background: radial-gradient(circle, rgba(0, 102, 204, 0.08) 0%, transparent 70%) !important;
+                }
+                body.light-theme .shape-2 {
+                    background: radial-gradient(circle, rgba(0, 168, 232, 0.08) 0%, transparent 70%) !important;
+                }
+
+                /* --- الوضع الافتراضي (الداكن الطبي المخصص) --- */
+                body:not(.light-theme) {
+                    background-color: #0A1128 !important;
+                    color: #E2E8F0 !important;
+                }
+                body:not(.light-theme) .navbar {
+                    background: rgba(10, 17, 40, 0.95) !important;
+                    border-bottom: 1px solid rgba(0, 212, 255, 0.12) !important;
+                    box-shadow: 0 4px 30px rgba(0, 212, 255, 0.03) !important;
+                }
+                body:not(.light-theme) .logo {
+                    color: #00D4FF !important;
+                }
+                body:not(.light-theme) .nav-links a {
+                    color: #94A3B8 !important;
+                }
+                body:not(.light-theme) .nav-links a:hover {
+                    color: #00D4FF !important;
+                }
+                body:not(.light-theme) .theme-btn, 
+                body:not(.light-theme) .lang-btn, 
+                body:not(.light-theme) .menu-btn {
+                    border-color: rgba(0, 212, 255, 0.25) !important;
+                    color: #00D4FF !important;
+                    background: rgba(0, 212, 255, 0.05) !important;
+                }
+                body:not(.light-theme) .header-card {
+                    background: rgba(16, 31, 66, 0.7) !important;
+                    border-color: rgba(0, 212, 255, 0.15) !important;
+                    backdrop-filter: blur(15px) !important;
+                    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
+                }
+                body:not(.light-theme) .glass-card,
+                body:not(.light-theme) .edu-card,
+                body:not(.light-theme) .cert-modern-card,
+                body:not(.light-theme) .project-modern-card,
+                body:not(.light-theme) .exp-modern-card,
+                body:not(.light-theme) .reference-card {
+                    background: rgba(16, 31, 66, 0.5) !important;
+                    border-color: rgba(0, 212, 255, 0.15) !important;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+                }
+                body:not(.light-theme) .glass-card:hover,
+                body:not(.light-theme) .edu-card:hover,
+                body:not(.light-theme) .cert-modern-card:hover,
+                body:not(.light-theme) .project-modern-card:hover,
+                body:not(.light-theme) .exp-modern-card:hover {
+                    background: rgba(16, 31, 66, 0.85) !important;
+                    border-color: #00D4FF !important;
+                    box-shadow: 0 15px 35px rgba(0, 212, 255, 0.15) !important;
+                }
+                body:not(.light-theme) .edu-degree,
+                body:not(.light-theme) .cert-title,
+                body:not(.light-theme) .skill-title,
+                body:not(.light-theme) .proj-title,
+                body:not(.light-theme) .exp-position,
+                body:not(.light-theme) .section-title h2,
+                body:not(.light-theme) .footer-name {
+                    color: #FFFFFF !important;
+                }
+                body:not(.light-theme) .text-secondary,
+                body:not(.light-theme) .bio-text,
+                body:not(.light-theme) .edu-inst,
+                body:not(.light-theme) .cert-issuer,
+                body:not(.light-theme) .proj-summary,
+                body:not(.light-theme) .exp-desc,
+                body:not(.light-theme) .copyright {
+                    color: #94A3B8 !important;
+                }
+                body:not(.light-theme) .hero-socials a {
+                    background: rgba(0, 212, 255, 0.05) !important;
+                    border-color: rgba(0, 212, 255, 0.2) !important;
+                    color: #E2E8F0 !important;
+                }
+                body:not(.light-theme) .hero-socials a:hover {
+                    background: #00D4FF !important;
+                    border-color: #00D4FF !important;
+                    color: #0A1128 !important;
+                    box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3) !important;
+                }
+                body:not(.light-theme) .hero-welcome-badge {
+                    background: rgba(0, 212, 255, 0.1) !important;
+                    border-color: rgba(0, 212, 255, 0.3) !important;
+                    color: #00D4FF !important;
+                }
+                body:not(.light-theme) .edu-year {
+                    background: rgba(0, 212, 255, 0.1) !important;
+                    color: #00D4FF !important;
+                }
+                body:not(.light-theme) .footer .social-links a {
+                    background: rgba(0, 212, 255, 0.08) !important;
+                    color: #00D4FF !important;
+                }
+                body:not(.light-theme) .footer .social-links a:hover {
+                    background: #00D4FF !important;
+                    color: #0A1128 !important;
+                }
+                body:not(.light-theme) .lang-bar-wrapper {
+                    background: rgba(255, 255, 255, 0.05) !important;
+                }
+
+                /* --- وضع اللايت مود المخصص (أبيض خالص) --- */
+                body.light-theme {
+                    background-color: #FFFFFF !important;
+                    color: #0D1F3C !important;
+                }
+                body.light-theme .navbar {
+                    background: rgba(255, 255, 255, 0.96) !important;
+                    border-bottom: 1px solid rgba(0, 102, 204, 0.1) !important;
+                    box-shadow: 0 2px 20px rgba(0,102,204,0.05) !important;
+                }
+                body.light-theme .logo {
+                    color: #0066CC !important;
+                }
+                body.light-theme .nav-links a {
+                    color: #0D1F3C !important;
+                }
+                body.light-theme .nav-links a:hover {
+                    color: #0066CC !important;
+                }
+                body.light-theme .theme-btn, 
+                body.light-theme .lang-btn, 
+                body.light-theme .menu-btn {
+                    border-color: rgba(0,102,204,0.2) !important;
+                    color: #0066CC !important;
+                    background: rgba(0,102,204,0.03) !important;
+                }
+                body.light-theme .header-card {
+                    background: #FFFFFF !important;
+                    border-color: rgba(0,102,204,0.1) !important;
+                    box-shadow: 0 15px 45px rgba(0,102,204,0.06) !important;
+                }
+                body.light-theme .glass-card,
+                body.light-theme .edu-card,
+                body.light-theme .cert-modern-card,
+                body.light-theme .project-modern-card,
+                body.light-theme .exp-modern-card,
+                body.light-theme .reference-card {
+                    background: #FFFFFF !important;
+                    border-color: rgba(0, 102, 204, 0.1) !important;
+                    box-shadow: 0 8px 24px rgba(0, 102, 204, 0.04) !important;
+                    color: #0D1F3C !important;
+                }
+                body.light-theme .glass-card:hover,
+                body.light-theme .edu-card:hover,
+                body.light-theme .cert-modern-card:hover,
+                body.light-theme .project-modern-card:hover,
+                body.light-theme .exp-modern-card:hover {
+                    background: #FFFFFF !important;
+                    border-color: #0066CC !important;
+                    box-shadow: 0 12px 30px rgba(0, 102, 204, 0.1) !important;
+                }
+                body.light-theme .edu-degree,
+                body.light-theme .cert-title,
+                body.light-theme .skill-title,
+                body.light-theme .proj-title,
+                body.light-theme .exp-position,
+                body.light-theme .section-title h2,
+                body.light-theme .footer-name {
+                    color: #0D1F3C !important;
+                }
+                body.light-theme .text-secondary,
+                body.light-theme .bio-text,
+                body.light-theme .edu-inst,
+                body.light-theme .cert-issuer,
+                body.light-theme .proj-summary,
+                body.light-theme .exp-desc,
+                body.light-theme .copyright {
+                    color: #4A6FA5 !important;
+                }
+                body.light-theme .hero-socials a {
+                    background: rgba(0, 102, 204, 0.04) !important;
+                    border-color: rgba(0, 102, 204, 0.15) !important;
+                    color: #0D1F3C !important;
+                }
+                body.light-theme .hero-socials a:hover {
+                    background: #0066CC !important;
+                    border-color: #0066CC !important;
+                    color: #ffffff !important;
+                    box-shadow: 0 10px 20px rgba(0, 102, 204, 0.2) !important;
+                }
+                body.light-theme .hero-welcome-badge {
+                    background: rgba(0, 102, 204, 0.08) !important;
+                    border-color: rgba(0, 102, 204, 0.25) !important;
+                    color: #0066CC !important;
+                }
+                body.light-theme .edu-year {
+                    background: rgba(0, 102, 204, 0.08) !important;
+                    color: #0066CC !important;
+                }
+                body.light-theme .footer .social-links a {
+                    background: rgba(0, 102, 204, 0.06) !important;
+                    color: #0066CC !important;
+                }
+                body.light-theme .footer .social-links a:hover {
+                    background: #0066CC !important;
+                    color: #ffffff !important;
+                }
+                body.light-theme .lang-bar-wrapper {
+                    background: rgba(0, 102, 204, 0.08) !important;
+                }
+                body.light-theme .rotating-arc.arc-1 {
+                    border-color: rgba(0, 102, 204, 0.3) !important;
+                }
+                body.light-theme .rotating-arc.arc-2 {
+                    border-color: rgba(0, 168, 232, 0.2) !important;
+                }
+            </style>
+</head>
+<body>
+
+    <!-- Animated Shapes Background -->
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-content">
+            <a href="#" class="logo">Dr. Ali Al-Sharif</a>
+            <div class="nav-links" id="navLinks">
+                <a href="#objective">Home</a>
+                                <a href="#education">Medical Qualifications</a>                <a href="#certificates">Licenses &amp; Credentials</a>                <a href="#skills">Medical Specializations</a>                <a href="#projects">Research &amp; Publications</a>                <a href="#experiences">Medical Career</a>                <a href="#contact">Contact</a>
+            </div>
+            
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button id="themeToggleBtn" class="theme-btn" aria-label="Toggle Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                                    <a href="?lang=ar" class="lang-btn">
+                        AR                    </a>
+                                <div class="menu-btn" id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header / Hero -->
+        <header class="header" id="objective">
+            <div class="header-card" data-aos="fade-up">
+                <div class="header-content hero-mobile-reverse">
+                    <!-- Right Side: Text -->
+                    <div class="hero-text-content">
+                        <div class="hero-welcome-badge"><i class="fas fa-stethoscope"></i> Medical Specialist</div>
+                        <h2>I am <span class="highlight-text">Dr. Ali Al-Sharif</span></h2>
+
+                        <div class="job-title-wrapper">
+                            <span class="job-title">Consultant Orthopedic &amp; Joint Surgeon</span>
+                        </div>
+
+                        <div class="hero-socials">
+                                                            <a href="https://www.linkedin.com/in/abdullah-al-sharif-888239320/" target="_blank" title="linkedin">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                                            <a href="https://github.com/abdullahw8080" target="_blank" title="github">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                                            <a href="abdullahw8080@gmail.com" target="_blank" title="email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                                                            <a href="+967716415103" target="_blank" title="phone">
+                                    <i class="fas fa-phone"></i>
+                                </a>
+                                                    </div>
+
+                        <p class="bio-text">
+                            A Saudi orthopedic surgeon with over 15 years of experience specializing in knee, shoulder injuries and joint replacement surgeries. He has worked in leading Saudi and British hospitals, performing over 2,000 successful surgeries. He believes that continuous education and patient-centered care are the foundation of true medicine.                        </p>
+
+                        <div class="hero-buttons">
+                             <a href="#contact" class="hero-btn btn-primary">Contact Doctor</a>
+                                                     </div>
+                    </div>
+
+                    <!-- Left Side: Image with Glowing Rotating Arcs -->
+                                            <div class="profile-image-container">
+                            <div class="profile-image-glow-wrapper">
+                                <div class="rotating-arc arc-1"></div>
+                                <div class="rotating-arc arc-2"></div>
+                                                                <img src="/SaaS_Multi_Tenant_platform/uploads/sites/3/profile_6a5347b8c54a54.41980382.jpg" alt="Dr. Ali Al-Sharif" class="glowing-image">
+                                <div class="glow-effect"></div>
+                            </div>
+                        </div>
+                                    </div>
+            </div>
+        </header>
+
+                <!-- Populate secData for sections rendering -->
+        
+        <!-- 1. Education -->
+                    <section class="section" id="education" data-aos="fade-up">
+                <div class="section-title">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h2>Medical Qualifications</h2>
+                </div>
+                    <div class="edu-grid">
+                    <div class="edu-card glass-card">
+                <div class="edu-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="edu-details">
+                    <h3 class="edu-degree">Arab Board of Orthopedic Surgery — ABOS</h3>
+                    <h4 class="edu-inst">Arab Board of Medical Specializations</h4>
+                </div>
+                                    <div class="edu-year"><i class="far fa-calendar"></i> 2013</div>
+                            </div>
+                    <div class="edu-card glass-card">
+                <div class="edu-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="edu-details">
+                    <h3 class="edu-degree">Bachelor of Medicine &amp; Surgery (MBBS) — Honors</h3>
+                    <h4 class="edu-inst">King Saud University — College of Medicine</h4>
+                </div>
+                                    <div class="edu-year"><i class="far fa-calendar"></i> 2005</div>
+                            </div>
+                    <div class="edu-card glass-card">
+                <div class="edu-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="edu-details">
+                    <h3 class="edu-degree">Healthcare Leadership Program</h3>
+                    <h4 class="edu-inst">Institute of Public Administration — Riyadh</h4>
+                </div>
+                                    <div class="edu-year"><i class="far fa-calendar"></i> 2020</div>
+                            </div>
+            </div>
+            </section>
+        
+        <!-- 2. Certificates -->
+                    <section class="section" id="certificates" data-aos="fade-up">
+                <div class="section-title">
+                    <i class="fas fa-id-card"></i>
+                    <h2>Licenses &amp; Credentials</h2>
+                </div>
+                    <div class="cert-modern-grid">
+                    <div class="cert-modern-card glass-card">
+                <div class="cert-content">
+                    <h3 class="cert-title">Fellow of the Royal College of Surgeons — FRCS</h3>
+                    <p class="cert-issuer">Royal College of Surgeons — Edinburgh</p>
+                                            <p class="cert-year">2013</p>
+                                    </div>
+                
+                <div class="cert-buttons">
+                                                        </div>
+            </div>
+                    <div class="cert-modern-card glass-card">
+                <div class="cert-content">
+                    <h3 class="cert-title">Sports Surgery Quality Accreditation</h3>
+                    <p class="cert-issuer">International Society of Arthroscopy, Knee Surgery</p>
+                                            <p class="cert-year">2015</p>
+                                    </div>
+                
+                <div class="cert-buttons">
+                                                        </div>
+            </div>
+                    <div class="cert-modern-card glass-card">
+                <div class="cert-content">
+                    <h3 class="cert-title">Saudi Commission Medical License</h3>
+                    <p class="cert-issuer">Saudi Commission for Health Specialties — SCHS</p>
+                                            <p class="cert-year">2013</p>
+                                    </div>
+                
+                <div class="cert-buttons">
+                                                        </div>
+            </div>
+            </div>
+            </section>
+        
+        <!-- 3. Skills -->
+                    <section class="section" id="skills" data-aos="fade-up">
+                <div class="section-title">
+                    <i class="fas fa-heartbeat"></i>
+                    <h2>Medical Specializations</h2>
+                </div>
+                    <div class="skills-cards-grid">
+                    <div class="skill-modern-card glass-card">
+                <h3 class="skill-title"><i class="fas fa-laptop-code"></i> Knee &amp; Joint Surgery</h3>
+                                    <p class="skill-desc">Total &amp; partial knee replacement, ACL reconstruction</p>
+                            </div>
+                    <div class="skill-modern-card glass-card">
+                <h3 class="skill-title"><i class="fas fa-laptop-code"></i> Shoulder &amp; Arthroscopic Surgery</h3>
+                                    <p class="skill-desc">Rotator cuff repair, arthroscopic shoulder stabilization</p>
+                            </div>
+                    <div class="skill-modern-card glass-card">
+                <h3 class="skill-title"><i class="fas fa-laptop-code"></i> Spine Surgery</h3>
+                                    <p class="skill-desc">Disc herniation, spinal canal stenosis treatment</p>
+                            </div>
+                    <div class="skill-modern-card glass-card">
+                <h3 class="skill-title"><i class="fas fa-laptop-code"></i> Sports Medicine</h3>
+                                    <p class="skill-desc">Athlete injury management &amp; post-surgical rehabilitation</p>
+                            </div>
+                    <div class="skill-modern-card glass-card">
+                <h3 class="skill-title"><i class="fas fa-laptop-code"></i> Musculoskeletal Ultrasound</h3>
+                                    <p class="skill-desc">Diagnostic imaging &amp; ultrasound-guided injections</p>
+                            </div>
+            </div>
+            </section>
+        
+        <!-- 4. Projects -->
+                    <section class="section" id="projects" data-aos="fade-up">
+                <div class="section-title">
+                    <i class="fas fa-book-medical"></i>
+                    <h2>Research &amp; Publications</h2>
+                </div>
+                    <div class="projects-modern-grid">
+                    <div class="project-modern-card glass-card">
+                                    <div class="proj-img-wrapper">
+                                                <img src="/SaaS_Multi_Tenant_platform/uploads/sites/3/thumbnail_6a5347b8dd6765.73152152.jpg" alt="Project Cover" loading="lazy">
+                        <div class="proj-overlay">
+                                                            <a href="/SaaS_Multi_Tenant_platform/ali/projects/journal?lang=en" class="proj-view-btn">
+                                    View Details                                </a>
+                                                    </div>
+                    </div>
+                                <div class="proj-content">
+                    <h3 class="proj-title">Robotic vs. Conventional Total Knee Replacement: A Comparative Study</h3>
+                                            <p class="proj-summary">A comparative study on 180 patients (2019-2022) demonstrating the superiority of robotic surgery in precision and recovery time.</p>
+                                    </div>
+            </div>
+            </div>
+            </section>
+        
+        <!-- 5. Experiences -->
+                    <section class="section" id="experiences" data-aos="fade-up">
+                <div class="section-title">
+                    <i class="fas fa-hospital"></i>
+                    <h2>Medical Career</h2>
+                </div>
+                    <div class="exp-modern-grid">
+                    <div class="exp-modern-card">
+                <div class="exp-header">
+                    <h3 class="exp-position">Consultant Orthopedic Surgeon</h3>
+                                            <span class="exp-date">2020 - الحالي</span>
+                                    </div>
+                <h4 class="exp-company"><i class="fas fa-building"></i> King Faisal Specialist Hospital — Riyadh</h4>
+                                    <p class="exp-desc">Head of joint replacement unit, supervising over 300 surgeries annually, training residents, and participating in medical quality committees.</p>
+                            </div>
+                    <div class="exp-modern-card">
+                <div class="exp-header">
+                    <h3 class="exp-position">Orthopedic Specialist</h3>
+                                            <span class="exp-date">مارس 2013 - ديسمبر 2017</span>
+                                    </div>
+                <h4 class="exp-company"><i class="fas fa-building"></i> National Guard Hospital — Jeddah</h4>
+                                    <p class="exp-desc">Performed open and arthroscopic orthopedic surgeries, participated in the 24/7 surgical emergency on-call program.</p>
+                            </div>
+                    <div class="exp-modern-card">
+                <div class="exp-header">
+                    <h3 class="exp-position">Fellowship in Sports Medicine &amp; Joint Surgery</h3>
+                                            <span class="exp-date">يوليو 2011 - فبراير 2013</span>
+                                    </div>
+                <h4 class="exp-company"><i class="fas fa-building"></i> Stoke Mandeville Hospital — London, UK</h4>
+                                    <p class="exp-desc">Specialized training in knee surgery and sports medicine under supervision of leading British surgeons.</p>
+                            </div>
+            </div>
+            </section>
+        
+        <!-- 6. Personal Skills -->
+                    <section class="section" id="personal-skills" data-aos="fade-up">
+                <div class="section-title">
+                    <i class="fas fa-user-check"></i>
+                    <h2>Personal Skills</h2>
+                </div>
+                <div class="skills-cards-grid">
+                                            <div class="skill-modern-card glass-card">
+                            <h3 class="skill-title"><i class="fas fa-star"></i> Patient Communication</h3>
+                                                            <p class="skill-desc">Building trust and explaining diagnoses in simple terms</p>
+                                                    </div>
+                                            <div class="skill-modern-card glass-card">
+                            <h3 class="skill-title"><i class="fas fa-star"></i> Working Under Pressure</h3>
+                                                            <p class="skill-desc">Fast, accurate decision-making in ORs and emergencies</p>
+                                                    </div>
+                                            <div class="skill-modern-card glass-card">
+                            <h3 class="skill-title"><i class="fas fa-star"></i> Medical Leadership</h3>
+                                                            <p class="skill-desc">Leading surgical teams and mentoring residents</p>
+                                                    </div>
+                                    </div>
+            </section>
+        
+        <!-- 7. Languages -->
+                    <section class="section" id="languages" data-aos="fade-up">
+                <div class="section-title">
+                    <i class="fas fa-language"></i>
+                    <h2>Languages</h2>
+                </div>
+                    <div class="languages-grid">
+                    <div class="lang-modern-card glass-card">
+                <div class="lang-info-header">
+                    <h3 class="lang-title"><i class="fas fa-language"></i> Arabic</h3>
+                    <span class="lang-level">Native</span>
+                </div>
+                <div class="lang-bar-wrapper">
+                                        <div class="lang-bar-fill" style="width: 100%;"></div>
+                </div>
+            </div>
+                    <div class="lang-modern-card glass-card">
+                <div class="lang-info-header">
+                    <h3 class="lang-title"><i class="fas fa-language"></i> English</h3>
+                    <span class="lang-level">Excellent (Advanced Medical Level)</span>
+                </div>
+                <div class="lang-bar-wrapper">
+                                        <div class="lang-bar-fill" style="width: 100%;"></div>
+                </div>
+            </div>
+            </div>
+            </section>
+        
+        <!-- References -->
+                    <section class="section" id="references" data-aos="fade-up">
+                <div class="section-title">
+                    <i class="fas fa-users"></i>
+                    <h2>References</h2>
+                </div>
+                <div class="reference-card glass-card">
+                    <i class="fas fa-quote-right quote-icon"></i>
+                    <p>All references and letters of recommendation are available upon request. Please contact King Faisal Specialist Hospital, Department of Orthopedic Surgery.</p>
+                </div>
+            </section>
+        
+        <!-- Footer -->
+        <footer class="footer" id="contact">
+            <h2 class="footer-name">Dr. Ali Al-Sharif</h2>
+            <div class="social-links">
+                                    <a href="https://www.linkedin.com/in/abdullah-al-sharif-888239320/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                                    <a href="https://github.com/abdullahw8080" target="_blank"><i class="fab fa-github"></i></a>
+                                    <a href="abdullahw8080@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
+                                    <a href="+967716415103" target="_blank"><i class="fas fa-phone"></i></a>
+                            </div>
+            <p class="copyright">&copy; 2026 All rights reserved</p>
+        </footer>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="/SaaS_Multi_Tenant_platform/templates/template-developer/script.js?v=1784040370"></script>
+</body>
+</html>

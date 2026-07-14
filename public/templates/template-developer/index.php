@@ -8,7 +8,7 @@ $lang       = $_GET['lang'] ?? $data['site']['default_lang'] ?? 'ar';
 $dir        = ($lang === 'ar') ? 'rtl' : 'ltr';
 $profession = $data['site']['profession_type'] ?? 'developer';
 
-require_once __DIR__ . '/../../../app/Config/ProfessionConfig.php';
+require_once __DIR__ . '/../../app/Config/ProfessionConfig.php';
 $labels       = ProfessionConfig::getLabels($profession, $lang);
 $cssVars      = ProfessionConfig::getCssVariables($profession);
 $showLevelBar = ProfessionConfig::showLevelBar($profession);
