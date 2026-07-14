@@ -317,6 +317,10 @@
             padding: 6px 10px; background: var(--bg-input); border: 1px solid var(--border-color);
             color: var(--text-main); border-radius: 4px; font-size: 0.8rem; font-family: inherit; cursor: pointer;
         }
+        .select-mini option, .form-input option {
+            background: #1a2030 !important;
+            color: #f8fafc !important;
+        }
 
         /* Modal */
         .modal {

@@ -44,6 +44,23 @@
                     <input type="password" id="confirm_password" name="confirm_password" class="form-input ltr" placeholder="••••••••" required>
                 </div>
 
+                <div class="form-group">
+                    <label class="form-label" for="profession_type">مجال عملك / مهنتك</label>
+                    <select id="profession_type" name="profession_type" class="form-input" required style="cursor: pointer;">
+                        <option value="" disabled selected>اختر مهنتك لتخصيص موقعك تلقائياً</option>
+                        <option value="developer">مطور برمجيات / تقني</option>
+                        <option value="engineer">مهندس</option>
+                        <option value="doctor">طبيب</option>
+                        <option value="pharmacist">صيدلي</option>
+                        <option value="lawyer">محامي</option>
+                        <option value="teacher">مدرس / أستاذ</option>
+                        <option value="executive">مدير أعمال / تنفيذي</option>
+                        <option value="accountant">محاسب</option>
+                        <option value="student">طالب</option>
+                        <option value="other">مهنة أخرى</option>
+                    </select>
+                </div>
+
                 <button type="submit" class="btn btn-primary" style="margin-top: 10px;">
                     تسجيل الحساب
                 </button>

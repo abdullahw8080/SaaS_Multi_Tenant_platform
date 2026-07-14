@@ -155,6 +155,11 @@ body {
     text-align: right;
 }
 
+.form-input option {
+    background-color: #1a2030 !important;
+    color: #f8fafc !important;
+}
+
 .form-input:focus {
     outline: none;
     border-color: var(--primary);

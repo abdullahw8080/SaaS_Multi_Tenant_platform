@@ -124,10 +124,14 @@ class AuthController extends BaseController {
         }
 
         // 3. Create site (Default template 1 = Developer Dark, status = pending/draft)
+        $allowedProfessions = ['developer','engineer','doctor','pharmacist','lawyer','teacher','executive','accountant','student','other'];
+        $profession = in_array($_POST['profession_type'] ?? '', $allowedProfessions) ? $_POST['profession_type'] : 'developer';
+
         $siteId = $siteModel->create([
             'user_id'         => $userId,
             'slug'            => $slug,
             'template_id'     => 1, // Developer template by default
+            'profession_type' => $profession,
             'is_published'    => 0,
             'approval_status' => 'pending' // Initial status is pending approval workflow
         ]);

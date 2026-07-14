@@ -495,16 +495,17 @@
                     <!-- Arabic Fields -->
                     <div id="profile-ar" class="lang-field-group active">
                         <div class="form-group">
-                            <label class="form-label">الاسم الكامل</label>
-                            <input type="text" name="profile[full_name]" class="form-input" value="<?= htmlspecialchars($siteData['profile']['full_name'] ?? '') ?>" required>
+                            <label class="form-label">الاسم الكامل (سيظهر كعنوان رئيسي وشخصي في موقعك)</label>
+                            <input type="text" name="profile[full_name]" class="form-input" value="<?= htmlspecialchars($siteData['profile']['full_name'] ?? '') ?>" placeholder="مثال: د. باسم علي الشريف، م. أحمد الحربي" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">المسمى الوظيفي / الاختصاص</label>
-                            <input type="text" name="profile[title]" class="form-input" value="<?= htmlspecialchars($siteData['profile']['title'] ?? '') ?>" placeholder="مثال: مطور ويب، أخصائي عظام">
+                            <label class="form-label">المسمى المهني / الاختصاص الدقيق</label>
+                            <input type="text" name="profile[title]" class="form-input" value="<?= htmlspecialchars($siteData['profile']['title'] ?? '') ?>" placeholder="مثال: استشاري جراحة العظام، مهندس مدني، مطور تطبيقات ويب، مستشار قانوني">
+                            <small style="color: var(--text-muted); display: block; margin-top: 4px; font-size: 0.8rem;">يحدد تخصصك الفرعي أو لقبك المهني بدقة ليظهر تحت اسمك مباشرة.</small>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">نبذة تعريفية (Bio)</label>
-                            <textarea name="profile[bio]" class="form-input"><?= htmlspecialchars($siteData['profile']['bio'] ?? '') ?></textarea>
+                            <label class="form-label">نبذة تعريفية شاملة (Bio)</label>
+                            <textarea name="profile[bio]" class="form-input" rows="4" placeholder="اكتب نبذة مهنية تلخص مسيرتك وخبراتك وتناسب تخصصك..."><?= htmlspecialchars($siteData['profile']['bio'] ?? '') ?></textarea>
                         </div>
                     </div>
 
@@ -681,7 +682,10 @@
 
                 <!-- TAB: Skills -->
                 <div id="tab-skills" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-code" style="color:var(--primary)"></i> إدارة المهارات التقنية</div>
+                    <div class="section-title"><i class="fa-solid fa-code" style="color:var(--primary)"></i> إدارة المهارات والاهتمامات المهنية</div>
+                    <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
+                        أدخل مهاراتك الفنية والتخصصية التي تميزك في مجالك (مثال: لغات البرمجة للمطورين، التخصصات الإكلينيكية للأطباء، البرمجيات الهندسية للمهندسين، إلخ).
+                    </p>
                     <div id="skills-container">
                         <?php foreach ($siteData['skills'] as $i => $skill): ?>
                             <div class="dynamic-row skill-row">
@@ -750,7 +754,10 @@
 
                 <!-- TAB: Experiences -->
                 <div id="tab-experiences" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-history" style="color:var(--primary)"></i> الخبرات المهنية</div>
+                    <div class="section-title"><i class="fa-solid fa-history" style="color:var(--primary)"></i> مسيرتك المهنية والخبرات العملانية</div>
+                    <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
+                        أضف هنا تاريخك الوظيفي وأماكن عملك السابقة (مثال: مستشفيات أو عيادات للأطباء، شركات هندسية للمهندسين، مدارس للمعلمين، إلخ).
+                    </p>
                     <div id="experiences-container">
                         <?php foreach ($siteData['experiences'] as $i => $exp): ?>
                             <div class="dynamic-row exp-row">
@@ -811,7 +818,10 @@
 
                 <!-- TAB: Education -->
                 <div id="tab-education" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-graduation-cap" style="color:var(--primary)"></i> التعليم والمؤهلات</div>
+                    <div class="section-title"><i class="fa-solid fa-graduation-cap" style="color:var(--primary)"></i> التعليم والمؤهلات الأكاديمية</div>
+                    <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
+                        أضف مؤهلاتك الدراسية، درجاتك العلمية، أو زمالاتك وتدريبك الأكاديمي (بكالوريوس، ماجستير، زمالة طبية، شهادة فنية، إلخ).
+                    </p>
                     <div id="education-container">
                         <?php foreach ($siteData['education'] as $i => $edu): ?>
                             <div class="dynamic-row edu-row">
@@ -858,7 +868,10 @@
 
                 <!-- TAB: Certificates -->
                 <div id="tab-certificates" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-certificate" style="color:var(--primary)"></i> الشهادات والاعتمادات المهنية</div>
+                    <div class="section-title"><i class="fa-solid fa-certificate" style="color:var(--primary)"></i> الشهادات المهنية، الرخص والاعتمادات</div>
+                    <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
+                        أضف تراخيصك المهنية، شهادات الاعتماد والتدريب البارزة (مثل رخصة مزاولة المهنة للأطباء، رخصة هيئة المهندسين للمهندسين، شهادة PMP لمدراء المشاريع، إلخ).
+                    </p>
                     <div id="certificates-container">
                         <?php foreach ($siteData['certificates'] as $i => $cert): ?>
                             <div class="dynamic-row cert-row">
@@ -911,7 +924,10 @@
 
                 <!-- TAB: Projects & Research -->
                 <div id="tab-projects" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-briefcase" style="color:var(--primary)"></i> المشاريع، الأبحاث، ودراسات الحالة</div>
+                    <div class="section-title"><i class="fa-solid fa-briefcase" style="color:var(--primary)"></i> المشاريع، الإنجازات، والأبحاث والمنشورات العلمية</div>
+                    <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
+                        أدخل أعمالك البارزة هنا. بالنسبة للأطباء والباحثين، يمكن أن تكون أبحاثاً طبية منشورة أو حالات سريرية معقدة. للمطورين والمهندسين، مشاريع برمجية أو إنشائية. للمحامين، قضايا ودراسات حالة ناجحة.
+                    </p>
                     <div id="projects-container">
                         <?php foreach ($siteData['projects'] as $i => $proj): ?>
                             <div class="dynamic-row proj-row" data-index="<?= $i ?>">
@@ -1030,7 +1046,10 @@
 
                 <!-- TAB: Languages -->
                 <div id="tab-languages" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-language" style="color:var(--primary)"></i> إدارة اللغات</div>
+                    <div class="section-title"><i class="fa-solid fa-language" style="color:var(--primary)"></i> إدارة اللغات المتقنة</div>
+                    <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
+                        أدخل اللغات التي تجيد التحدث أو الكتابة بها ومستوى إتقانك لكل لغة.
+                    </p>
                     <div id="languages-container">
                         <?php foreach ($siteData['languages'] as $i => $langObj): ?>
                             <div class="dynamic-row lang-row">
@@ -1601,6 +1620,128 @@
             
             setTimeout(() => { isHandlingInvalid = false; }, 1000);
         }, true); // Use capture phase to intercept the event before it bubbles
+
+        // Define tab order
+        const tabOrder = [
+            'tab-profile',
+            'tab-sections',
+            'tab-social',
+            'tab-skills',
+            'tab-experiences',
+            'tab-education',
+            'tab-certificates',
+            'tab-projects',
+            'tab-languages'
+        ];
+
+        function nextTab() {
+            const activeTab = document.querySelector('.tab-content.active');
+            if (activeTab) {
+                const currentIndex = tabOrder.indexOf(activeTab.id);
+                if (currentIndex !== -1 && currentIndex < tabOrder.length - 1) {
+                    const nextTabId = tabOrder[currentIndex + 1];
+                    const nextBtn = document.querySelector(`.mobile-tabs-container .tab-btn[onclick*="${nextTabId}"]`);
+                    showTab(nextTabId, nextBtn);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        }
+
+        function prevTab() {
+            const activeTab = document.querySelector('.tab-content.active');
+            if (activeTab) {
+                const currentIndex = tabOrder.indexOf(activeTab.id);
+                if (currentIndex > 0) {
+                    const prevTabId = tabOrder[currentIndex - 1];
+                    const prevBtn = document.querySelector(`.mobile-tabs-container .tab-btn[onclick*="${prevTabId}"]`);
+                    showTab(prevTabId, prevBtn);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        }
+
+        // Inject navigation buttons and style the save footer on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Move the sticky footer buttons to the last tab and make it non-sticky
+            const stickyFooter = document.querySelector('div[style*="position: sticky"]');
+            const lastTab = document.getElementById('tab-languages');
+            if (stickyFooter && lastTab) {
+                // Style footer to be a standard card bottom panel
+                stickyFooter.removeAttribute('style');
+                stickyFooter.style.marginTop = '30px';
+                stickyFooter.style.borderTop = '1px solid var(--border-color)';
+                stickyFooter.style.paddingTop = '20px';
+                stickyFooter.style.display = 'flex';
+                stickyFooter.style.gap = '15px';
+                stickyFooter.style.justifyContent = 'flex-end';
+                
+                // Extract inner container div and inject a back button
+                const buttonsContainer = stickyFooter.querySelector('div');
+                if (buttonsContainer) {
+                    buttonsContainer.removeAttribute('style');
+                    buttonsContainer.style.display = 'flex';
+                    buttonsContainer.style.gap = '15px';
+                    buttonsContainer.style.justifyContent = 'flex-end';
+                    buttonsContainer.style.width = '100%';
+                    buttonsContainer.style.flexWrap = 'wrap';
+                    
+                    // Create prev button for the last tab
+                    const prevBtn = document.createElement('button');
+                    prevBtn.type = 'button';
+                    prevBtn.className = 'btn btn-secondary';
+                    prevBtn.innerHTML = '⬅ السابق';
+                    prevBtn.style.width = 'auto';
+                    prevBtn.style.padding = '12px 24px';
+                    prevBtn.onclick = prevTab;
+                    
+                    buttonsContainer.insertBefore(prevBtn, buttonsContainer.firstChild);
+                }
+                
+                // Append the stickyFooter to the lastTab
+                lastTab.appendChild(stickyFooter);
+            }
+
+            // 2. Inject Next/Prev buttons in all tabs except the last one
+            tabOrder.forEach((tabId, idx) => {
+                if (tabId === 'tab-languages') return; // Skip last tab
+                
+                const tabEl = document.getElementById(tabId);
+                if (tabEl) {
+                    const navContainer = document.createElement('div');
+                    navContainer.style.display = 'flex';
+                    navContainer.style.gap = '15px';
+                    navContainer.style.justifyContent = 'flex-end';
+                    navContainer.style.marginTop = '30px';
+                    navContainer.style.borderTop = '1px solid var(--border-color)';
+                    navContainer.style.paddingTop = '20px';
+                    
+                    // If not the first tab, add a prev button
+                    if (idx > 0) {
+                        const prevBtn = document.createElement('button');
+                        prevBtn.type = 'button';
+                        prevBtn.className = 'btn btn-secondary';
+                        prevBtn.innerHTML = '⬅ السابق';
+                        prevBtn.style.width = 'auto';
+                        prevBtn.style.padding = '10px 24px';
+                        prevBtn.onclick = prevTab;
+                        navContainer.appendChild(prevBtn);
+                    }
+                    
+                    // Add next button
+                    const nextBtn = document.createElement('button');
+                    nextBtn.type = 'button';
+                    nextBtn.className = 'btn btn-primary';
+                    nextBtn.innerHTML = 'التالي ➔';
+                    nextBtn.style.width = 'auto';
+                    nextBtn.style.padding = '10px 28px';
+                    nextBtn.style.fontWeight = '600';
+                    nextBtn.onclick = nextTab;
+                    navContainer.appendChild(nextBtn);
+                    
+                    tabEl.appendChild(navContainer);
+                }
+            });
+        });
     </script>
 </body>
 </html>

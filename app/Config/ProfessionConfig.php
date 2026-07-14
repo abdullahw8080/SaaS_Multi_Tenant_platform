@@ -121,49 +121,239 @@ class ProfessionConfig
                 'border_color'         => 'rgba(0, 102, 204, 0.15)',
             ],
             'extra_css' => "
-                body { background-color: #F4F9FF !important; }
-                .navbar { background: rgba(255, 255, 255, 0.95) !important; border-bottom: 1px solid rgba(0, 102, 204, 0.12) !important; box-shadow: 0 2px 20px rgba(0,102,204,0.08) !important; }
-                .logo { color: #0066CC !important; }
-                .nav-links a { color: #0D1F3C !important; }
-                .nav-links a:hover { color: #0066CC !important; }
-                .theme-btn, .lang-btn, .menu-btn { border-color: rgba(0,102,204,0.25) !important; color: #0066CC !important; background: rgba(0,102,204,0.05) !important; }
-                .header-card { background: rgba(255,255,255,0.9) !important; border-color: rgba(0,102,204,0.12) !important; box-shadow: 0 20px 60px rgba(0,102,204,0.10) !important; }
-                .glass-card { background: rgba(255,255,255,0.85) !important; border-color: rgba(0,102,204,0.15) !important; box-shadow: 0 8px 24px rgba(0,102,204,0.08) !important; }
-                .glass-card:hover { background: rgba(240,248,255,0.95) !important; border-color: rgba(0,102,204,0.35) !important; box-shadow: 0 12px 32px rgba(0,102,204,0.15) !important; }
-                .edu-card { background: #FFFFFF !important; border-color: rgba(0,102,204,0.12) !important; }
-                .edu-card:hover { box-shadow: 0 15px 30px rgba(0,102,204,0.12) !important; border-color: rgba(0,102,204,0.3) !important; }
-                .edu-degree { color: #0D1F3C !important; }
-                .edu-year { background: rgba(0,102,204,0.08) !important; color: #0066CC !important; }
-                .cert-modern-card { background: #FFFFFF !important; border-color: rgba(0,102,204,0.12) !important; }
-                .cert-title { color: #0D1F3C !important; }
-                .cert-issuer { color: #4A6FA5 !important; }
-                .cert-year { color: #0066CC !important; }
-                .btn-cert.secondary:hover { border-color: #0066CC !important; color: #0066CC !important; }
-                .skill-modern-card { background: rgba(0,102,204,0.03) !important; border-color: rgba(0,102,204,0.12) !important; }
-                .skill-modern-card:hover { background: rgba(0,102,204,0.06) !important; border-color: #0066CC !important; }
-                .skill-title { color: #0D1F3C !important; }
-                .project-modern-card { background: #FFFFFF !important; border-color: rgba(0,102,204,0.12) !important; }
-                .project-modern-card:hover { box-shadow: 0 20px 40px rgba(0,102,204,0.15) !important; }
-                .proj-title { color: #0D1F3C !important; }
-                .proj-summary { color: #4A6FA5 !important; }
-                .proj-overlay { background: rgba(0,30,80,0.75) !important; }
-                .exp-modern-card { background: #FFFFFF !important; border-color: rgba(0,102,204,0.2) !important; }
-                .exp-modern-card:hover { background: rgba(0,102,204,0.03) !important; }
-                .exp-position { color: #0D1F3C !important; }
-                .exp-date { background: rgba(0,102,204,0.07) !important; color: #4A6FA5 !important; }
-                .section-title h2 { color: #0D1F3C !important; }
-                .footer { border-top-color: rgba(0,102,204,0.12) !important; }
-                .footer-name { color: #0D1F3C !important; }
-                .footer .social-links a { background: rgba(0,102,204,0.08) !important; color: #0066CC !important; }
-                .footer .social-links a:hover { background: #0066CC !important; color: #fff !important; }
-                .footer .copyright { color: #4A6FA5 !important; }
-                .hero-socials a { background: rgba(0,102,204,0.06) !important; border-color: rgba(0,102,204,0.2) !important; color: #0D1F3C !important; }
-                .hero-socials a:hover { background: #0066CC !important; border-color: #0066CC !important; color: #fff !important; }
-                .shape { opacity: 0.06 !important; }
-                .lang-bar-wrapper { background: rgba(0,102,204,0.08) !important; }
-                .lang-modern-card.glass-card { background: #FFFFFF !important; }
-                .reference-card { background: #FFFFFF !important; }
-                .hero-welcome-badge { background: rgba(0,102,204,0.10) !important; border-color: rgba(0,102,204,0.35) !important; color: #0055BB !important; }
+                /* --- أنميشن ألوان متدرجة متحركة (Gradient Animation) --- */
+                @keyframes doctorGradientMove {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                }
+
+                .highlight-text, .btn-primary {
+                    background-size: 200% 200% !important;
+                    animation: doctorGradientMove 6s ease infinite !important;
+                }
+
+                /* --- الأشكال الخلفية المتحركة --- */
+                body:not(.light-theme) .shape-1 {
+                    background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%) !important;
+                }
+                body:not(.light-theme) .shape-2 {
+                    background: radial-gradient(circle, rgba(167, 139, 250, 0.15) 0%, transparent 70%) !important;
+                }
+                body.light-theme .shape-1 {
+                    background: radial-gradient(circle, rgba(0, 102, 204, 0.08) 0%, transparent 70%) !important;
+                }
+                body.light-theme .shape-2 {
+                    background: radial-gradient(circle, rgba(0, 168, 232, 0.08) 0%, transparent 70%) !important;
+                }
+
+                /* --- الوضع الافتراضي (الداكن الطبي المخصص) --- */
+                body:not(.light-theme) {
+                    background-color: #0A1128 !important;
+                    color: #E2E8F0 !important;
+                }
+                body:not(.light-theme) .navbar {
+                    background: rgba(10, 17, 40, 0.95) !important;
+                    border-bottom: 1px solid rgba(0, 212, 255, 0.12) !important;
+                    box-shadow: 0 4px 30px rgba(0, 212, 255, 0.03) !important;
+                }
+                body:not(.light-theme) .logo {
+                    color: #00D4FF !important;
+                }
+                body:not(.light-theme) .nav-links a {
+                    color: #94A3B8 !important;
+                }
+                body:not(.light-theme) .nav-links a:hover {
+                    color: #00D4FF !important;
+                }
+                body:not(.light-theme) .theme-btn, 
+                body:not(.light-theme) .lang-btn, 
+                body:not(.light-theme) .menu-btn {
+                    border-color: rgba(0, 212, 255, 0.25) !important;
+                    color: #00D4FF !important;
+                    background: rgba(0, 212, 255, 0.05) !important;
+                }
+                body:not(.light-theme) .header-card {
+                    background: rgba(16, 31, 66, 0.7) !important;
+                    border-color: rgba(0, 212, 255, 0.15) !important;
+                    backdrop-filter: blur(15px) !important;
+                    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
+                }
+                body:not(.light-theme) .glass-card,
+                body:not(.light-theme) .edu-card,
+                body:not(.light-theme) .cert-modern-card,
+                body:not(.light-theme) .project-modern-card,
+                body:not(.light-theme) .exp-modern-card,
+                body:not(.light-theme) .reference-card {
+                    background: rgba(16, 31, 66, 0.5) !important;
+                    border-color: rgba(0, 212, 255, 0.15) !important;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+                }
+                body:not(.light-theme) .glass-card:hover,
+                body:not(.light-theme) .edu-card:hover,
+                body:not(.light-theme) .cert-modern-card:hover,
+                body:not(.light-theme) .project-modern-card:hover,
+                body:not(.light-theme) .exp-modern-card:hover {
+                    background: rgba(16, 31, 66, 0.85) !important;
+                    border-color: #00D4FF !important;
+                    box-shadow: 0 15px 35px rgba(0, 212, 255, 0.15) !important;
+                }
+                body:not(.light-theme) .edu-degree,
+                body:not(.light-theme) .cert-title,
+                body:not(.light-theme) .skill-title,
+                body:not(.light-theme) .proj-title,
+                body:not(.light-theme) .exp-position,
+                body:not(.light-theme) .section-title h2,
+                body:not(.light-theme) .footer-name {
+                    color: #FFFFFF !important;
+                }
+                body:not(.light-theme) .text-secondary,
+                body:not(.light-theme) .bio-text,
+                body:not(.light-theme) .edu-inst,
+                body:not(.light-theme) .cert-issuer,
+                body:not(.light-theme) .proj-summary,
+                body:not(.light-theme) .exp-desc,
+                body:not(.light-theme) .copyright {
+                    color: #94A3B8 !important;
+                }
+                body:not(.light-theme) .hero-socials a {
+                    background: rgba(0, 212, 255, 0.05) !important;
+                    border-color: rgba(0, 212, 255, 0.2) !important;
+                    color: #E2E8F0 !important;
+                }
+                body:not(.light-theme) .hero-socials a:hover {
+                    background: #00D4FF !important;
+                    border-color: #00D4FF !important;
+                    color: #0A1128 !important;
+                    box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3) !important;
+                }
+                body:not(.light-theme) .hero-welcome-badge {
+                    background: rgba(0, 212, 255, 0.1) !important;
+                    border-color: rgba(0, 212, 255, 0.3) !important;
+                    color: #00D4FF !important;
+                }
+                body:not(.light-theme) .edu-year {
+                    background: rgba(0, 212, 255, 0.1) !important;
+                    color: #00D4FF !important;
+                }
+                body:not(.light-theme) .footer .social-links a {
+                    background: rgba(0, 212, 255, 0.08) !important;
+                    color: #00D4FF !important;
+                }
+                body:not(.light-theme) .footer .social-links a:hover {
+                    background: #00D4FF !important;
+                    color: #0A1128 !important;
+                }
+                body:not(.light-theme) .lang-bar-wrapper {
+                    background: rgba(255, 255, 255, 0.05) !important;
+                }
+
+                /* --- وضع اللايت مود المخصص (أبيض خالص) --- */
+                body.light-theme {
+                    background-color: #FFFFFF !important;
+                    color: #0D1F3C !important;
+                }
+                body.light-theme .navbar {
+                    background: rgba(255, 255, 255, 0.96) !important;
+                    border-bottom: 1px solid rgba(0, 102, 204, 0.1) !important;
+                    box-shadow: 0 2px 20px rgba(0,102,204,0.05) !important;
+                }
+                body.light-theme .logo {
+                    color: #0066CC !important;
+                }
+                body.light-theme .nav-links a {
+                    color: #0D1F3C !important;
+                }
+                body.light-theme .nav-links a:hover {
+                    color: #0066CC !important;
+                }
+                body.light-theme .theme-btn, 
+                body.light-theme .lang-btn, 
+                body.light-theme .menu-btn {
+                    border-color: rgba(0,102,204,0.2) !important;
+                    color: #0066CC !important;
+                    background: rgba(0,102,204,0.03) !important;
+                }
+                body.light-theme .header-card {
+                    background: #FFFFFF !important;
+                    border-color: rgba(0,102,204,0.1) !important;
+                    box-shadow: 0 15px 45px rgba(0,102,204,0.06) !important;
+                }
+                body.light-theme .glass-card,
+                body.light-theme .edu-card,
+                body.light-theme .cert-modern-card,
+                body.light-theme .project-modern-card,
+                body.light-theme .exp-modern-card,
+                body.light-theme .reference-card {
+                    background: #FFFFFF !important;
+                    border-color: rgba(0, 102, 204, 0.1) !important;
+                    box-shadow: 0 8px 24px rgba(0, 102, 204, 0.04) !important;
+                    color: #0D1F3C !important;
+                }
+                body.light-theme .glass-card:hover,
+                body.light-theme .edu-card:hover,
+                body.light-theme .cert-modern-card:hover,
+                body.light-theme .project-modern-card:hover,
+                body.light-theme .exp-modern-card:hover {
+                    background: #FFFFFF !important;
+                    border-color: #0066CC !important;
+                    box-shadow: 0 12px 30px rgba(0, 102, 204, 0.1) !important;
+                }
+                body.light-theme .edu-degree,
+                body.light-theme .cert-title,
+                body.light-theme .skill-title,
+                body.light-theme .proj-title,
+                body.light-theme .exp-position,
+                body.light-theme .section-title h2,
+                body.light-theme .footer-name {
+                    color: #0D1F3C !important;
+                }
+                body.light-theme .text-secondary,
+                body.light-theme .bio-text,
+                body.light-theme .edu-inst,
+                body.light-theme .cert-issuer,
+                body.light-theme .proj-summary,
+                body.light-theme .exp-desc,
+                body.light-theme .copyright {
+                    color: #4A6FA5 !important;
+                }
+                body.light-theme .hero-socials a {
+                    background: rgba(0, 102, 204, 0.04) !important;
+                    border-color: rgba(0, 102, 204, 0.15) !important;
+                    color: #0D1F3C !important;
+                }
+                body.light-theme .hero-socials a:hover {
+                    background: #0066CC !important;
+                    border-color: #0066CC !important;
+                    color: #ffffff !important;
+                    box-shadow: 0 10px 20px rgba(0, 102, 204, 0.2) !important;
+                }
+                body.light-theme .hero-welcome-badge {
+                    background: rgba(0, 102, 204, 0.08) !important;
+                    border-color: rgba(0, 102, 204, 0.25) !important;
+                    color: #0066CC !important;
+                }
+                body.light-theme .edu-year {
+                    background: rgba(0, 102, 204, 0.08) !important;
+                    color: #0066CC !important;
+                }
+                body.light-theme .footer .social-links a {
+                    background: rgba(0, 102, 204, 0.06) !important;
+                    color: #0066CC !important;
+                }
+                body.light-theme .footer .social-links a:hover {
+                    background: #0066CC !important;
+                    color: #ffffff !important;
+                }
+                body.light-theme .lang-bar-wrapper {
+                    background: rgba(0, 102, 204, 0.08) !important;
+                }
+                body.light-theme .rotating-arc.arc-1 {
+                    border-color: rgba(0, 102, 204, 0.3) !important;
+                }
+                body.light-theme .rotating-arc.arc-2 {
+                    border-color: rgba(0, 168, 232, 0.2) !important;
+                }
             ",
             'labels' => [
                 'ar' => [
@@ -624,10 +814,241 @@ class ProfessionConfig
         return $names[$lang] ?? $names['ar'];
     }
 
-    /** جلب CSS إضافي لتخصيص مهني (مثل light theme للطبيب) */
+    /** جلب CSS إضافي لتخصيص مهني (توليد ديناميكي لجميع المهن لدعم اللايت والدارك والأنميشن) */
     public static function getExtraCss(string $profession): string
     {
-        return self::get($profession)['extra_css'] ?? '';
+        $profData = self::get($profession);
+        
+        // إذا كان هناك CSS مخصص بالكامل (مثل الطبيب)، نرجعه مباشرة
+        if (isset($profData['extra_css']) && !empty($profData['extra_css'])) {
+            return $profData['extra_css'];
+        }
+
+        $c = $profData['colors'];
+        $accent = $c['accent_glow'];
+        $accentSec = $c['accent_glow_secondary'];
+        $rgbAccent = self::hexToRgb($accent);
+        $rgbBgSec = self::hexToRgb($c['bg_secondary']);
+        $rgbBgPrim = self::hexToRgb($c['bg_primary']);
+        
+        // توليد CSS ديناميكي ذكي لكل المهن ليدعم زر تبديل الثيم بشكل متكامل
+        return "
+            /* --- أنميشن ألوان متدرجة متحركة للمهنة --- */
+            @keyframes {$profession}GradientMove {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+
+            .highlight-text, .btn-primary {
+                background-size: 200% 200% !important;
+                animation: {$profession}GradientMove 6s ease infinite !important;
+            }
+
+            /* --- الوضع الافتراضي (الداكن المخصص للمهنة) --- */
+            body:not(.light-theme) {
+                background-color: {$c['bg_primary']} !important;
+                color: {$c['text_primary']} !important;
+            }
+            body:not(.light-theme) .navbar {
+                background: rgba({$rgbBgPrim}, 0.95) !important;
+                border-bottom: 1px solid rgba({$rgbAccent}, 0.12) !important;
+            }
+            body:not(.light-theme) .logo {
+                color: {$accent} !important;
+            }
+            body:not(.light-theme) .nav-links a {
+                color: {$c['text_secondary']} !important;
+            }
+            body:not(.light-theme) .nav-links a:hover {
+                color: {$accent} !important;
+            }
+            body:not(.light-theme) .theme-btn, 
+            body:not(.light-theme) .lang-btn, 
+            body:not(.light-theme) .menu-btn {
+                border-color: rgba({$rgbAccent}, 0.25) !important;
+                color: {$accent} !important;
+                background: rgba({$rgbAccent}, 0.05) !important;
+            }
+            body:not(.light-theme) .header-card {
+                background: rgba({$rgbBgSec}, 0.7) !important;
+                border-color: rgba({$rgbAccent}, 0.15) !important;
+                backdrop-filter: blur(15px) !important;
+            }
+            body:not(.light-theme) .glass-card,
+            body:not(.light-theme) .edu-card,
+            body:not(.light-theme) .cert-modern-card,
+            body:not(.light-theme) .project-modern-card,
+            body:not(.light-theme) .exp-modern-card,
+            body:not(.light-theme) .reference-card {
+                background: rgba({$rgbBgSec}, 0.5) !important;
+                border-color: rgba({$rgbAccent}, 0.15) !important;
+                color: {$c['text_primary']} !important;
+            }
+            body:not(.light-theme) .glass-card:hover,
+            body:not(.light-theme) .edu-card:hover,
+            body:not(.light-theme) .cert-modern-card:hover,
+            body:not(.light-theme) .project-modern-card:hover,
+            body:not(.light-theme) .exp-modern-card:hover {
+                background: rgba({$rgbBgSec}, 0.85) !important;
+                border-color: {$accent} !important;
+                box-shadow: 0 15px 35px rgba({$rgbAccent}, 0.15) !important;
+            }
+            body:not(.light-theme) .edu-degree,
+            body:not(.light-theme) .cert-title,
+            body:not(.light-theme) .skill-title,
+            body:not(.light-theme) .proj-title,
+            body:not(.light-theme) .exp-position,
+            body:not(.light-theme) .section-title h2,
+            body:not(.light-theme) .footer-name {
+                color: #FFFFFF !important;
+            }
+            body:not(.light-theme) .hero-socials a {
+                background: rgba({$rgbAccent}, 0.05) !important;
+                border-color: rgba({$rgbAccent}, 0.2) !important;
+                color: {$c['text_primary']} !important;
+            }
+            body:not(.light-theme) .hero-socials a:hover {
+                background: {$accent} !important;
+                border-color: {$accent} !important;
+                color: {$c['bg_primary']} !important;
+                box-shadow: 0 10px 20px rgba({$rgbAccent}, 0.3) !important;
+            }
+            body:not(.light-theme) .hero-welcome-badge {
+                background: rgba({$rgbAccent}, 0.1) !important;
+                border-color: rgba({$rgbAccent}, 0.3) !important;
+                color: {$accent} !important;
+            }
+            body:not(.light-theme) .edu-year {
+                background: rgba({$rgbAccent}, 0.1) !important;
+                color: {$accent} !important;
+            }
+            body:not(.light-theme) .footer .social-links a {
+                background: rgba({$rgbAccent}, 0.08) !important;
+                color: {$accent} !important;
+            }
+            body:not(.light-theme) .footer .social-links a:hover {
+                background: {$accent} !important;
+                color: {$c['bg_primary']} !important;
+            }
+
+            /* --- وضع اللايت مود المخصص (أبيض خالص لكل المهن) --- */
+            body.light-theme {
+                background-color: #FFFFFF !important;
+                color: #1E293B !important;
+            }
+            body.light-theme .navbar {
+                background: rgba(255, 255, 255, 0.96) !important;
+                border-bottom: 1px solid rgba({$rgbAccent}, 0.12) !important;
+                box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04) !important;
+            }
+            body.light-theme .logo {
+                color: {$accent} !important;
+            }
+            body.light-theme .nav-links a {
+                color: #334155 !important;
+            }
+            body.light-theme .nav-links a:hover {
+                color: {$accent} !important;
+            }
+            body.light-theme .theme-btn, 
+            body.light-theme .lang-btn, 
+            body.light-theme .menu-btn {
+                border-color: rgba({$rgbAccent}, 0.2) !important;
+                color: {$accent} !important;
+                background: rgba({$rgbAccent}, 0.03) !important;
+            }
+            body.light-theme .header-card {
+                background: #FFFFFF !important;
+                border-color: rgba({$rgbAccent}, 0.1) !important;
+                box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05) !important;
+            }
+            body.light-theme .glass-card,
+            body.light-theme .edu-card,
+            body.light-theme .cert-modern-card,
+            body.light-theme .project-modern-card,
+            body.light-theme .exp-modern-card,
+            body.light-theme .reference-card {
+                background: #F8FAFC !important;
+                border-color: rgba({$rgbAccent}, 0.1) !important;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.02) !important;
+                color: #1E293B !important;
+            }
+            body.light-theme .glass-card:hover,
+            body.light-theme .edu-card:hover,
+            body.light-theme .cert-modern-card:hover,
+            body.light-theme .project-modern-card:hover,
+            body.light-theme .exp-modern-card:hover {
+                background: #FFFFFF !important;
+                border-color: {$accent} !important;
+                box-shadow: 0 12px 30px rgba({$rgbAccent}, 0.1) !important;
+            }
+            body.light-theme .edu-degree,
+            body.light-theme .cert-title,
+            body.light-theme .skill-title,
+            body.light-theme .proj-title,
+            body.light-theme .exp-position,
+            body.light-theme .section-title h2,
+            body.light-theme .footer-name {
+                color: #0F172A !important;
+            }
+            body.light-theme .text-secondary,
+            body.light-theme .bio-text,
+            body.light-theme .edu-inst,
+            body.light-theme .cert-issuer,
+            body.light-theme .proj-summary,
+            body.light-theme .exp-desc,
+            body.light-theme .copyright {
+                color: #475569 !important;
+            }
+            body.light-theme .hero-socials a {
+                background: rgba({$rgbAccent}, 0.04) !important;
+                border-color: rgba({$rgbAccent}, 0.15) !important;
+                color: #1E293B !important;
+            }
+            body.light-theme .hero-socials a:hover {
+                background: {$accent} !important;
+                border-color: {$accent} !important;
+                color: #ffffff !important;
+                box-shadow: 0 10px 20px rgba({$rgbAccent}, 0.2) !important;
+            }
+            body.light-theme .hero-welcome-badge {
+                background: rgba({$rgbAccent}, 0.08) !important;
+                border-color: rgba({$rgbAccent}, 0.25) !important;
+                color: {$accent} !important;
+            }
+            body.light-theme .edu-year {
+                background: rgba({$rgbAccent}, 0.08) !important;
+                color: {$accent} !important;
+            }
+            body.light-theme .footer .social-links a {
+                background: rgba({$rgbAccent}, 0.06) !important;
+                color: {$accent} !important;
+            }
+            body.light-theme .footer .social-links a:hover {
+                background: {$accent} !important;
+                color: #ffffff !important;
+            }
+            body.light-theme .lang-bar-wrapper {
+                background: rgba({$rgbAccent}, 0.08) !important;
+            }
+        ";
+    }
+
+    /** تحويل لون hex إلى rgb لسهولة استخدامه في شفافية الألوان */
+    private static function hexToRgb(string $hex): string
+    {
+        $hex = str_replace('#', '', $hex);
+        if (strlen($hex) == 3) {
+            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+        } else {
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
+        }
+        return "$r, $g, $b";
     }
 
     /**
