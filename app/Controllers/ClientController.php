@@ -13,6 +13,7 @@ use App\Models\Education;
 use App\Models\Certificate;
 use App\Models\SiteSection;
 use App\Models\SectionItem;
+use App\Models\Reference;
 use App\Services\FileUploadService;
 use App\Services\ApprovalService;
 use App\Services\ExportService;
@@ -253,6 +254,25 @@ class ClientController extends BaseController {
             $projectModel = new Project();
             $projectModel->sync($siteId, $projects);
 
+            // 7b. Sync References
+            $refsData = $_POST['references'] ?? [];
+            foreach ($refsData as $k => &$ref) {
+                $refPhotoKey = "reference_photo_{$k}";
+                if (!empty($_FILES[$refPhotoKey]['name'])) {
+                    $refPhotoPath = $fileUpload->uploadImage($_FILES[$refPhotoKey], $siteId, 'profile');
+                    if ($refPhotoPath) {
+                        $ref['photo'] = $refPhotoPath;
+                    }
+                } else {
+                    $ref['photo'] = $_POST['references'][$k]['existing_photo'] ?? null;
+                }
+            }
+            unset($ref);
+            $referenceModel = new Reference();
+            $referenceModel->sync($siteId, $refsData);
+
+            // Also save references_text to profile if provided
+            // (already handled in profile save above since it's in $_POST['profile'])
             // 8. Sync Dynamic Sections Visibility and Titles
             $sectionsData = $_POST['sections'] ?? [];
             $sectionModel = new SiteSection();
@@ -308,6 +328,11 @@ class ClientController extends BaseController {
      * Export site as static ZIP.
      */
     public function exportSite(): void {
+        if (\App\Core\Auth::role() !== 'admin') {
+            header($_SERVER["SERVER_PROTOCOL"] . " 403 Forbidden");
+            echo "<h1>403 Forbidden</h1><p>غير مسموح للمستخدمين بتصدير الموقع كملف ZIP. هذه الصلاحية مخصصة للمدير (Admin) فقط.</p>";
+            exit;
+        }
         $siteId = $this->checkSite();
 
         // 1. We require rendering the page inside a buffer

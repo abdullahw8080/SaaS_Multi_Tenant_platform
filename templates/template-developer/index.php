@@ -88,6 +88,7 @@ if (!function_exists('getSocialIconClass')) {
                 <?php if(isset($available['skills'])): ?><a href="#skills"><?= htmlspecialchars($available['skills']) ?></a><?php endif; ?>
                 <?php if(isset($available['projects'])): ?><a href="#projects"><?= htmlspecialchars($available['projects']) ?></a><?php endif; ?>
                 <?php if(isset($available['experiences'])): ?><a href="#experiences"><?= htmlspecialchars($available['experiences']) ?></a><?php endif; ?>
+                <?php if(isset($available['references'])): ?><a href="#references"><?= htmlspecialchars($available['references']) ?></a><?php endif; ?>
                 <a href="#contact"><?= $lang === 'en' ? 'Contact' : 'تواصل' ?></a>
             </div>
             
@@ -260,10 +261,18 @@ if (!function_exists('getSocialIconClass')) {
         <?php endif; ?>
 
         <!-- References -->
-        <?php if (!empty($data['profile']['references_text'])): ?>
+        <?php if(isset($secData['references']) && $secData['references']['is_visible']): ?>
             <section class="section" id="references" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-users"></i>
+                    <i class="fas <?= $sectionIcons['references'] ?? 'fa-user-check' ?>"></i>
+                    <h2><?= htmlspecialchars($labels['references'] ?? BilingualHelper::get($secData['references'], 'title', $lang)) ?></h2>
+                </div>
+                <?php include __DIR__ . "/sections/references.php"; ?>
+            </section>
+        <?php elseif (!empty($data['profile']['references_text'])): ?>
+            <section class="section" id="references" data-aos="fade-up">
+                <div class="section-title">
+                    <i class="fas fa-user-check"></i>
                     <h2><?= $lang === 'en' ? 'References' : 'المراجع' ?></h2>
                 </div>
                 <div class="reference-card glass-card">

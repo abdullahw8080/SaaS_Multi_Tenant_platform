@@ -260,7 +260,15 @@ if (!function_exists('getSocialIconClass')) {
         <?php endif; ?>
 
         <!-- References -->
-        <?php if (!empty($data['profile']['references_text'])): ?>
+        <?php if(isset($secData['references']) && $secData['references']['is_visible']): ?>
+            <section class="section" id="references" data-aos="fade-up">
+                <div class="section-title">
+                    <i class="fas <?= $sectionIcons['references'] ?? 'fa-users' ?>"></i>
+                    <h2><?= htmlspecialchars($labels['references'] ?? BilingualHelper::get($secData['references'], 'title', $lang)) ?></h2>
+                </div>
+                <?php include __DIR__ . "/sections/references.php"; ?>
+            </section>
+        <?php elseif (!empty($data['profile']['references_text'])): ?>
             <section class="section" id="references" data-aos="fade-up">
                 <div class="section-title">
                     <i class="fas fa-users"></i>
@@ -284,6 +292,11 @@ if (!function_exists('getSocialIconClass')) {
             <p class="copyright">&copy; <?= date('Y') ?> <?= $lang === 'en' ? 'All rights reserved' : 'جميع الحقوق محفوظة' ?></p>
         </footer>
 
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <i class="fas fa-arrow-up"></i>
     </div>
 
     <!-- Scripts -->

@@ -120,6 +120,11 @@ class Site extends BaseModel {
             $project['media'] = $stmtMedia->fetchAll();
         }
 
+        // 9b. Fetch Structured References
+        $stmtRefs = $this->db->prepare("SELECT * FROM `site_references` WHERE `site_id` = :site_id ORDER BY `sort_order` ASC");
+        $stmtRefs->execute(['site_id' => $siteId]);
+        $references = $stmtRefs->fetchAll();
+
         // 9. Fetch dynamic sections and items
         $stmtSections = $this->db->prepare("
             SELECT ss.*, st.key as type_key 
@@ -148,7 +153,8 @@ class Site extends BaseModel {
             'education'       => $education,
             'certificates'    => $certificates,
             'projects'        => $projects,
-            'sections'        => $sections
+            'sections'        => $sections,
+            'references'      => $references,
         ];
     }
 }

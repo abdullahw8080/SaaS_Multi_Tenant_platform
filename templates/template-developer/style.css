@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --bg-primary: #0f172a;
     --bg-secondary: #1e293b;
     --text-primary: #f8fafc;
@@ -420,8 +420,104 @@ body {
     margin-bottom: 10px;
 }
 
+/* Structured References Grid */
+.references-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+.ref-glass-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 20px !important;
+    border-radius: 14px !important;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.ref-glass-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15) !important;
+    border-color: rgba(139, 92, 246, 0.4) !important;
+}
+.ref-avatar-wrapper {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    padding: 3px;
+    background: linear-gradient(135deg, var(--accent-glow), var(--accent-glow-secondary, #3b82f6));
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 18px rgba(139, 92, 246, 0.3);
+    flex-shrink: 0;
+}
+.ref-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(15, 23, 42, 0.8);
+    display: block;
+}
+.ref-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(139, 92, 246, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--accent-glow);
+}
+.ref-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+.ref-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 14px;
+    flex-grow: 1;
+}
+.ref-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    justify-content: center;
+}
+.ref-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.ref-btn:hover {
+    background: var(--accent-glow);
+    color: #fff;
+    border-color: var(--accent-glow);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
+}
 @media (max-width: 992px) {
     .profile-image-container {
         flex: 0 0 250px;
     }
 }
+

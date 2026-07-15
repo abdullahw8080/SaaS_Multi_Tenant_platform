@@ -361,9 +361,11 @@
     <div class="top-navbar">
         <a href="<?= BASE_URL ?>/dashboard" class="auth-logo">بورتفوليو Hub</a>
         <div class="nav-actions">
-            <a href="<?= BASE_URL ?>/dashboard/export" class="btn btn-export">
-                <i class="fa-solid fa-file-zipper"></i> <span class="hide-mobile">تصدير ZIP</span>
-            </a>
+            <?php if (\App\Core\Auth::role() === 'admin' || !empty($_SESSION['admin_user_id'])): ?>
+                <a href="<?= BASE_URL ?>/dashboard/export" class="btn btn-export">
+                    <i class="fa-solid fa-file-zipper"></i> <span class="hide-mobile">تصدير ZIP</span>
+                </a>
+            <?php endif; ?>
             <a href="<?= BASE_URL ?>/logout" class="btn btn-logout">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="hide-mobile">خروج</span>
             </a>
@@ -371,6 +373,12 @@
     </div>
 
     <!-- Horizontal Scrollable Tabs Menu -->
+    <?php
+    $sectionVisible = [];
+    foreach ($siteData['sections'] as $sec) {
+        $sectionVisible[$sec['type_key']] = (bool)$sec['is_visible'];
+    }
+    ?>
     <div class="mobile-tabs-container">
         <button class="tab-btn active" onclick="showTab('tab-profile', this)">
             <i class="fa-solid fa-user"></i> الشخصية
@@ -381,24 +389,41 @@
         <button class="tab-btn" onclick="showTab('tab-social', this)">
             <i class="fa-solid fa-share-nodes"></i> التواصل
         </button>
-        <button class="tab-btn" onclick="showTab('tab-skills', this)">
-            <i class="fa-solid fa-code"></i> المهارات
-        </button>
-        <button class="tab-btn" onclick="showTab('tab-experiences', this)">
-            <i class="fa-solid fa-history"></i> الخبرات
-        </button>
-        <button class="tab-btn" onclick="showTab('tab-education', this)">
-            <i class="fa-solid fa-graduation-cap"></i> التعليم
-        </button>
-        <button class="tab-btn" onclick="showTab('tab-certificates', this)">
-            <i class="fa-solid fa-certificate"></i> الشهادات
-        </button>
-        <button class="tab-btn" onclick="showTab('tab-projects', this)">
-            <i class="fa-solid fa-briefcase"></i> المشاريع
-        </button>
-        <button class="tab-btn" onclick="showTab('tab-languages', this)">
-            <i class="fa-solid fa-language"></i> اللغات
-        </button>
+        <?php if ($sectionVisible['skills'] ?? true): ?>
+            <button class="tab-btn" onclick="showTab('tab-skills', this)">
+                <i class="fa-solid fa-code"></i> المهارات
+            </button>
+        <?php endif; ?>
+        <?php if ($sectionVisible['experiences'] ?? true): ?>
+            <button class="tab-btn" onclick="showTab('tab-experiences', this)">
+                <i class="fa-solid fa-history"></i> الخبرات
+            </button>
+        <?php endif; ?>
+        <?php if ($sectionVisible['education'] ?? true): ?>
+            <button class="tab-btn" onclick="showTab('tab-education', this)">
+                <i class="fa-solid fa-graduation-cap"></i> التعليم
+            </button>
+        <?php endif; ?>
+        <?php if ($sectionVisible['certificates'] ?? true): ?>
+            <button class="tab-btn" onclick="showTab('tab-certificates', this)">
+                <i class="fa-solid fa-certificate"></i> الشهادات
+            </button>
+        <?php endif; ?>
+        <?php if ($sectionVisible['projects'] ?? true): ?>
+            <button class="tab-btn" onclick="showTab('tab-projects', this)">
+                <i class="fa-solid fa-briefcase"></i> المشاريع
+            </button>
+        <?php endif; ?>
+        <?php if ($sectionVisible['languages'] ?? true): ?>
+            <button class="tab-btn" onclick="showTab('tab-languages', this)">
+                <i class="fa-solid fa-language"></i> اللغات
+            </button>
+        <?php endif; ?>
+        <?php if ($sectionVisible['references'] ?? true): ?>
+            <button class="tab-btn" onclick="showTab('tab-references', this)">
+                <i class="fa-solid fa-user-check"></i> المراجع
+            </button>
+        <?php endif; ?>
     </div>
 
     <div class="main-content">
@@ -527,13 +552,37 @@
 
                     <div class="grid grid-2">
                         <div class="form-group">
-                            <label class="form-label">الصورة الشخصية</label>
-                            <input type="file" name="profile_photo" class="form-input" style="height: auto;">
+                            <label class="form-label no-badge">الصورة الشخصية</label>
                             <?php if (!empty($siteData['profile']['photo'])): ?>
-                                <input type="hidden" name="profile[existing_photo]" value="<?= htmlspecialchars($siteData['profile']['photo']) ?>">
-                                <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
-                                    <img src="<?= BASE_URL . htmlspecialchars($siteData['profile']['photo']) ?>.jpg" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color);">
-                                    <span style="font-size:0.85rem; color:var(--text-muted)">تم رفع صورة مسبقاً</span>
+                                <?php $profilePhotoSrc = BASE_URL . '/' . ltrim(htmlspecialchars($siteData['profile']['photo']), '/') . '.jpg'; ?>
+                                <input type="hidden" name="profile[existing_photo]" id="existing_profile_photo" value="<?= htmlspecialchars($siteData['profile']['photo']) ?>">
+                                <!-- Current photo preview -->
+                                <div id="profile-photo-preview-box" style="margin-top: 10px; display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px; border: 1px solid var(--border-color);">
+                                    <img id="profile-photo-img" src="<?= $profilePhotoSrc ?>" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); flex-shrink:0;" onerror="this.src='<?= BASE_URL . '/' . ltrim(htmlspecialchars($siteData['profile']['photo']), '/') ?>.webp'; this.onerror=null;">
+                                    <div style="display:flex; flex-direction:column; gap:8px;">
+                                        <span style="font-size:0.85rem; font-weight:600; color:var(--text-main)"><i class="fa-solid fa-circle-check" style="color:var(--accent)"></i> الصورة الشخصية الحالية</span>
+                                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                            <label for="profile_photo" style="font-size:0.75rem; color:var(--primary); cursor:pointer; background:rgba(99,102,241,0.1); padding:5px 12px; border-radius:5px; border:1px solid rgba(99,102,241,0.3); display:inline-flex; align-items:center; gap:5px;">
+                                                <i class="fa-solid fa-cloud-arrow-up"></i> تبديل الصورة
+                                            </label>
+                                            <button type="button" onclick="deleteProfilePhoto()" style="font-size:0.75rem; color:var(--danger); cursor:pointer; background:rgba(239,68,68,0.1); padding:5px 12px; border-radius:5px; border:1px solid rgba(239,68,68,0.3); display:inline-flex; align-items:center; gap:5px;">
+                                                <i class="fa-solid fa-trash"></i> حذف الصورة
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="file" id="profile_photo" name="profile_photo" class="form-input" accept="image/*" style="height: auto; margin-top: 8px; display:none;" onchange="previewProfilePhoto(this)">
+                            <?php else: ?>
+                                <!-- No photo yet -->
+                                <div style="margin-top:10px;">
+                                    <label for="profile_photo" style="display:flex; flex-direction:column; align-items:center; gap:10px; background:rgba(99,102,241,0.05); border:2px dashed rgba(99,102,241,0.3); border-radius:10px; padding:20px; cursor:pointer; text-align:center;" id="profile-photo-dropzone">
+                                        <div id="profile-photo-preview-icon" style="width:72px; height:72px; border-radius:50%; background:rgba(99,102,241,0.1); display:flex; align-items:center; justify-content:center; font-size:2rem; color:var(--primary);">
+                                            <i class="fa-solid fa-user-circle"></i>
+                                        </div>
+                                        <span style="font-size:0.85rem; color:var(--text-muted)"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--primary)"></i> انقر لاختيار صورة شخصية</span>
+                                        <span style="font-size:0.75rem; color:var(--text-muted)">JPG, PNG, WEBP — بحد أقصى 10 ميجابايت</span>
+                                    </label>
+                                    <input type="file" id="profile_photo" name="profile_photo" accept="image/*" style="display:none;" onchange="previewProfilePhoto(this)">
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -578,8 +627,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-2" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">
-                        <div class="form-group">
+                        <div class="form-group" style="margin-top: 15px;">
                             <label class="form-label">ملف السيرة الذاتية (PDF)</label>
                             <input type="file" name="profile_cv" class="form-input" accept=".pdf" style="height: auto;">
                             <?php if (!empty($siteData['profile']['cv_url'])): ?>
@@ -591,20 +639,6 @@
                                 </div>
                             <?php endif; ?>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label no-badge">المراجع (References)</label>
-                            <div class="lang-tabs" style="margin-top: 5px;">
-                                <button type="button" class="lang-tab-btn active" onclick="switchLangTab(this, 'ref-ar')">العربية</button>
-                                <button type="button" class="lang-tab-btn" onclick="switchLangTab(this, 'ref-en')">English</button>
-                            </div>
-                            <div id="ref-ar" class="lang-field-group active" style="margin-top: 10px;">
-                                <textarea name="profile[references_text]" class="form-input" placeholder="مثال: جميع المراجع متوفرة عند الطلب..."><?= htmlspecialchars($siteData['profile']['references_text'] ?? '') ?></textarea>
-                            </div>
-                            <div id="ref-en" class="lang-field-group" style="margin-top: 10px;">
-                                <textarea name="profile[references_text_en]" class="form-input ltr" placeholder="Example: References available upon request..."><?= htmlspecialchars($siteData['profile']['references_text_en'] ?? '') ?></textarea>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- TAB: Section configuration -->
@@ -628,7 +662,7 @@
                             </div>
                             <div style="flex: 0 0 120px; display: flex; justify-content: flex-end;">
                                 <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; cursor: pointer;">
-                                    <input type="checkbox" name="sections[<?= $sec['id'] ?>][is_visible]" value="1" <?= $sec['is_visible'] ? 'checked' : '' ?>> مرئي بالصفحة
+                                    <input type="checkbox" name="sections[<?= $sec['id'] ?>][is_visible]" value="1" <?= $sec['is_visible'] ? 'checked' : '' ?> onchange="toggleSectionTab('<?= $sec['type_key'] ?>', this.checked)"> مرئي بالصفحة
                                 </label>
                             </div>
                         </div>
@@ -990,12 +1024,16 @@
                                 <div class="grid grid-2">
                                     <div class="form-group">
                                         <label class="form-label">صورة الغلاف للمشروع (Cover Image)</label>
-                                        <input type="file" name="project_cover_<?= $i ?>" class="form-input" style="height:auto">
+                                        <input type="file" name="project_cover_<?= $i ?>" class="form-input" style="height:auto" accept="image/*">
                                         <?php if (!empty($proj['cover_image'])): ?>
+                                            <?php $coverSrc = BASE_URL . '/' . ltrim(htmlspecialchars($proj['cover_image']), '/') . '.jpg'; ?>
                                             <input type="hidden" name="projects[<?= $i ?>][existing_cover]" value="<?= htmlspecialchars($proj['cover_image']) ?>">
-                                            <div style="margin-top:10px; display:flex; align-items:center; gap:10px;">
-                                                <img src="<?= htmlspecialchars($proj['cover_image']) ?>.jpg" style="width: 80px; height: 50px; object-fit: cover; border-radius: var(--radius-sm);">
-                                                <span style="font-size:0.85rem; color:var(--text-muted)">صورة الغلاف الحالية</span>
+                                            <div style="margin-top:10px; display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.2); padding:8px; border-radius:8px; border:1px solid var(--border-color);">
+                                                <img src="<?= $coverSrc ?>" style="width: 90px; height: 60px; object-fit: cover; border-radius: 6px; border:1px solid var(--border-color);" onerror="this.src='<?= BASE_URL . '/' . ltrim(htmlspecialchars($proj['cover_image']), '/') ?>.webp'; this.onerror=null;">
+                                                <div style="display:flex; flex-direction:column; gap:4px;">
+                                                    <span style="font-size:0.85rem; color:var(--text-muted)"><i class="fa-solid fa-image" style="color:var(--accent)"></i> صورة الغلاف الحالية</span>
+                                                    <span style="font-size:0.75rem; color:var(--text-muted)">ارفع صورة جديدة للاستبدال</span>
+                                                </div>
                                             </div>
                                         <?php endif; ?>
                                     </div>
@@ -1011,19 +1049,36 @@
                                     <div class="media-gallery-container" id="media-gallery-<?= $i ?>">
                                         <?php if (!empty($proj['media'])): ?>
                                             <?php foreach ($proj['media'] as $j => $media): ?>
-                                                <div class="gallery-item">
-                                                    <span class="remove-row-btn" style="top:5px; left:5px; width:24px; height:24px; font-size:0.75rem;" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></span>
+                                                <div class="gallery-item" style="position:relative; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; padding:12px; margin-bottom:10px;">
                                                     <input type="hidden" name="projects[<?= $i ?>][media][<?= $j ?>][existing_file]" value="<?= htmlspecialchars($media['file_path']) ?>">
-                                                    <div style="display:flex; flex-direction:column; gap:8px; width:100%; padding-left: 20px;">
-                                                        <div style="display:flex; align-items:center; gap:10px;">
+                                                    <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
+                                                        <!-- Preview row -->
+                                                        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
                                                             <?php if ($media['file_type'] === 'image'): ?>
-                                                                <img src="<?= htmlspecialchars($media['file_path']) ?>.jpg" style="width: 40px; height: 40px; object-fit: cover; border-radius: var(--radius-sm);">
+                                                                <?php $mediaSrc = BASE_URL . '/' . ltrim(htmlspecialchars($media['file_path']), '/') . '.jpg'; ?>
+                                                                <img src="<?= $mediaSrc ?>" style="width:70px; height:55px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color); flex-shrink:0;" onerror="this.src='<?= BASE_URL . '/' . ltrim(htmlspecialchars($media['file_path']), '/') ?>.webp'; this.onerror=null;">
                                                             <?php else: ?>
-                                                                <div style="width: 40px; height: 40px; display:flex; align-items:center; justify-content:center; background:#ef4444; border-radius:var(--radius-sm); font-size:1.2rem; color:white;"><i class="fa-solid fa-file-pdf"></i></div>
+                                                                <div style="width:70px; height:55px; display:flex; align-items:center; justify-content:center; background:#ef4444; border-radius:6px; font-size:1.5rem; color:white; flex-shrink:0;"><i class="fa-solid fa-file-pdf"></i></div>
                                                             <?php endif; ?>
-                                                            <span style="font-size:0.8rem; color:var(--text-muted);">ملف مرفق جاهز</span>
+                                                            <div style="flex:1; min-width:0;">
+                                                                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">
+                                                                    <i class="fa-solid <?= $media['file_type'] === 'image' ? 'fa-image' : 'fa-file-pdf' ?>" style="color:var(--accent)"></i>
+                                                                    <?= $media['file_type'] === 'image' ? 'صورة مرفقة' : 'ملف PDF مرفق' ?>
+                                                                </div>
+                                                                <!-- Replace + Delete buttons -->
+                                                                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                                                    <label for="replace_media_<?= $i ?>_<?= $j ?>" style="font-size:0.75rem; color:var(--accent); cursor:pointer; background:rgba(16,185,129,0.1); padding:4px 10px; border-radius:4px; border:1px solid rgba(16,185,129,0.3); display:inline-flex; align-items:center; gap:4px;">
+                                                                        <i class="fa-solid fa-cloud-arrow-up"></i> تبديل الملف
+                                                                    </label>
+                                                                    <input type="file" id="replace_media_<?= $i ?>_<?= $j ?>" name="project_media_file_<?= $i ?>_<?= $j ?>" accept="image/*,.pdf" style="display:none;" onchange="updateReplaceLabel(this, 'replace_media_<?= $i ?>_<?= $j ?>')">
+                                                                    <button type="button" onclick="this.closest('.gallery-item').remove()" style="font-size:0.75rem; color:var(--danger); cursor:pointer; background:rgba(239,68,68,0.1); padding:4px 10px; border-radius:4px; border:1px solid rgba(239,68,68,0.3); display:inline-flex; align-items:center; gap:4px;">
+                                                                        <i class="fa-solid fa-trash"></i> حذف
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div class="grid grid-2" style="gap:10px; margin-top:5px;">
+                                                        <!-- Caption inputs -->
+                                                        <div class="grid grid-2" style="gap:10px;">
                                                             <input type="text" name="projects[<?= $i ?>][media][<?= $j ?>][caption]" class="form-input" style="padding:6px; font-size:0.8rem;" value="<?= htmlspecialchars($media['caption'] ?? '') ?>" placeholder="تعليق الصورة بالعربية">
                                                             <input type="text" name="projects[<?= $i ?>][media][<?= $j ?>][caption_en]" class="form-input ltr" style="padding:6px; font-size:0.8rem;" value="<?= htmlspecialchars($media['caption_en'] ?? '') ?>" placeholder="English Caption">
                                                         </div>
@@ -1084,6 +1139,89 @@
                     </button>
                 </div>
 
+                <!-- TAB: References -->
+                <div id="tab-references" class="tab-content section-card">
+                    <div class="section-title"><i class="fa-solid fa-user-check" style="color:var(--primary)"></i> إدارة المراجع والتوصيات</div>
+                    <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
+                        أضف المراجع من أشخاص عملت معهم سابقاً، أو اكتب نصاً عاماً (مثل: المراجع متوفرة عند الطلب) في حال عدم رغبتك بإضافة مراجع فردية.
+                    </p>
+
+                    <!-- Text area for general references fallback -->
+                    <div class="form-group" style="background: rgba(0,0,0,0.1); padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 25px;">
+                        <label class="form-label" style="font-weight: 700; color: var(--accent);">نص المراجع العام (اختياري / بديل للمراجع الفردية)</label>
+                        <div class="lang-tabs" style="margin-top: 5px;">
+                            <button type="button" class="lang-tab-btn active" onclick="switchLangTab(this, 'ref-ar-tab')">العربية</button>
+                            <button type="button" class="lang-tab-btn" onclick="switchLangTab(this, 'ref-en-tab')">English</button>
+                        </div>
+                        <div id="ref-ar-tab" class="lang-field-group active" style="margin-top: 10px;">
+                            <textarea name="profile[references_text]" class="form-input" style="height: 80px;" placeholder="مثال: جميع المراجع متوفرة عند الطلب..."><?= htmlspecialchars($siteData['profile']['references_text'] ?? '') ?></textarea>
+                        </div>
+                        <div id="ref-en-tab" class="lang-field-group" style="margin-top: 10px;">
+                            <textarea name="profile[references_text_en]" class="form-input ltr" style="height: 80px;" placeholder="Example: References available upon request..."><?= htmlspecialchars($siteData['profile']['references_text_en'] ?? '') ?></textarea>
+                        </div>
+                    </div>
+
+                    <!-- List of Structured References -->
+                    <div id="references-container">
+                        <?php if (!empty($siteData['references'])): ?>
+                            <?php foreach ($siteData['references'] as $i => $ref): ?>
+                                <div class="dynamic-row ref-row">
+                                    <span class="remove-row-btn" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></span>
+                                    <input type="hidden" name="references[<?= $i ?>][existing_photo]" value="<?= htmlspecialchars($ref['photo'] ?? '') ?>">
+                                    <div class="grid grid-2">
+                                        <div class="form-group">
+                                            <label class="form-label">الاسم بالكامل بالعربية</label>
+                                            <input type="text" name="references[<?= $i ?>][name]" class="form-input" value="<?= htmlspecialchars($ref['name']) ?>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label ltr">Full Name (English)</label>
+                                            <input type="text" name="references[<?= $i ?>][name_en]" class="form-input ltr" value="<?= htmlspecialchars($ref['name_en'] ?? '') ?>">
+                                        </div>
+                                        <div class="form-group" style="grid-column: span 2;">
+                                            <label class="form-label">نبذة أو وصف مختصر بالعربية (مثال: مدير مشروع في شركة س - اختياري)</label>
+                                            <input type="text" name="references[<?= $i ?>][description]" class="form-input" value="<?= htmlspecialchars($ref['description'] ?? '') ?>">
+                                        </div>
+                                        <div class="form-group" style="grid-column: span 2;">
+                                            <label class="form-label ltr">Description (English - Optional)</label>
+                                            <input type="text" name="references[<?= $i ?>][description_en]" class="form-input ltr" value="<?= htmlspecialchars($ref['description_en'] ?? '') ?>">
+                                        </div>
+                                        <div class="form-group" style="grid-column: span 2;">
+                                            <label class="form-label">صورة المرجع (اختياري)</label>
+                                            <input type="file" name="reference_photo_<?= $i ?>" class="form-input" accept="image/*" style="height:auto;">
+                                            <?php if (!empty($ref['photo'])): ?>
+                                                <?php $refPhotoUrl = BASE_URL . '/' . ltrim(htmlspecialchars($ref['photo']), '/') . '.jpg'; ?>
+                                                <div class="photo-preview-box" style="margin-top:10px; display:flex; align-items:center; gap:12px; background: rgba(0,0,0,0.1); padding: 10px; border-radius: 8px; border: 1px dashed var(--border-color);">
+                                                    <img src="<?= $refPhotoUrl ?>" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border: 2px solid var(--primary);" onerror="this.src='<?= BASE_URL . '/' . ltrim(htmlspecialchars($ref['photo']), '/') ?>.webp'; this.onerror=null;">
+                                                    <div style="display:flex; flex-direction:column; gap:6px;">
+                                                        <span style="font-size:0.85rem; font-weight:600; color:var(--text-main)"><i class="fa-solid fa-circle-check" style="color:var(--accent)"></i> صورة المرجع الحالية</span>
+                                                        <div style="display:flex; gap:8px;">
+                                                            <button type="button" onclick="this.closest('.ref-row').querySelector('input[type=hidden][name*=\'[existing_photo]\']').value=''; this.closest('.photo-preview-box').remove();" style="font-size:0.75rem; color:var(--danger); cursor:pointer; background:rgba(239,68,68,0.1); padding:4px 10px; border-radius:4px; border:1px solid rgba(239,68,68,0.3); display:inline-flex; align-items:center; gap:4px;">
+                                                                <i class="fa-solid fa-trash"></i> حذف الصورة
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">رقم الهاتف (اختياري)</label>
+                                            <input type="text" name="references[<?= $i ?>][phone]" class="form-input ltr" value="<?= htmlspecialchars($ref['phone'] ?? '') ?>" placeholder="+966xxxxxxxxx">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">البريد الإلكتروني (اختياري)</label>
+                                            <input type="email" name="references[<?= $i ?>][email]" class="form-input ltr" value="<?= htmlspecialchars($ref['email'] ?? '') ?>" placeholder="name@domain.com">
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                    <button type="button" class="add-row-btn" onclick="addReferenceRow()">
+                        <i class="fa-solid fa-plus"></i> إضافة مرجع جديد
+                    </button>
+                </div>
+
+
                 <!-- Form Submit Sticky Footer -->
                 <div class="section-card" style="position: sticky; bottom: 0; margin-bottom: 0; z-index: 10; border-top: 1px solid var(--border-color); box-shadow: 0 -10px 15px -3px rgba(0,0,0,0.3); border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
                     <div style="display: flex; gap: 20px; justify-content: flex-end;">
@@ -1100,6 +1238,42 @@
         </div>
     <!-- JS Form Dynamism Engine -->
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.querySelector('form');
+            if (form) {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', function() {
+                        if (!form.checkValidity()) {
+                            const invalidElements = form.querySelectorAll(':invalid');
+                            let firstInvalid = null;
+                            for (let el of invalidElements) {
+                                if (el.tagName !== 'FORM') {
+                                    firstInvalid = el;
+                                    break;
+                                }
+                            }
+                            if (firstInvalid) {
+                                const tabContent = firstInvalid.closest('.tab-content');
+                                if (tabContent && !tabContent.classList.contains('active')) {
+                                    showTab(tabContent.id);
+                                }
+                                const langGroup = firstInvalid.closest('.lang-field-group');
+                                if (langGroup && !langGroup.classList.contains('active')) {
+                                    const langTabsContainer = langGroup.parentElement.querySelector('.lang-tabs');
+                                    if (langTabsContainer) {
+                                        const btn = langTabsContainer.querySelector(`[onclick*="${langGroup.id}"]`);
+                                        if (btn) btn.click();
+                                    }
+                                }
+                                setTimeout(() => firstInvalid.focus(), 100);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
         // Tab system
         function showTab(tabId, btnElement = null) {
             const contents = document.querySelectorAll('.tab-content');
@@ -1140,6 +1314,57 @@
             btn.classList.add('active');
         }
 
+        // Profile photo: live preview on file select
+        function previewProfilePhoto(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // If existing preview box exists, update its image
+                const imgEl = document.getElementById('profile-photo-img');
+                if (imgEl) {
+                    imgEl.src = e.target.result;
+                } else {
+                    // If it was empty (no photo), replace dropzone with a preview box
+                    const dropzone = document.getElementById('profile-photo-dropzone');
+                    if (dropzone) {
+                        const previewBox = document.createElement('div');
+                        previewBox.id = 'profile-photo-preview-box';
+                        previewBox.style.cssText = 'margin-top:10px; display:flex; align-items:center; gap:14px; background:rgba(0,0,0,0.2); padding:12px; border-radius:10px; border:1px solid var(--border-color);';
+                        previewBox.innerHTML = `
+                            <img id="profile-photo-img" src="${e.target.result}" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:3px solid var(--primary); flex-shrink:0;">
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <span style="font-size:0.85rem; font-weight:600; color:var(--text-main)"><i class="fa-solid fa-circle-check" style="color:var(--accent)"></i> ${file.name.substring(0,25)}...</span>
+                                <span style="font-size:0.75rem; color:var(--text-muted)">ستُرفع الصورة عند الحفظ</span>
+                            </div>
+                        `;
+                        dropzone.parentElement.insertBefore(previewBox, dropzone);
+                        dropzone.style.display = 'none';
+                    }
+                }
+                // Show the file input if it was hidden (for replace flow)
+                input.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Profile photo: delete (clear hidden input + remove preview)
+        function deleteProfilePhoto() {
+            if (!confirm('هل أنت متأكد من حذف الصورة الشخصية الحالية؟')) return;
+            // Clear the existing_photo hidden input so it won't be kept on save
+            const existingInput = document.getElementById('existing_profile_photo');
+            if (existingInput) existingInput.value = '';
+            // Remove preview box
+            const previewBox = document.getElementById('profile-photo-preview-box');
+            if (previewBox) previewBox.remove();
+            // Show an empty dropzone instead
+            const fileInput = document.getElementById('profile_photo');
+            if (fileInput) {
+                fileInput.style.display = 'block';
+                fileInput.style.marginTop = '8px';
+            }
+        }
+
         // Inner row language toggler
         function switchRowLang(btn, lang) {
             const row = btn.parentElement.parentElement;
@@ -1160,13 +1385,56 @@
         }
 
         // Counters for array index generation in newly added elements
-        let skillCounter = <?= count($siteData['skills']) ?>;
-        let personalSkillCounter = <?= count($siteData['personal_skills']) ?>;
-        let langCounter = <?= count($siteData['languages']) ?>;
-        let expCounter = <?= count($siteData['experiences']) ?>;
-        let eduCounter = <?= count($siteData['education']) ?>;
-        let certCounter = <?= count($siteData['certificates']) ?>;
-        let projCounter = <?= count($siteData['projects']) ?>;
+        let skillCounter = Math.floor(Date.now() / 1000);
+        let personalSkillCounter = Math.floor(Date.now() / 1000) + 1;
+        let langCounter = Math.floor(Date.now() / 1000) + 2;
+        let expCounter = Math.floor(Date.now() / 1000) + 3;
+        let eduCounter = Math.floor(Date.now() / 1000) + 4;
+        let certCounter = Math.floor(Date.now() / 1000) + 5;
+        let projCounter = Math.floor(Date.now() / 1000) + 6;
+        let refCounter = Math.floor(Date.now() / 1000) + 7;
+
+        function addReferenceRow() {
+            const container = document.getElementById('references-container');
+            const html = `
+                <div class="dynamic-row ref-row">
+                    <span class="remove-row-btn" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></span>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label">الاسم بالكامل بالعربية</label>
+                            <input type="text" name="references[${refCounter}][name]" class="form-input" placeholder="اسم صاحب المرجع" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label ltr">Full Name (English)</label>
+                            <input type="text" name="references[${refCounter}][name_en]" class="form-input ltr" placeholder="Reference Full Name">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="form-label">نبذة أو وصف مختصر بالعربية (مثال: مدير مشروع في شركة س - اختياري)</label>
+                            <input type="text" name="references[${refCounter}][description]" class="form-input">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="form-label ltr">Description (English - Optional)</label>
+                            <input type="text" name="references[${refCounter}][description_en]" class="form-input ltr">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="form-label">صورة المرجع (اختياري)</label>
+                            <input type="file" name="reference_photo_${refCounter}" class="form-input" accept="image/*" style="height:auto;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">رقم الهاتف (اختياري)</label>
+                            <input type="text" name="references[${refCounter}][phone]" class="form-input ltr" placeholder="+966xxxxxxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">البريد الإلكتروني (اختياري)</label>
+                            <input type="email" name="references[${refCounter}][email]" class="form-input ltr" placeholder="name@domain.com">
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+            refCounter++;
+        }
+
 
         function addSkillRow() {
             const container = document.getElementById('skills-container');
@@ -1485,6 +1753,16 @@
             projCounter++;
         }
 
+        // Helper: update replace label text after file chosen
+        function updateReplaceLabel(input, labelId) {
+            const label = document.querySelector('label[for="' + labelId + '"]');
+            if (label && input.files.length > 0) {
+                label.innerHTML = '<i class="fa-solid fa-check"></i> تم اختيار: ' + input.files[0].name.substring(0, 20);
+                label.style.color = 'var(--accent)';
+                label.style.borderColor = 'var(--accent)';
+            }
+        }
+
         // Dynamic project gallery media items
         function addGalleryMediaItem(projectIndex) {
             const container = document.getElementById('media-gallery-' + projectIndex);
@@ -1492,16 +1770,24 @@
             const mediaIndex = container.querySelectorAll('.gallery-item').length;
             
             const html = `
-                <div class="gallery-item">
-                    <span class="remove-row-btn" style="top:5px; left:5px; width:24px; height:24px; font-size:0.75rem;" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></span>
-                    <div style="display:flex; flex-direction:column; gap:8px; width:100%; padding-left: 20px;">
-                        <div class="grid grid-2" style="gap:10px;">
-                            <div class="form-group" style="margin-bottom:0">
-                                <label class="form-label" style="font-size:0.75rem">اختر ملف (صورة أو PDF)</label>
-                                <input type="file" name="project_media_file_${projectIndex}_${mediaIndex}" class="form-input" style="padding:6px; font-size:0.8rem; height:auto;" required>
+                <div class="gallery-item" style="position:relative; background:rgba(0,0,0,0.2); border:1px solid var(--border-color); border-radius:8px; padding:12px; margin-bottom:10px;">
+                    <div style="display:flex; flex-direction:column; gap:10px; width:100%;">
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            <div id="preview-${projectIndex}-${mediaIndex}" style="width:70px; height:55px; background:rgba(99,102,241,0.1); border-radius:6px; border:2px dashed var(--primary); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.5rem; color:var(--primary);"><i class="fa-solid fa-image"></i></div>
+                            <div style="flex:1;">
+                                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">اختر صورة أو PDF للإضافة</div>
+                                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                                    <label style="font-size:0.75rem; color:var(--primary); cursor:pointer; background:rgba(99,102,241,0.1); padding:5px 12px; border-radius:4px; border:1px solid rgba(99,102,241,0.3); display:inline-flex; align-items:center; gap:4px;">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> اختيار ملف
+                                        <input type="file" name="project_media_file_${projectIndex}_${mediaIndex}" accept="image/*,.pdf" style="display:none;" required onchange="previewNewMedia(this, '${projectIndex}', '${mediaIndex}')">
+                                    </label>
+                                    <button type="button" onclick="this.closest('.gallery-item').remove()" style="font-size:0.75rem; color:var(--danger); cursor:pointer; background:rgba(239,68,68,0.1); padding:5px 12px; border-radius:4px; border:1px solid rgba(239,68,68,0.3); display:inline-flex; align-items:center; gap:4px;">
+                                        <i class="fa-solid fa-trash"></i> حذف
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="grid grid-2" style="gap:10px; margin-top:5px;">
+                        <div class="grid grid-2" style="gap:10px;">
                             <input type="text" name="projects[${projectIndex}][media][${mediaIndex}][caption]" class="form-input" style="padding:6px; font-size:0.8rem;" placeholder="تعليق الصورة بالعربية">
                             <input type="text" name="projects[${projectIndex}][media][${mediaIndex}][caption_en]" class="form-input ltr" style="padding:6px; font-size:0.8rem;" placeholder="English Caption">
                         </div>
@@ -1509,6 +1795,42 @@
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', html);
+        }
+
+        // Preview newly selected media file before upload
+        function previewNewMedia(input, projIdx, mediaIdx) {
+            const previewEl = document.getElementById('preview-' + projIdx + '-' + mediaIdx);
+            if (!previewEl) return;
+            const file = input.files[0];
+            if (!file) return;
+            if (file.type === 'application/pdf') {
+                previewEl.innerHTML = '<i class="fa-solid fa-file-pdf" style="color:#ef4444; font-size:1.8rem;"></i>';
+                previewEl.style.background = 'rgba(239,68,68,0.1)';
+                previewEl.style.border = '2px solid rgba(239,68,68,0.3)';
+            } else {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewEl.innerHTML = '<img src="' + e.target.result + '" style="width:100%; height:100%; object-fit:cover; border-radius:4px;">';
+                    previewEl.style.border = '2px solid var(--accent)';
+                };
+                reader.readAsDataURL(file);
+            }
+            // Update label
+            const label = input.parentElement;
+            label.innerHTML = '<i class="fa-solid fa-check"></i> ' + file.name.substring(0,18) + '...';
+            label.style.color = 'var(--accent)';
+            label.style.borderColor = 'var(--accent)';
+            label.style.background = 'rgba(16,185,129,0.1)';
+            // Re-append the file input (since we replaced innerHTML)
+            const newInput = document.createElement('input');
+            newInput.type = 'file';
+            newInput.name = 'project_media_file_' + projIdx + '_' + mediaIdx;
+            newInput.accept = 'image/*,.pdf';
+            newInput.required = true;
+            newInput.style.display = 'none';
+            newInput.onchange = function() { previewNewMedia(this, projIdx, mediaIdx); };
+            label.appendChild(newInput);
+            // Transfer the file to the new input (not possible directly, so just keep original input hidden inside)
         }
 
         // AJAX Form Submission (Prevent page reloads and retain inputs)
@@ -1621,8 +1943,8 @@
             setTimeout(() => { isHandlingInvalid = false; }, 1000);
         }, true); // Use capture phase to intercept the event before it bubbles
 
-        // Define tab order
-        const tabOrder = [
+        // Define all potential tab IDs
+        const allTabs = [
             'tab-profile',
             'tab-sections',
             'tab-social',
@@ -1631,10 +1953,21 @@
             'tab-education',
             'tab-certificates',
             'tab-projects',
-            'tab-languages'
+            'tab-languages',
+            'tab-references'
         ];
 
+        let tabOrder = [];
+        function updateTabOrder() {
+            tabOrder = allTabs.filter(tabId => {
+                if (['tab-profile', 'tab-sections', 'tab-social'].includes(tabId)) return true;
+                const btn = document.querySelector(`.mobile-tabs-container .tab-btn[onclick*="${tabId}"]`);
+                return btn !== null;
+            });
+        }
+
         function nextTab() {
+            updateTabOrder();
             const activeTab = document.querySelector('.tab-content.active');
             if (activeTab) {
                 const currentIndex = tabOrder.indexOf(activeTab.id);
@@ -1648,6 +1981,7 @@
         }
 
         function prevTab() {
+            updateTabOrder();
             const activeTab = document.querySelector('.tab-content.active');
             if (activeTab) {
                 const currentIndex = tabOrder.indexOf(activeTab.id);
@@ -1662,9 +1996,12 @@
 
         // Inject navigation buttons and style the save footer on load
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Move the sticky footer buttons to the last tab and make it non-sticky
+            updateTabOrder();
+            
+            // 1. Move the sticky footer buttons to the last active tab and make it non-sticky
             const stickyFooter = document.querySelector('div[style*="position: sticky"]');
-            const lastTab = document.getElementById('tab-languages');
+            const lastTabId = tabOrder[tabOrder.length - 1];
+            const lastTab = document.getElementById(lastTabId);
             if (stickyFooter && lastTab) {
                 // Style footer to be a standard card bottom panel
                 stickyFooter.removeAttribute('style');
@@ -1685,7 +2022,7 @@
                     buttonsContainer.style.width = '100%';
                     buttonsContainer.style.flexWrap = 'wrap';
                     
-                    // Create prev button for the last tab
+                    // Create prev button for the last active tab
                     const prevBtn = document.createElement('button');
                     prevBtn.type = 'button';
                     prevBtn.className = 'btn btn-secondary';
@@ -1697,13 +2034,13 @@
                     buttonsContainer.insertBefore(prevBtn, buttonsContainer.firstChild);
                 }
                 
-                // Append the stickyFooter to the lastTab
+                // Append the stickyFooter to the last active tab
                 lastTab.appendChild(stickyFooter);
             }
 
-            // 2. Inject Next/Prev buttons in all tabs except the last one
+            // 2. Inject Next/Prev buttons in all active tabs except the last one
             tabOrder.forEach((tabId, idx) => {
-                if (tabId === 'tab-languages') return; // Skip last tab
+                if (tabId === lastTabId) return; // Skip last active tab
                 
                 const tabEl = document.getElementById(tabId);
                 if (tabEl) {
