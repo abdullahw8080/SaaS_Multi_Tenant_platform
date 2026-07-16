@@ -113,12 +113,12 @@ class ProfessionConfig
         'doctor' => [
             'colors' => [
                 'bg_primary'           => '#F4F9FF',
-                'bg_secondary'         => '#FFFFFF',
+                'bg_secondary'         => '#ffffffff',
                 'text_primary'         => '#0D1F3C',
                 'text_secondary'       => '#4A6FA5',
                 'accent_glow'          => '#0066CC',
                 'accent_glow_secondary'=> '#00A8E8',
-                'border_color'         => 'rgba(0, 102, 204, 0.15)',
+                'border_color'         => 'rgba(252, 254, 255, 0.15)',
             ],
             'extra_css' => "
                 /* --- أنميشن ألوان متدرجة متحركة (Gradient Animation) --- */

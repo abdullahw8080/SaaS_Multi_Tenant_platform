@@ -79,7 +79,7 @@ if (!function_exists('getSocialIconClass')) {
                     $available = [];
                     foreach ($data['sections'] as $s) {
                         if ($s['is_visible']) {
-                            $available[$s['type_key']] = $labels[$s['type_key']] ?? BilingualHelper::get($s, 'title', $lang);
+                            $available[$s['type_key']] = BilingualHelper::get($s, 'title', $lang) ?: ($labels[$s['type_key']] ?? '');
                         }
                     }
                 ?>
@@ -179,7 +179,7 @@ if (!function_exists('getSocialIconClass')) {
             <section class="section" id="education" data-aos="fade-up">
                 <div class="section-title">
                     <i class="fas <?= $sectionIcons['education'] ?>"></i>
-                    <h2><?= htmlspecialchars($labels['education'] ?? BilingualHelper::get($secData['education'], 'title', $lang)) ?></h2>
+                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['education'], 'title', $lang) ?: ($labels['education'] ?? '')) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/education.php"; ?>
             </section>
@@ -190,7 +190,7 @@ if (!function_exists('getSocialIconClass')) {
             <section class="section" id="certificates" data-aos="fade-up">
                 <div class="section-title">
                     <i class="fas <?= $sectionIcons['certificates'] ?>"></i>
-                    <h2><?= htmlspecialchars($labels['certificates'] ?? BilingualHelper::get($secData['certificates'], 'title', $lang)) ?></h2>
+                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['certificates'], 'title', $lang) ?: ($labels['certificates'] ?? '')) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/certificates.php"; ?>
             </section>
@@ -201,7 +201,7 @@ if (!function_exists('getSocialIconClass')) {
             <section class="section" id="skills" data-aos="fade-up">
                 <div class="section-title">
                     <i class="fas <?= $sectionIcons['skills'] ?>"></i>
-                    <h2><?= htmlspecialchars($labels['skills'] ?? BilingualHelper::get($secData['skills'], 'title', $lang)) ?></h2>
+                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['skills'], 'title', $lang) ?: ($labels['skills'] ?? '')) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/skills.php"; ?>
             </section>
@@ -212,7 +212,7 @@ if (!function_exists('getSocialIconClass')) {
             <section class="section" id="projects" data-aos="fade-up">
                 <div class="section-title">
                     <i class="fas <?= $sectionIcons['projects'] ?>"></i>
-                    <h2><?= htmlspecialchars($labels['projects'] ?? BilingualHelper::get($secData['projects'], 'title', $lang)) ?></h2>
+                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['projects'], 'title', $lang) ?: ($labels['projects'] ?? '')) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/projects.php"; ?>
             </section>
@@ -223,7 +223,7 @@ if (!function_exists('getSocialIconClass')) {
             <section class="section" id="experiences" data-aos="fade-up">
                 <div class="section-title">
                     <i class="fas <?= $sectionIcons['experiences'] ?>"></i>
-                    <h2><?= htmlspecialchars($labels['experiences'] ?? BilingualHelper::get($secData['experiences'], 'title', $lang)) ?></h2>
+                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['experiences'], 'title', $lang) ?: ($labels['experiences'] ?? '')) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/experiences.php"; ?>
             </section>
@@ -254,7 +254,7 @@ if (!function_exists('getSocialIconClass')) {
             <section class="section" id="languages" data-aos="fade-up">
                 <div class="section-title">
                     <i class="fas <?= $sectionIcons['languages'] ?>"></i>
-                    <h2><?= htmlspecialchars($labels['languages'] ?? BilingualHelper::get($secData['languages'], 'title', $lang)) ?></h2>
+                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['languages'], 'title', $lang) ?: ($labels['languages'] ?? '')) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/languages.php"; ?>
             </section>
@@ -265,7 +265,7 @@ if (!function_exists('getSocialIconClass')) {
             <section class="section" id="references" data-aos="fade-up">
                 <div class="section-title">
                     <i class="fas <?= $sectionIcons['references'] ?? 'fa-user-check' ?>"></i>
-                    <h2><?= htmlspecialchars($labels['references'] ?? BilingualHelper::get($secData['references'], 'title', $lang)) ?></h2>
+                    <h2><?= htmlspecialchars(BilingualHelper::get($secData['references'], 'title', $lang) ?: ($labels['references'] ?? '')) ?></h2>
                 </div>
                 <?php include __DIR__ . "/sections/references.php"; ?>
             </section>

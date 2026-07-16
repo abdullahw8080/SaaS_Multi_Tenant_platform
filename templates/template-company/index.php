@@ -1,5 +1,10 @@
 <?php
 use App\Services\BilingualHelper;
+
+$profession = $data['site']['profession_type'] ?? 'developer';
+require_once __DIR__ . '/../../app/Config/ProfessionConfig.php';
+$cssVars      = ProfessionConfig::getCssVariables($profession);
+$extraCss     = ProfessionConfig::getExtraCss($profession);
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>" dir="<?= $dir ?>">
@@ -13,6 +18,8 @@ use App\Services\BilingualHelper;
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/templates/template-company/style.css">
+    <!-- [PROFESSION COLORS] — CSS Variable Override per Profession -->
+    <style>:root { <?= $cssVars ?> } <?= $extraCss ?></style>
 </head>
 <body>
 

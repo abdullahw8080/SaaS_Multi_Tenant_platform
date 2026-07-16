@@ -25,6 +25,16 @@ class SiteSection extends BaseModel {
      * Initialize default sections for a site based on template default sections JSON.
      */
     public function initializeDefaultSections(int $siteId, int $templateId): void {
+        // Fetch site profession
+        $stmtSite = $this->db->prepare("SELECT `profession_type` FROM `sites` WHERE `id` = :site_id LIMIT 1");
+        $stmtSite->execute(['site_id' => $siteId]);
+        $profession = $stmtSite->fetchColumn() ?: 'developer';
+
+        // Load ProfessionConfig
+        require_once dirname(__DIR__) . '/Config/ProfessionConfig.php';
+        $labelsAr = \ProfessionConfig::getLabels($profession, 'ar');
+        $labelsEn = \ProfessionConfig::getLabels($profession, 'en');
+
         // 1. Fetch template default sections
         $stmtTpl = $this->db->prepare("SELECT `default_sections` FROM `templates` WHERE `id` = :template_id LIMIT 1");
         $stmtTpl->execute(['template_id' => $templateId]);
@@ -49,11 +59,15 @@ class SiteSection extends BaseModel {
             $type = $stmtType->fetch();
 
             if ($type) {
+                // If there's a custom label in ProfessionConfig for this key, use it; otherwise fallback
+                $titleAr = $labelsAr[$key] ?? $type['name'];
+                $titleEn = $labelsEn[$key] ?? ucwords(str_replace('_', ' ', $key));
+
                 $this->create([
                     'site_id'         => $siteId,
                     'section_type_id' => $type['id'],
-                    'title'           => $type['name'], // Arabic name from seed data
-                    'title_en'        => ucwords(str_replace('_', ' ', $key)),
+                    'title'           => $titleAr,
+                    'title_en'        => $titleEn,
                     'sort_order'      => $index,
                     'is_visible'      => 1
                 ]);

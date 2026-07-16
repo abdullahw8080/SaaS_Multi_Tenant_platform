@@ -375,8 +375,10 @@
     <!-- Horizontal Scrollable Tabs Menu -->
     <?php
     $sectionVisible = [];
+    $sectionTitles = [];
     foreach ($siteData['sections'] as $sec) {
         $sectionVisible[$sec['type_key']] = (bool)$sec['is_visible'];
+        $sectionTitles[$sec['type_key']] = $sec['title'];
     }
     ?>
     <div class="mobile-tabs-container">
@@ -391,37 +393,37 @@
         </button>
         <?php if ($sectionVisible['skills'] ?? true): ?>
             <button class="tab-btn" onclick="showTab('tab-skills', this)">
-                <i class="fa-solid fa-code"></i> المهارات
+                <i class="fa-solid fa-code"></i> <?= htmlspecialchars($sectionTitles['skills'] ?? 'المهارات') ?>
             </button>
         <?php endif; ?>
         <?php if ($sectionVisible['experiences'] ?? true): ?>
             <button class="tab-btn" onclick="showTab('tab-experiences', this)">
-                <i class="fa-solid fa-history"></i> الخبرات
+                <i class="fa-solid fa-history"></i> <?= htmlspecialchars($sectionTitles['experiences'] ?? 'الخبرات') ?>
             </button>
         <?php endif; ?>
         <?php if ($sectionVisible['education'] ?? true): ?>
             <button class="tab-btn" onclick="showTab('tab-education', this)">
-                <i class="fa-solid fa-graduation-cap"></i> التعليم
+                <i class="fa-solid fa-graduation-cap"></i> <?= htmlspecialchars($sectionTitles['education'] ?? 'التعليم') ?>
             </button>
         <?php endif; ?>
         <?php if ($sectionVisible['certificates'] ?? true): ?>
             <button class="tab-btn" onclick="showTab('tab-certificates', this)">
-                <i class="fa-solid fa-certificate"></i> الشهادات
+                <i class="fa-solid fa-certificate"></i> <?= htmlspecialchars($sectionTitles['certificates'] ?? 'الشهادات') ?>
             </button>
         <?php endif; ?>
         <?php if ($sectionVisible['projects'] ?? true): ?>
             <button class="tab-btn" onclick="showTab('tab-projects', this)">
-                <i class="fa-solid fa-briefcase"></i> المشاريع
+                <i class="fa-solid fa-briefcase"></i> <?= htmlspecialchars($sectionTitles['projects'] ?? 'المشاريع') ?>
             </button>
         <?php endif; ?>
         <?php if ($sectionVisible['languages'] ?? true): ?>
             <button class="tab-btn" onclick="showTab('tab-languages', this)">
-                <i class="fa-solid fa-language"></i> اللغات
+                <i class="fa-solid fa-language"></i> <?= htmlspecialchars($sectionTitles['languages'] ?? 'اللغات') ?>
             </button>
         <?php endif; ?>
         <?php if ($sectionVisible['references'] ?? true): ?>
             <button class="tab-btn" onclick="showTab('tab-references', this)">
-                <i class="fa-solid fa-user-check"></i> المراجع
+                <i class="fa-solid fa-user-check"></i> <?= htmlspecialchars($sectionTitles['references'] ?? 'المراجع') ?>
             </button>
         <?php endif; ?>
     </div>
@@ -716,7 +718,7 @@
 
                 <!-- TAB: Skills -->
                 <div id="tab-skills" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-code" style="color:var(--primary)"></i> إدارة المهارات والاهتمامات المهنية</div>
+                    <div class="section-title"><i class="fa-solid fa-code" style="color:var(--primary)"></i> <?= htmlspecialchars($sectionTitles['skills'] ?? 'إدارة المهارات والاهتمامات المهنية') ?></div>
                     <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
                         أدخل مهاراتك الفنية والتخصصية التي تميزك في مجالك (مثال: لغات البرمجة للمطورين، التخصصات الإكلينيكية للأطباء، البرمجيات الهندسية للمهندسين، إلخ).
                     </p>
@@ -788,7 +790,7 @@
 
                 <!-- TAB: Experiences -->
                 <div id="tab-experiences" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-history" style="color:var(--primary)"></i> مسيرتك المهنية والخبرات العملانية</div>
+                    <div class="section-title"><i class="fa-solid fa-history" style="color:var(--primary)"></i> <?= htmlspecialchars($sectionTitles['experiences'] ?? 'مسيرتك المهنية والخبرات العملانية') ?></div>
                     <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
                         أضف هنا تاريخك الوظيفي وأماكن عملك السابقة (مثال: مستشفيات أو عيادات للأطباء، شركات هندسية للمهندسين، مدارس للمعلمين، إلخ).
                     </p>
@@ -852,7 +854,7 @@
 
                 <!-- TAB: Education -->
                 <div id="tab-education" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-graduation-cap" style="color:var(--primary)"></i> التعليم والمؤهلات الأكاديمية</div>
+                    <div class="section-title"><i class="fa-solid fa-graduation-cap" style="color:var(--primary)"></i> <?= htmlspecialchars($sectionTitles['education'] ?? 'التعليم والمؤهلات الأكاديمية') ?></div>
                     <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
                         أضف مؤهلاتك الدراسية، درجاتك العلمية، أو زمالاتك وتدريبك الأكاديمي (بكالوريوس، ماجستير، زمالة طبية، شهادة فنية، إلخ).
                     </p>
@@ -902,7 +904,7 @@
 
                 <!-- TAB: Certificates -->
                 <div id="tab-certificates" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-certificate" style="color:var(--primary)"></i> الشهادات المهنية، الرخص والاعتمادات</div>
+                    <div class="section-title"><i class="fa-solid fa-certificate" style="color:var(--primary)"></i> <?= htmlspecialchars($sectionTitles['certificates'] ?? 'الشهادات المهنية، الرخص والاعتمادات') ?></div>
                     <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
                         أضف تراخيصك المهنية، شهادات الاعتماد والتدريب البارزة (مثل رخصة مزاولة المهنة للأطباء، رخصة هيئة المهندسين للمهندسين، شهادة PMP لمدراء المشاريع، إلخ).
                     </p>
@@ -958,7 +960,7 @@
 
                 <!-- TAB: Projects & Research -->
                 <div id="tab-projects" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-briefcase" style="color:var(--primary)"></i> المشاريع، الإنجازات، والأبحاث والمنشورات العلمية</div>
+                    <div class="section-title"><i class="fa-solid fa-briefcase" style="color:var(--primary)"></i> <?= htmlspecialchars($sectionTitles['projects'] ?? 'المشاريع، الإنجازات، والأبحاث والمنشورات العلمية') ?></div>
                     <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
                         أدخل أعمالك البارزة هنا. بالنسبة للأطباء والباحثين، يمكن أن تكون أبحاثاً طبية منشورة أو حالات سريرية معقدة. للمطورين والمهندسين، مشاريع برمجية أو إنشائية. للمحامين، قضايا ودراسات حالة ناجحة.
                     </p>
@@ -1101,7 +1103,7 @@
 
                 <!-- TAB: Languages -->
                 <div id="tab-languages" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-language" style="color:var(--primary)"></i> إدارة اللغات المتقنة</div>
+                    <div class="section-title"><i class="fa-solid fa-language" style="color:var(--primary)"></i> <?= htmlspecialchars($sectionTitles['languages'] ?? 'إدارة اللغات المتقنة') ?></div>
                     <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
                         أدخل اللغات التي تجيد التحدث أو الكتابة بها ومستوى إتقانك لكل لغة.
                     </p>
@@ -1141,7 +1143,7 @@
 
                 <!-- TAB: References -->
                 <div id="tab-references" class="tab-content section-card">
-                    <div class="section-title"><i class="fa-solid fa-user-check" style="color:var(--primary)"></i> إدارة المراجع والتوصيات</div>
+                    <div class="section-title"><i class="fa-solid fa-user-check" style="color:var(--primary)"></i> <?= htmlspecialchars($sectionTitles['references'] ?? 'إدارة المراجع والتوصيات') ?></div>
                     <p style="color:var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">
                         أضف المراجع من أشخاص عملت معهم سابقاً، أو اكتب نصاً عاماً (مثل: المراجع متوفرة عند الطلب) في حال عدم رغبتك بإضافة مراجع فردية.
                     </p>

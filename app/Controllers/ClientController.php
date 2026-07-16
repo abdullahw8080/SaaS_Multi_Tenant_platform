@@ -62,14 +62,26 @@ class ClientController extends BaseController {
                         $stmtType->execute(['key' => $key]);
                         $type = $stmtType->fetch();
                         if ($type) {
+                            // Get profession type for the site
+                            $stmtProf = $db->prepare("SELECT `profession_type` FROM `sites` WHERE `id` = :site_id LIMIT 1");
+                            $stmtProf->execute(['site_id' => $siteId]);
+                            $profession = $stmtProf->fetchColumn() ?: 'developer';
+
+                            require_once dirname(__DIR__, 2) . '/app/Config/ProfessionConfig.php';
+                            $labelsAr = \ProfessionConfig::getLabels($profession, 'ar');
+                            $labelsEn = \ProfessionConfig::getLabels($profession, 'en');
+
+                            $titleAr = $labelsAr[$key] ?? $type['name'];
+                            $titleEn = $labelsEn[$key] ?? ucwords(str_replace('_', ' ', $key));
+
                             $db->prepare("
                                 INSERT INTO `site_sections` (`site_id`, `section_type_id`, `title`, `title_en`, `sort_order`, `is_visible`)
                                 VALUES (:site_id, :section_type_id, :title, :title_en, :sort_order, 1)
                             ")->execute([
                                 'site_id' => $siteId,
                                 'section_type_id' => $type['id'],
-                                'title' => $type['name'],
-                                'title_en' => ucwords(str_replace('_', ' ', $key)),
+                                'title' => $titleAr,
+                                'title_en' => $titleEn,
                                 'sort_order' => 10 + $index
                             ]);
                         }
