@@ -77,7 +77,7 @@ $darkDocCardBg = ($profession === 'doctor') ? 'rgba(255, 255, 255, 0.03)' : Prof
     <title><?= htmlspecialchars(BilingualHelper::get($project, 'title', $lang)) ?> - <?= htmlspecialchars(BilingualHelper::get($site, 'full_name', $lang)) ?></title>
     
     <!-- CSS -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>/templates/template-developer/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/templates/template-developer/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
@@ -859,8 +859,8 @@ $darkDocCardBg = ($profession === 'doctor') ? 'rgba(255, 255, 255, 0.03)' : Prof
                         </span>
                     </div>
                     <a href="<?= $pdfUrl ?>" target="_blank" class="pd-doc-download">
-                        <i class="fa-solid fa-download"></i>
-                        <?= $lang === 'en' ? 'Download' : 'تحميل' ?>
+                        <i class="fa-solid fa-eye"></i>
+                        <?= $lang === 'en' ? 'View' : 'عرض' ?>
                     </a>
                 </div>
                 <?php endforeach; ?>

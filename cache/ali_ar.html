@@ -13,251 +13,229 @@
     <!-- Icons & Animations -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <link rel="stylesheet" href="/SaaS_Multi_Tenant_platform/templates/template-developer/style.css?v=1784208523">
+    <link rel="stylesheet" href="/SaaS_Multi_Tenant_platform/templates/template-developer/style.css?v=1784216937">
     <!-- [PROFESSION COLORS] — CSS Variable Override per Profession -->
     <style>:root { 
-            --bg-primary: #F4F9FF;
-            --bg-secondary: #ffffffff;
-            --text-primary: #0D1F3C;
-            --text-secondary: #4A6FA5;
-            --accent-glow: #0066CC;
-            --accent-glow-secondary: #00A8E8;
-            --border-color: rgba(0, 102, 204, 0.15);
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-glow: #8b5cf6;
+            --accent-glow-secondary: #3b82f6;
+            --border-color: rgba(255, 255, 255, 0.08);
          } 
-                /* --- أنميشن ألوان متدرجة متحركة (Gradient Animation) --- */
-                @keyframes doctorGradientMove {
-                    0% { background-position: 0% 50%; }
-                    50% { background-position: 100% 50%; }
-                    100% { background-position: 0% 50%; }
-                }
+            /* --- أنميشن ألوان متدرجة متحركة للمهنة --- */
+            @keyframes developerGradientMove {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
 
-                .highlight-text, .btn-primary {
-                    background-size: 200% 200% !important;
-                    animation: doctorGradientMove 6s ease infinite !important;
-                }
+            .highlight-text, .btn-primary {
+                background-size: 200% 200% !important;
+                animation: developerGradientMove 6s ease infinite !important;
+            }
 
-                /* --- الأشكال الخلفية المتحركة --- */
-                body:not(.light-theme) .shape-1 {
-                    background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%) !important;
-                }
-                body:not(.light-theme) .shape-2 {
-                    background: radial-gradient(circle, rgba(167, 139, 250, 0.15) 0%, transparent 70%) !important;
-                }
-                body.light-theme .shape-1 {
-                    background: radial-gradient(circle, rgba(0, 102, 204, 0.08) 0%, transparent 70%) !important;
-                }
-                body.light-theme .shape-2 {
-                    background: radial-gradient(circle, rgba(0, 168, 232, 0.08) 0%, transparent 70%) !important;
-                }
+            /* --- الوضع الافتراضي (الداكن المخصص للمهنة) --- */
+            body:not(.light-theme) {
+                background-color: #0f172a !important;
+                color: #f8fafc !important;
+            }
+            body:not(.light-theme) .navbar {
+                background: rgba(15, 23, 42, 0.95) !important;
+                border-bottom: 1px solid rgba(139, 92, 246, 0.12) !important;
+            }
+            body:not(.light-theme) .logo {
+                color: #8b5cf6 !important;
+            }
+            body:not(.light-theme) .nav-links a {
+                color: #94a3b8 !important;
+            }
+            body:not(.light-theme) .nav-links a:hover {
+                color: #8b5cf6 !important;
+            }
+            body:not(.light-theme) .theme-btn, 
+            body:not(.light-theme) .lang-btn, 
+            body:not(.light-theme) .menu-btn {
+                border-color: rgba(139, 92, 246, 0.25) !important;
+                color: #8b5cf6 !important;
+                background: rgba(139, 92, 246, 0.05) !important;
+            }
+            body:not(.light-theme) .header-card {
+                background: rgba(30, 41, 59, 0.7) !important;
+                border-color: rgba(139, 92, 246, 0.15) !important;
+                backdrop-filter: blur(15px) !important;
+            }
+            body:not(.light-theme) .glass-card,
+            body:not(.light-theme) .edu-card,
+            body:not(.light-theme) .cert-modern-card,
+            body:not(.light-theme) .project-modern-card,
+            body:not(.light-theme) .exp-modern-card,
+            body:not(.light-theme) .reference-card {
+                background: rgba(30, 41, 59, 0.5) !important;
+                border-color: rgba(139, 92, 246, 0.15) !important;
+                color: #f8fafc !important;
+            }
+            body:not(.light-theme) .glass-card:hover,
+            body:not(.light-theme) .edu-card:hover,
+            body:not(.light-theme) .cert-modern-card:hover,
+            body:not(.light-theme) .project-modern-card:hover,
+            body:not(.light-theme) .exp-modern-card:hover {
+                background: rgba(30, 41, 59, 0.85) !important;
+                border-color: #8b5cf6 !important;
+                box-shadow: 0 15px 35px rgba(139, 92, 246, 0.15) !important;
+            }
+            body:not(.light-theme) .edu-degree,
+            body:not(.light-theme) .cert-title,
+            body:not(.light-theme) .skill-title,
+            body:not(.light-theme) .proj-title,
+            body:not(.light-theme) .exp-position,
+            body:not(.light-theme) .section-title h2,
+            body:not(.light-theme) .footer-name {
+                color: #FFFFFF !important;
+            }
+            body:not(.light-theme) .hero-socials a {
+                background: rgba(139, 92, 246, 0.05) !important;
+                border-color: rgba(139, 92, 246, 0.2) !important;
+                color: #f8fafc !important;
+            }
+            body:not(.light-theme) .hero-socials a:hover {
+                background: #8b5cf6 !important;
+                border-color: #8b5cf6 !important;
+                color: #0f172a !important;
+                box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3) !important;
+            }
+            body:not(.light-theme) .hero-welcome-badge {
+                background: rgba(139, 92, 246, 0.1) !important;
+                border-color: rgba(139, 92, 246, 0.3) !important;
+                color: #8b5cf6 !important;
+            }
+            body:not(.light-theme) .edu-year {
+                background: rgba(139, 92, 246, 0.1) !important;
+                color: #8b5cf6 !important;
+            }
+            body:not(.light-theme) .footer .social-links a {
+                background: rgba(139, 92, 246, 0.05) !important;
+                border: 1px solid rgba(139, 92, 246, 0.2) !important;
+                color: #E2E8F0 !important;
+                border-radius: 12px !important;
+                text-decoration: none !important;
+            }
+            body:not(.light-theme) .footer .social-links a:hover {
+                background: #8b5cf6 !important;
+                border-color: #8b5cf6 !important;
+                color: #0f172a !important;
+                transform: translateY(-5px) !important;
+                box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3) !important;
+            }
 
-                /* --- الوضع الافتراضي (الداكن الطبي المخصص) --- */
-                body:not(.light-theme) {
-                    background-color: #0A1128 !important;
-                    color: #E2E8F0 !important;
-                }
-                body:not(.light-theme) .navbar {
-                    background: rgba(10, 17, 40, 0.95) !important;
-                    border-bottom: 1px solid rgba(0, 212, 255, 0.12) !important;
-                    box-shadow: 0 4px 30px rgba(0, 212, 255, 0.03) !important;
-                }
-                body:not(.light-theme) .logo {
-                    color: #00D4FF !important;
-                }
-                body:not(.light-theme) .nav-links a {
-                    color: #94A3B8 !important;
-                }
-                body:not(.light-theme) .nav-links a:hover {
-                    color: #00D4FF !important;
-                }
-                body:not(.light-theme) .theme-btn, 
-                body:not(.light-theme) .lang-btn, 
-                body:not(.light-theme) .menu-btn {
-                    border-color: rgba(0, 212, 255, 0.25) !important;
-                    color: #00D4FF !important;
-                    background: rgba(0, 212, 255, 0.05) !important;
-                }
-                body:not(.light-theme) .header-card {
-                    background: rgba(16, 31, 66, 0.7) !important;
-                    border-color: rgba(0, 212, 255, 0.15) !important;
-                    backdrop-filter: blur(15px) !important;
-                    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
-                }
-                body:not(.light-theme) .glass-card,
-                body:not(.light-theme) .edu-card,
-                body:not(.light-theme) .cert-modern-card,
-                body:not(.light-theme) .project-modern-card,
-                body:not(.light-theme) .exp-modern-card,
-                body:not(.light-theme) .reference-card {
-                    background: rgba(16, 31, 66, 0.5) !important;
-                    border-color: rgba(0, 212, 255, 0.15) !important;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-                }
-                body:not(.light-theme) .glass-card:hover,
-                body:not(.light-theme) .edu-card:hover,
-                body:not(.light-theme) .cert-modern-card:hover,
-                body:not(.light-theme) .project-modern-card:hover,
-                body:not(.light-theme) .exp-modern-card:hover {
-                    background: rgba(16, 31, 66, 0.85) !important;
-                    border-color: #00D4FF !important;
-                    box-shadow: 0 15px 35px rgba(0, 212, 255, 0.15) !important;
-                }
-                body:not(.light-theme) .edu-degree,
-                body:not(.light-theme) .cert-title,
-                body:not(.light-theme) .skill-title,
-                body:not(.light-theme) .proj-title,
-                body:not(.light-theme) .exp-position,
-                body:not(.light-theme) .section-title h2,
-                body:not(.light-theme) .footer-name {
-                    color: #FFFFFF !important;
-                }
-                body:not(.light-theme) .text-secondary,
-                body:not(.light-theme) .bio-text,
-                body:not(.light-theme) .edu-inst,
-                body:not(.light-theme) .cert-issuer,
-                body:not(.light-theme) .proj-summary,
-                body:not(.light-theme) .exp-desc,
-                body:not(.light-theme) .copyright {
-                    color: #94A3B8 !important;
-                }
-                body:not(.light-theme) .hero-socials a {
-                    background: rgba(0, 212, 255, 0.05) !important;
-                    border-color: rgba(0, 212, 255, 0.2) !important;
-                    color: #E2E8F0 !important;
-                }
-                body:not(.light-theme) .hero-socials a:hover {
-                    background: #00D4FF !important;
-                    border-color: #00D4FF !important;
-                    color: #0A1128 !important;
-                    box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3) !important;
-                }
-                body:not(.light-theme) .hero-welcome-badge {
-                    background: rgba(0, 212, 255, 0.1) !important;
-                    border-color: rgba(0, 212, 255, 0.3) !important;
-                    color: #00D4FF !important;
-                }
-                body:not(.light-theme) .edu-year {
-                    background: rgba(0, 212, 255, 0.1) !important;
-                    color: #00D4FF !important;
-                }
-                body:not(.light-theme) .footer .social-links a {
-                    background: rgba(0, 212, 255, 0.08) !important;
-                    color: #00D4FF !important;
-                }
-                body:not(.light-theme) .footer .social-links a:hover {
-                    background: #00D4FF !important;
-                    color: #0A1128 !important;
-                }
-                body:not(.light-theme) .lang-bar-wrapper {
-                    background: rgba(255, 255, 255, 0.05) !important;
-                }
-
-                /* --- وضع اللايت مود المخصص (أبيض خالص) --- */
-                body.light-theme {
-                    background-color: #FFFFFF !important;
-                    color: #0D1F3C !important;
-                }
-                body.light-theme .navbar {
-                    background: rgba(255, 255, 255, 0.96) !important;
-                    border-bottom: 1px solid rgba(0, 102, 204, 0.1) !important;
-                    box-shadow: 0 2px 20px rgba(0,102,204,0.05) !important;
-                }
-                body.light-theme .logo {
-                    color: #0066CC !important;
-                }
-                body.light-theme .nav-links a {
-                    color: #0D1F3C !important;
-                }
-                body.light-theme .nav-links a:hover {
-                    color: #0066CC !important;
-                }
-                body.light-theme .theme-btn, 
-                body.light-theme .lang-btn, 
-                body.light-theme .menu-btn {
-                    border-color: rgba(0,102,204,0.2) !important;
-                    color: #0066CC !important;
-                    background: rgba(0,102,204,0.03) !important;
-                }
-                body.light-theme .header-card {
-                    background: #FFFFFF !important;
-                    border-color: rgba(0,102,204,0.1) !important;
-                    box-shadow: 0 15px 45px rgba(0,102,204,0.06) !important;
-                }
-                body.light-theme .glass-card,
-                body.light-theme .edu-card,
-                body.light-theme .cert-modern-card,
-                body.light-theme .project-modern-card,
-                body.light-theme .exp-modern-card,
-                body.light-theme .reference-card {
-                    background: #FFFFFF !important;
-                    border-color: rgba(0, 102, 204, 0.1) !important;
-                    box-shadow: 0 8px 24px rgba(0, 102, 204, 0.04) !important;
-                    color: #0D1F3C !important;
-                }
-                body.light-theme .glass-card:hover,
-                body.light-theme .edu-card:hover,
-                body.light-theme .cert-modern-card:hover,
-                body.light-theme .project-modern-card:hover,
-                body.light-theme .exp-modern-card:hover {
-                    background: #FFFFFF !important;
-                    border-color: #0066CC !important;
-                    box-shadow: 0 12px 30px rgba(0, 102, 204, 0.1) !important;
-                }
-                body.light-theme .edu-degree,
-                body.light-theme .cert-title,
-                body.light-theme .skill-title,
-                body.light-theme .proj-title,
-                body.light-theme .exp-position,
-                body.light-theme .section-title h2,
-                body.light-theme .footer-name {
-                    color: #0D1F3C !important;
-                }
-                body.light-theme .text-secondary,
-                body.light-theme .bio-text,
-                body.light-theme .edu-inst,
-                body.light-theme .cert-issuer,
-                body.light-theme .proj-summary,
-                body.light-theme .exp-desc,
-                body.light-theme .copyright {
-                    color: #4A6FA5 !important;
-                }
-                body.light-theme .hero-socials a {
-                    background: rgba(0, 102, 204, 0.04) !important;
-                    border-color: rgba(0, 102, 204, 0.15) !important;
-                    color: #0D1F3C !important;
-                }
-                body.light-theme .hero-socials a:hover {
-                    background: #0066CC !important;
-                    border-color: #0066CC !important;
-                    color: #ffffff !important;
-                    box-shadow: 0 10px 20px rgba(0, 102, 204, 0.2) !important;
-                }
-                body.light-theme .hero-welcome-badge {
-                    background: rgba(0, 102, 204, 0.08) !important;
-                    border-color: rgba(0, 102, 204, 0.25) !important;
-                    color: #0066CC !important;
-                }
-                body.light-theme .edu-year {
-                    background: rgba(0, 102, 204, 0.08) !important;
-                    color: #0066CC !important;
-                }
-                body.light-theme .footer .social-links a {
-                    background: rgba(0, 102, 204, 0.06) !important;
-                    color: #0066CC !important;
-                }
-                body.light-theme .footer .social-links a:hover {
-                    background: #0066CC !important;
-                    color: #ffffff !important;
-                }
-                body.light-theme .lang-bar-wrapper {
-                    background: rgba(0, 102, 204, 0.08) !important;
-                }
-                body.light-theme .rotating-arc.arc-1 {
-                    border-color: rgba(0, 102, 204, 0.3) !important;
-                }
-                body.light-theme .rotating-arc.arc-2 {
-                    border-color: rgba(0, 168, 232, 0.2) !important;
-                }
-            </style>
+            /* --- وضع اللايت مود المخصص (أبيض خالص لكل المهن) --- */
+            body.light-theme {
+                background-color: #FFFFFF !important;
+                color: #1E293B !important;
+            }
+            body.light-theme .navbar {
+                background: rgba(255, 255, 255, 0.96) !important;
+                border-bottom: 1px solid rgba(139, 92, 246, 0.12) !important;
+                box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04) !important;
+            }
+            body.light-theme .logo {
+                color: #8b5cf6 !important;
+            }
+            body.light-theme .nav-links a {
+                color: #334155 !important;
+            }
+            body.light-theme .nav-links a:hover {
+                color: #8b5cf6 !important;
+            }
+            body.light-theme .theme-btn, 
+            body.light-theme .lang-btn, 
+            body.light-theme .menu-btn {
+                border-color: rgba(139, 92, 246, 0.2) !important;
+                color: #8b5cf6 !important;
+                background: rgba(139, 92, 246, 0.03) !important;
+            }
+            body.light-theme .header-card {
+                background: #FFFFFF !important;
+                border-color: rgba(139, 92, 246, 0.1) !important;
+                box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05) !important;
+            }
+            body.light-theme .glass-card,
+            body.light-theme .edu-card,
+            body.light-theme .cert-modern-card,
+            body.light-theme .project-modern-card,
+            body.light-theme .exp-modern-card,
+            body.light-theme .reference-card {
+                background: #F8FAFC !important;
+                border-color: rgba(139, 92, 246, 0.1) !important;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.02) !important;
+                color: #1E293B !important;
+            }
+            body.light-theme .glass-card:hover,
+            body.light-theme .edu-card:hover,
+            body.light-theme .cert-modern-card:hover,
+            body.light-theme .project-modern-card:hover,
+            body.light-theme .exp-modern-card:hover {
+                background: #FFFFFF !important;
+                border-color: #8b5cf6 !important;
+                box-shadow: 0 12px 30px rgba(139, 92, 246, 0.1) !important;
+            }
+            body.light-theme .edu-degree,
+            body.light-theme .cert-title,
+            body.light-theme .skill-title,
+            body.light-theme .proj-title,
+            body.light-theme .exp-position,
+            body.light-theme .section-title h2,
+            body.light-theme .footer-name {
+                color: #0F172A !important;
+            }
+            body.light-theme .text-secondary,
+            body.light-theme .bio-text,
+            body.light-theme .edu-inst,
+            body.light-theme .cert-issuer,
+            body.light-theme .proj-summary,
+            body.light-theme .exp-desc,
+            body.light-theme .copyright {
+                color: #475569 !important;
+            }
+            body.light-theme .hero-socials a {
+                background: rgba(139, 92, 246, 0.04) !important;
+                border-color: rgba(139, 92, 246, 0.15) !important;
+                color: #1E293B !important;
+            }
+            body.light-theme .hero-socials a:hover {
+                background: #8b5cf6 !important;
+                border-color: #8b5cf6 !important;
+                color: #ffffff !important;
+                box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2) !important;
+            }
+            body.light-theme .hero-welcome-badge {
+                background: rgba(139, 92, 246, 0.08) !important;
+                border-color: rgba(139, 92, 246, 0.25) !important;
+                color: #8b5cf6 !important;
+            }
+            body.light-theme .edu-year {
+                background: rgba(139, 92, 246, 0.08) !important;
+                color: #8b5cf6 !important;
+            }
+            body.light-theme .footer .social-links a {
+                background: rgba(139, 92, 246, 0.05) !important;
+                border: 1px solid rgba(139, 92, 246, 0.2) !important;
+                color: #8b5cf6 !important;
+                border-radius: 12px !important;
+                text-decoration: none !important;
+            }
+            body.light-theme .footer .social-links a:hover {
+                background: #8b5cf6 !important;
+                border-color: #8b5cf6 !important;
+                color: #ffffff !important;
+                transform: translateY(-5px) !important;
+                box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2) !important;
+            }
+            body.light-theme .lang-bar-wrapper {
+                background: rgba(139, 92, 246, 0.08) !important;
+            }
+        </style>
 </head>
 <body>
 
@@ -274,7 +252,7 @@
             <a href="#" class="logo">د. علي بن محمد الشريف</a>
             <div class="nav-links" id="navLinks">
                 <a href="#objective">الرئيسية</a>
-                                <a href="#education">التعليم والمؤهلات</a>                <a href="#certificates">الشهادات والاعتمادات</a>                <a href="#skills">المهارات</a>                <a href="#projects">المشاريع والأعمال</a>                <a href="#experiences">الخبرات المهنية</a>                <a href="#references">المراجع</a>                <a href="#contact">تواصل</a>
+                                <a href="#education">المؤهلات الطبية</a>                <a href="#certificates">الاعتمادات والتراخيص</a>                <a href="#skills">التخصصات الطبية</a>                <a href="#projects">الأبحاث والمنشورات</a>                <a href="#experiences">المسيرة الطبية</a>                <a href="#references">المراجع</a>                <a href="#contact">تواصل</a>
             </div>
             
             <div style="display:flex; align-items:center; gap:10px;">
@@ -297,7 +275,7 @@
                 <div class="header-content hero-mobile-reverse">
                     <!-- Right Side: Text -->
                     <div class="hero-text-content">
-                        <div class="hero-welcome-badge"><i class="fas fa-stethoscope"></i> طبيب متخصص</div>
+                        <div class="hero-welcome-badge"><i class="fas fa-code"></i> مرحبا</div>
                         <h2>أنا <span class="highlight-text">د. علي بن محمد الشريف</span></h2>
 
                         <div class="job-title-wrapper">
@@ -323,8 +301,10 @@
                             طبيب سعودي متخصص في جراحة العظام والمفاصل، يمتلك خبرة تجاوزت خمس عشرة سنة في علاج إصابات الركبة والكتف وإجراء عمليات تبديل المفاصل. عمل في كبرى المستشفيات السعودية والبريطانية، وأجرى أكثر من 2000 عملية جراحية ناجحة. يؤمن بأن التعليم المستمر وخدمة المريض هما أساس الطب الحقيقي.                        </p>
 
                         <div class="hero-buttons">
-                             <a href="#contact" class="hero-btn btn-primary">تواصل مع الطبيب</a>
-                                                     </div>
+                                                          <a href="#contact" class="hero-btn btn-primary" style="">تواصل معي</a>
+                                                                                                  <a href="/SaaS_Multi_Tenant_platform/uploads/sites/3/docs/doc_6a58fb739acb26.18374749.pdf" target="_blank" class="hero-btn btn-secondary" style="">
+                                      <i class="fas fa-file-pdf"></i> عرض السيرة الذاتية                                  </a>
+                                                      </div>
                     </div>
 
                     <!-- Left Side: Image with Glowing Rotating Arcs -->
@@ -346,7 +326,7 @@
                     <section class="section" id="education" data-aos="fade-up">
                 <div class="section-title">
                     <i class="fas fa-graduation-cap"></i>
-                    <h2>التعليم والمؤهلات</h2>
+                    <h2>المؤهلات الطبية</h2>
                 </div>
                     <div class="edu-grid">
                     <div class="edu-card glass-card">
@@ -379,8 +359,8 @@
         <!-- 2. Certificates -->
                     <section class="section" id="certificates" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-id-card"></i>
-                    <h2>الشهادات والاعتمادات</h2>
+                    <i class="fas fa-certificate"></i>
+                    <h2>الاعتمادات والتراخيص</h2>
                 </div>
                     <div class="cert-modern-grid">
                     <div class="cert-modern-card glass-card">
@@ -419,8 +399,8 @@
         <!-- 3. Skills -->
                     <section class="section" id="skills" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-heartbeat"></i>
-                    <h2>المهارات</h2>
+                    <i class="fas fa-laptop-code"></i>
+                    <h2>التخصصات الطبية</h2>
                 </div>
                     <div class="skills-cards-grid">
                     <div class="skill-modern-card glass-card">
@@ -449,8 +429,8 @@
         <!-- 4. Projects -->
                     <section class="section" id="projects" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-book-medical"></i>
-                    <h2>المشاريع والأعمال</h2>
+                    <i class="fas fa-folder-open"></i>
+                    <h2>الأبحاث والمنشورات</h2>
                 </div>
                     <div class="projects-modern-grid">
                     <div class="project-modern-card glass-card">
@@ -471,8 +451,8 @@
         <!-- 5. Experiences -->
                     <section class="section" id="experiences" data-aos="fade-up">
                 <div class="section-title">
-                    <i class="fas fa-hospital"></i>
-                    <h2>الخبرات المهنية</h2>
+                    <i class="fas fa-briefcase"></i>
+                    <h2>المسيرة الطبية</h2>
                 </div>
                     <div class="exp-modern-grid">
                     <div class="exp-modern-card">
@@ -528,7 +508,7 @@
                     <section class="section" id="languages" data-aos="fade-up">
                 <div class="section-title">
                     <i class="fas fa-language"></i>
-                    <h2>اللغات </h2>
+                    <h2>اللغات</h2>
                 </div>
                     <div class="languages-grid">
                     <div class="lang-modern-card glass-card">
@@ -635,6 +615,6 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script src="/SaaS_Multi_Tenant_platform/templates/template-developer/script.js?v=1784208523"></script>
+    <script src="/SaaS_Multi_Tenant_platform/templates/template-developer/script.js?v=1784216937"></script>
 </body>
 </html>

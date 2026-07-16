@@ -135,12 +135,17 @@ if (!function_exists('getSocialIconClass')) {
                         </p>
 
                         <div class="hero-buttons">
-                             <a href="#contact" class="hero-btn btn-primary"><?= htmlspecialchars($labels['cta_primary']) ?></a>
-                             <?php if (!empty($data['profile']['cv_url'])): ?>
-                                 <a href="<?= BASE_URL ?>/<?= htmlspecialchars(ltrim($data['profile']['cv_url'], '/')) ?>" download class="hero-btn btn-secondary">
-                                     <i class="fas fa-file-download"></i> <?= htmlspecialchars($labels['cta_cv']) ?>
-                                 </a>
-                             <?php endif; ?>
+                             <?php $doctorBtnStyle = ($profession === 'doctor') ? 'color: #ffffff !important; border: 2px solid #ffffff !important; background: transparent !important; box-shadow: none !important;' : ''; ?>
+                             <a href="#contact" class="hero-btn btn-primary" style="<?= $doctorBtnStyle ?>"><?= htmlspecialchars($labels['cta_primary']) ?></a>
+                              <?php if (!empty($data['profile']['cv_url'])): ?>
+                                  <?php 
+                                      $cvUrl = BASE_URL . '/' . ltrim($data['profile']['cv_url'], '/');
+                                      $isPdf = (strtolower(pathinfo($cvUrl, PATHINFO_EXTENSION)) === 'pdf');
+                                  ?>
+                                  <a href="<?= htmlspecialchars($cvUrl, ENT_QUOTES, 'UTF-8') ?>" <?= $isPdf ? 'target="_blank"' : 'download' ?> class="hero-btn btn-secondary" style="<?= $doctorBtnStyle ?>">
+                                      <i class="fas <?= $isPdf ? 'fa-file-pdf' : 'fa-file-download' ?>"></i> <?= htmlspecialchars($isPdf ? ($lang === 'ar' ? 'عرض السيرة الذاتية' : 'View CV') : $labels['cta_cv']) ?>
+                                  </a>
+                              <?php endif; ?>
                         </div>
                     </div>
 

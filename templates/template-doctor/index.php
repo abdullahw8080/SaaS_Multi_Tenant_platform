@@ -200,9 +200,13 @@ if (!function_exists('getMedicalIconSvg')) {
 
       <div class="hero__actions" data-aos="fade-up">
         <a href="#contact" class="btn btn--primary"><?= $lang === 'ar' ? 'تواصل معي' : 'Get In Touch' ?></a>
-        <?php if (!empty($data['profile']['cv_pdf'])): ?>
-          <a href="<?= htmlspecialchars(BASE_URL . '/' . ltrim($data['profile']['cv_pdf'], '/'), ENT_QUOTES, 'UTF-8') ?>" download class="btn btn--ghost">
-            <i class="fas fa-file-download"></i> <?= $lang === 'ar' ? 'تحميل السيرة الذاتية' : 'Download CV' ?>
+        <?php if (!empty($data['profile']['cv_url'])): ?>
+          <?php 
+              $cvUrl = BASE_URL . '/' . ltrim($data['profile']['cv_url'], '/');
+              $isPdf = (strtolower(pathinfo($cvUrl, PATHINFO_EXTENSION)) === 'pdf');
+          ?>
+          <a href="<?= htmlspecialchars($cvUrl, ENT_QUOTES, 'UTF-8') ?>" <?= $isPdf ? 'target="_blank"' : 'download' ?> class="btn btn--ghost">
+            <i class="fas <?= $isPdf ? 'fa-file-pdf' : 'fa-file-download' ?>"></i> <?= $isPdf ? ($lang === 'ar' ? 'عرض السيرة الذاتية' : 'View CV') : ($lang === 'ar' ? 'تحميل السيرة الذاتية' : 'Download CV') ?>
           </a>
         <?php endif; ?>
       </div>

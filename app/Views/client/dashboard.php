@@ -72,6 +72,8 @@
         .btn-export:hover { background: var(--accent); color: white; }
         .btn-logout { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); }
         .btn-logout:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
+        .btn-save { background: rgba(99, 102, 241, 0.2); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .btn-save:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
         /* Horizontal Scrollable Tabs */
         .mobile-tabs-container {
@@ -361,6 +363,9 @@
     <div class="top-navbar">
         <a href="<?= BASE_URL ?>/dashboard" class="auth-logo">بورتفوليو Hub</a>
         <div class="nav-actions">
+            <button type="submit" form="dashboardForm" class="btn btn-save" style="cursor: pointer; font-family: inherit;">
+                <i class="fa-solid fa-floppy-disk"></i> <span>حفظ</span>
+            </button>
             <?php if (\App\Core\Auth::role() === 'admin' || !empty($_SESSION['admin_user_id'])): ?>
                 <a href="<?= BASE_URL ?>/dashboard/export" class="btn btn-export">
                     <i class="fa-solid fa-file-zipper"></i> <span class="hide-mobile">تصدير ZIP</span>
@@ -506,7 +511,7 @@
             <?php endif; ?>
 
             <!-- Global Form -->
-            <form action="<?= BASE_URL ?>/dashboard/save" method="POST" enctype="multipart/form-data">
+            <form id="dashboardForm" action="<?= BASE_URL ?>/dashboard/save" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 <input type="hidden" name="approval_status" value="<?= htmlspecialchars($status) ?>">
 
@@ -603,29 +608,6 @@
                                     <input type="checkbox" name="is_bilingual" value="1" <?= $siteData['site']['is_bilingual'] ? 'checked' : '' ?>> تفعيل الموقع باللغتين معاً (Arabic & English)
                                 </label>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label no-badge">مهنتك (تُغيّر ألوان ونصوص الموقع)</label>
-                            <select name="profession_type" class="form-input" style="margin-top: 12px;">
-                                <?php
-                                $profOptions = [
-                                    'developer'  => 'مطور برمجيات',
-                                    'engineer'   => 'مهندس',
-                                    'doctor'     => 'طبيب',
-                                    'pharmacist' => 'صيدلي',
-                                    'lawyer'     => 'محامي',
-                                    'teacher'    => 'مدرس / أستاذ',
-                                    'executive'  => 'مدير أعمال / تنفيذي',
-                                    'accountant' => 'محاسب',
-                                    'student'    => 'طالب',
-                                    'other'      => 'مهنة أخرى',
-                                ];
-                                $currentProf = $siteData['site']['profession_type'] ?? 'developer';
-                                foreach ($profOptions as $key => $name): ?>
-                                    <option value="<?= $key ?>" <?= $currentProf === $key ? 'selected' : '' ?>><?= $name ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <small style="color: var(--text-muted); display: block; margin-top: 6px; font-size: 0.8rem;">مستقلة عن القالب — تُحدد لون الثيم والنصوص التلقائية</small>
                         </div>
                     </div>
 
@@ -1224,17 +1206,7 @@
                 </div>
 
 
-                <!-- Form Submit Sticky Footer -->
-                <div class="section-card" style="position: sticky; bottom: 0; margin-bottom: 0; z-index: 10; border-top: 1px solid var(--border-color); box-shadow: 0 -10px 15px -3px rgba(0,0,0,0.3); border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
-                    <div style="display: flex; gap: 20px; justify-content: flex-end;">
-                        <button type="button" class="btn btn-secondary" style="width: auto; padding: 14px 30px; font-size: 1.1rem; background-color: var(--bg-input); border-color: var(--border-color); color: var(--text-main);" onclick="window.location.reload();">
-                            إلغاء التعديلات <i class="fa-solid fa-xmark"></i>
-                        </button>
-                        <button type="submit" class="btn btn-primary" style="width: auto; padding: 14px 40px; font-size: 1.1rem; background-color: var(--primary);">
-                            حفظ جميع التعديلات <i class="fa-solid fa-floppy-disk"></i>
-                        </button>
-                    </div>
-                </div>
+
 
             </form>
         </div>
@@ -1836,16 +1808,19 @@
         }
 
         // AJAX Form Submission (Prevent page reloads and retain inputs)
-        const dashboardForm = document.querySelector('form');
+        const dashboardForm = document.getElementById('dashboardForm') || document.querySelector('form');
         if (dashboardForm) {
             dashboardForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 
                 // Show loading state
-                const submitBtn = dashboardForm.querySelector('button[type="submit"]');
-                const originalHtml = submitBtn.innerHTML;
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = 'جاري حفظ التعديلات... <i class="fa-solid fa-spinner fa-spin"></i>';
+                const submitBtn = document.querySelector('button[type="submit"][form="' + dashboardForm.id + '"]') || dashboardForm.querySelector('button[type="submit"]');
+                let originalHtml = '';
+                if (submitBtn) {
+                    originalHtml = submitBtn.innerHTML;
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = 'جاري الحفظ... <i class="fa-solid fa-spinner fa-spin"></i>';
+                }
                 
                 const formData = new FormData(dashboardForm);
                 
@@ -1861,8 +1836,10 @@
                 })
                 .then(response => response.json().then(data => ({ status: response.status, body: data })))
                 .then(res => {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalHtml;
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalHtml;
+                    }
                     
                     if (res.status === 200 && res.body.success) {
                         const alertHtml = `
@@ -1892,8 +1869,10 @@
                     }
                 })
                 .catch(err => {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalHtml;
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalHtml;
+                    }
                     
                     const alertHtml = `
                         <div class="alert alert-danger" style="margin-bottom: 25px;">

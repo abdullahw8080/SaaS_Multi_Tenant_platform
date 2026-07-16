@@ -296,6 +296,33 @@ class AdminController extends BaseController {
         // Fallback if not impersonating or admin not found
         $this->redirect('/logout');
     }
+
+    /**
+     * Delete a user completely from the database.
+     */
+    public function deleteUser(array $params): void {
+        $this->verifyCsrf();
+        $userId = (int)($params['id'] ?? 0);
+
+        if ($userId === (int)\App\Core\Auth::id()) {
+            $_SESSION['flash_error'] = "لا يمكنك حذف حسابك الحالي الذي تستخدمه لتسجيل الدخول.";
+            $this->redirect('/admin');
+            return;
+        }
+
+        $db = Database::getInstance()->getConnection();
+        
+        // Delete user (cascade will handle sites, profiles, sections, etc.)
+        $stmt = $db->prepare("DELETE FROM `users` WHERE `id` = :id");
+        $success = $stmt->execute(['id' => $userId]);
+
+        if ($success) {
+            $_SESSION['flash_success'] = "تم حذف المستخدم وكافة بياناته ومواقعه التابعة له بنجاح.";
+        } else {
+            $_SESSION['flash_error'] = "فشلت عملية حذف المستخدم.";
+        }
+        $this->redirect('/admin');
+    }
 }
 
 // ✅ CHECKPOINT: AdminController.php — COMPLETE (المرحلة 6 من 8)

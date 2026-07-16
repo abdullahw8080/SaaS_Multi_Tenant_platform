@@ -426,7 +426,7 @@ $extraCss     = ProfessionConfig::getExtraCss($profession);
                 <?= htmlspecialchars(BilingualHelper::get($pdf, 'caption', $lang) ?: ($lang === 'ar' ? 'مستند طبي مرفق' : 'Attached Report'), ENT_QUOTES, 'UTF-8') ?>
               </span>
               <a href="<?= htmlspecialchars($pdfUrl, ENT_QUOTES, 'UTF-8') ?>" target="_blank" class="btn btn--pdf" style="padding: 8px 16px; font-size: 0.85rem; min-height: 38px;" rel="noopener noreferrer">
-                <i class="fa-solid fa-download"></i> <?= $lang === 'ar' ? 'تحميل الملف' : 'Download PDF' ?>
+                <i class="fa-solid fa-eye"></i> <?= $lang === 'ar' ? 'عرض الملف' : 'View PDF' ?>
               </a>
             </div>
           <?php endforeach; ?>

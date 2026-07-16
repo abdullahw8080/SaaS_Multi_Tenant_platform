@@ -302,6 +302,8 @@
         .action-reject:hover { background: var(--danger); color: #fff; }
         .action-edit { background: rgba(99, 102, 241, 0.15); color: #818cf8; border-color: rgba(99, 102, 241, 0.3); }
         .action-edit:hover { background: var(--primary); color: #fff; }
+        .action-delete { background: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+        .action-delete:hover { background: var(--danger); color: #fff; }
         
         .action-toggle { background: transparent; border-color: var(--border-color); color: var(--text-main); }
         .action-toggle:hover { background: rgba(255, 255, 255, 0.05); }
@@ -505,6 +507,9 @@
                                                 <a href="<?= BASE_URL ?>/admin/impersonate/<?= $s['user_id'] ?>" class="action-btn action-edit" title="دخول وتعديل">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </a>
+                                                <button type="button" class="action-btn action-delete" onclick="confirmDeleteUser(<?= $s['user_id'] ?>, '<?= htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8') ?>')" title="حذف المستخدم نهائياً">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
                                                 <?php if ($s['approval_status'] !== 'approved'): ?>
                                                     <a href="<?= BASE_URL ?>/admin/approve/<?= $s['id'] ?>" class="action-btn action-approve" title="موافقة">
                                                         <i class="fa-solid fa-check"></i>
@@ -599,6 +604,27 @@
             </form>
         </div>
     </div>
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title" style="color: var(--danger);">
+                <i class="fa-solid fa-trash-can"></i>
+                تأكيد حذف المستخدم
+            </div>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">
+                هل أنت متأكد من رغبتك في حذف المستخدم <strong id="deleteUserEmail" style="color: var(--text-main);"></strong> نهائياً؟ 
+                <br><br>
+                <span style="color: var(--danger); font-size: 0.85rem; font-weight: 600;">تحذير: سيتم حذف جميع مواقع هذا المستخدم وسيرته الذاتية وكافة البيانات المرتبطة به نهائياً ولا يمكن التراجع عن هذا الإجراء!</span>
+            </p>
+            <form id="deleteForm" action="" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="submit" class="action-btn" style="flex:1; justify-content:center; padding:8px; background-color: var(--danger); border-color: var(--danger); color: white;">تأكيد الحذف النهائي</button>
+                    <button type="button" class="action-btn" style="flex:1; justify-content:center; background:var(--bg-input); color:var(--text-main); border:1px solid var(--border-color);" onclick="closeDeleteModal()">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script>
         function switchTab(tabId, btn) {
@@ -627,11 +653,27 @@
             document.getElementById('rejectModal').style.display = 'none';
         }
 
+        function confirmDeleteUser(userId, email) {
+            const modal = document.getElementById('deleteModal');
+            const form = document.getElementById('deleteForm');
+            document.getElementById('deleteUserEmail').textContent = email;
+            form.action = '<?= BASE_URL ?>/admin/delete-user/' + userId;
+            modal.style.display = 'flex';
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
         // Close modal when clicking outside
         window.onclick = function(event) {
-            const modal = document.getElementById('rejectModal');
-            if (event.target == modal) {
-                modal.style.display = "none";
+            const rejectModal = document.getElementById('rejectModal');
+            const deleteModal = document.getElementById('deleteModal');
+            if (event.target == rejectModal) {
+                rejectModal.style.display = "none";
+            }
+            if (event.target == deleteModal) {
+                deleteModal.style.display = "none";
             }
         }
     </script>

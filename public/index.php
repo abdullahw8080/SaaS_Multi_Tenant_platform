@@ -61,6 +61,7 @@ $router->post('/admin/assign-template/{id}', 'AdminController@assignTemplate', $
 $router->post('/admin/assign-profession/{id}', 'AdminController@assignProfession', $adminMiddlewares);
 $router->post('/admin/create-client', 'AdminController@createClient', $adminMiddlewares);
 $router->get('/admin/impersonate/{id}', 'AdminController@impersonate', $adminMiddlewares);
+$router->post('/admin/delete-user/{id}', 'AdminController@deleteUser', $adminMiddlewares);
 $router->get('/admin/stop-impersonating', 'AdminController@stopImpersonating', [AuthMiddleware::class]);
 
 // --- Client Dashboard Routes (Protected & segregated by ownership) ---

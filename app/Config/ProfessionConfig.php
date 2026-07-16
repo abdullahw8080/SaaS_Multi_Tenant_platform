@@ -28,7 +28,7 @@ class ProfessionConfig
             ],
             'labels' => [
                 'ar' => [
-                    'hero_badge'   => 'مطور برمجيات',
+                    'hero_badge'   => 'مرحبا',
                     'about'        => 'من أنا',
                     'skills'       => 'التقنيات والأدوات',
                     'projects'     => 'المشاريع البرمجية',
@@ -42,7 +42,7 @@ class ProfessionConfig
                     'present'      => 'حتى الآن',
                 ],
                 'en' => [
-                    'hero_badge'   => 'Software Developer',
+                    'hero_badge'   => 'Hello',
                     'about'        => 'About Me',
                     'skills'       => 'Tech Stack & Tools',
                     'projects'     => 'Projects',
@@ -71,11 +71,11 @@ class ProfessionConfig
                 'text_secondary'       => '#86A899',
                 'accent_glow'          => '#10B981',
                 'accent_glow_secondary'=> '#F59E0B',
-                'border_color'         => 'rgba(16, 185, 129, 0.12)',
+                'border_color'         => 'rgba(255, 255, 255, 0.12)',
             ],
             'labels' => [
                 'ar' => [
-                    'hero_badge'   => 'مهندس محترف',
+                    'hero_badge'   => 'مرحبا',
                     'about'        => 'نبذة عن المهندس',
                     'skills'       => 'المهارات الهندسية',
                     'projects'     => 'المشاريع الهندسية',
@@ -89,7 +89,7 @@ class ProfessionConfig
                     'present'      => 'حتى الآن',
                 ],
                 'en' => [
-                    'hero_badge'   => 'Professional Engineer',
+                    'hero_badge'   => 'Hello',
                     'about'        => 'About the Engineer',
                     'skills'       => 'Engineering Skills',
                     'projects'     => 'Engineering Projects',
@@ -237,12 +237,18 @@ class ProfessionConfig
                     color: #00D4FF !important;
                 }
                 body:not(.light-theme) .footer .social-links a {
-                    background: rgba(0, 212, 255, 0.08) !important;
-                    color: #00D4FF !important;
+                    background: rgba(0, 212, 255, 0.05) !important;
+                    border: 1px solid rgba(0, 212, 255, 0.2) !important;
+                    color: #E2E8F0 !important;
+                    border-radius: 12px !important;
+                    text-decoration: none !important;
                 }
                 body:not(.light-theme) .footer .social-links a:hover {
                     background: #00D4FF !important;
+                    border-color: #00D4FF !important;
                     color: #0A1128 !important;
+                    transform: translateY(-5px) !important;
+                    box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3) !important;
                 }
                 body:not(.light-theme) .lang-bar-wrapper {
                     background: rgba(255, 255, 255, 0.05) !important;
@@ -338,12 +344,18 @@ class ProfessionConfig
                     color: #0066CC !important;
                 }
                 body.light-theme .footer .social-links a {
-                    background: rgba(0, 102, 204, 0.06) !important;
+                    background: rgba(0, 102, 204, 0.05) !important;
+                    border: 1px solid rgba(0, 102, 204, 0.2) !important;
                     color: #0066CC !important;
+                    border-radius: 12px !important;
+                    text-decoration: none !important;
                 }
                 body.light-theme .footer .social-links a:hover {
                     background: #0066CC !important;
+                    border-color: #0066CC !important;
                     color: #ffffff !important;
+                    transform: translateY(-5px) !important;
+                    box-shadow: 0 10px 20px rgba(0, 102, 204, 0.2) !important;
                 }
                 body.light-theme .lang-bar-wrapper {
                     background: rgba(0, 102, 204, 0.08) !important;
@@ -357,7 +369,7 @@ class ProfessionConfig
             ",
             'labels' => [
                 'ar' => [
-                    'hero_badge'   => 'طبيب متخصص',
+                    'hero_badge'   => 'مرحبا',
                     'about'        => 'نبذة عن الطبيب',
                     'skills'       => 'التخصصات الطبية',
                     'projects'     => 'الأبحاث والمنشورات',
@@ -371,7 +383,7 @@ class ProfessionConfig
                     'present'      => 'حتى الآن',
                 ],
                 'en' => [
-                    'hero_badge'   => 'Medical Specialist',
+                    'hero_badge'   => 'Hello',
                     'about'        => 'About the Doctor',
                     'skills'       => 'Medical Specializations',
                     'projects'     => 'Research & Publications',
@@ -412,7 +424,7 @@ class ProfessionConfig
             ],
             'labels' => [
                 'ar' => [
-                    'hero_badge'   => 'صيدلي متخصص',
+                    'hero_badge'   => 'مرحبا',
                     'about'        => 'نبذة عن الصيدلي',
                     'skills'       => 'مجالات التخصص الصيدلي',
                     'projects'     => 'الأبحاث والدراسات',
@@ -426,7 +438,7 @@ class ProfessionConfig
                     'present'      => 'حتى الآن',
                 ],
                 'en' => [
-                    'hero_badge'   => 'Clinical Pharmacist',
+                    'hero_badge'   => 'Hello',
                     'about'        => 'About the Pharmacist',
                     'skills'       => 'Pharmacy Specializations',
                     'projects'     => 'Research & Studies',
@@ -459,7 +471,7 @@ class ProfessionConfig
             ],
             'labels' => [
                 'ar' => [
-                    'hero_badge'   => 'محامٍ ومستشار قانوني',
+                    'hero_badge'   => 'مرحبا',
                     'about'        => 'نبذة عن المحامي',
                     'skills'       => 'مجالات الممارسة القانونية',
                     'projects'     => 'القضايا والإنجازات البارزة',
@@ -473,7 +485,7 @@ class ProfessionConfig
                     'present'      => 'حتى الآن',
                 ],
                 'en' => [
-                    'hero_badge'   => 'Attorney & Legal Advisor',
+                    'hero_badge'   => 'Hello',
                     'about'        => 'About the Attorney',
                     'skills'       => 'Practice Areas',
                     'projects'     => 'Notable Cases & Achievements',
@@ -506,7 +518,7 @@ class ProfessionConfig
             ],
             'labels' => [
                 'ar' => [
-                    'hero_badge'   => 'معلم ومربّي',
+                    'hero_badge'   => 'مرحبا',
                     'about'        => 'فلسفتي التعليمية',
                     'skills'       => 'المواد التي أدرّسها',
                     'projects'     => 'الأبحاث والمنشورات',
@@ -520,7 +532,7 @@ class ProfessionConfig
                     'present'      => 'حتى الآن',
                 ],
                 'en' => [
-                    'hero_badge'   => 'Educator & Teacher',
+                    'hero_badge'   => 'Hello',
                     'about'        => 'My Teaching Philosophy',
                     'skills'       => 'Subjects I Teach',
                     'projects'     => 'Research & Publications',
@@ -553,7 +565,7 @@ class ProfessionConfig
             ],
             'labels' => [
                 'ar' => [
-                    'hero_badge'   => 'قائد تنفيذي',
+                    'hero_badge'   => 'مرحبا',
                     'about'        => 'القصة القيادية',
                     'skills'       => 'مجالات الخبرة',
                     'projects'     => 'الإنجازات الكبرى',
@@ -567,7 +579,7 @@ class ProfessionConfig
                     'present'      => 'حتى الآن',
                 ],
                 'en' => [
-                    'hero_badge'   => 'Executive Leader',
+                    'hero_badge'   => 'Hello',
                     'about'        => 'Leadership Story',
                     'skills'       => 'Areas of Expertise',
                     'projects'     => 'Key Achievements',
@@ -600,7 +612,7 @@ class ProfessionConfig
             ],
             'labels' => [
                 'ar' => [
-                    'hero_badge'   => 'محاسب قانوني معتمد',
+                    'hero_badge'   => 'مرحبا',
                     'about'        => 'نبذة تعريفية',
                     'skills'       => 'مجالات المحاسبة والمالية',
                     'projects'     => 'المشاريع والإنجازات',
@@ -614,7 +626,7 @@ class ProfessionConfig
                     'present'      => 'حتى الآن',
                 ],
                 'en' => [
-                    'hero_badge'   => 'Certified Accountant',
+                    'hero_badge'   => 'Hello',
                     'about'        => 'About Me',
                     'skills'       => 'Accounting & Finance Areas',
                     'projects'     => 'Projects & Achievements',
@@ -647,7 +659,7 @@ class ProfessionConfig
             ],
             'labels' => [
                 'ar' => [
-                    'hero_badge'   => 'طالب متميز',
+                    'hero_badge'   => 'مرحبا',
                     'about'        => 'نبذة تعريفية',
                     'skills'       => 'المهارات والاهتمامات',
                     'projects'     => 'المشاريع الأكاديمية',
@@ -661,7 +673,7 @@ class ProfessionConfig
                     'present'      => 'حتى الآن',
                 ],
                 'en' => [
-                    'hero_badge'   => 'Academic Student',
+                    'hero_badge'   => 'Hello',
                     'about'        => 'About Me',
                     'skills'       => 'Skills & Interests',
                     'projects'     => 'Academic Projects',
@@ -694,7 +706,7 @@ class ProfessionConfig
             ],
             'labels' => [
                 'ar' => [
-                    'hero_badge'   => 'محترف متميز',
+                    'hero_badge'   => 'مرحبا',
                     'about'        => 'نبذة تعريفية',
                     'skills'       => 'المهارات والخبرات',
                     'projects'     => 'المشاريع والأعمال',
@@ -708,7 +720,7 @@ class ProfessionConfig
                     'present'      => 'حتى الآن',
                 ],
                 'en' => [
-                    'hero_badge'   => 'Professional',
+                    'hero_badge'   => 'Hello',
                     'about'        => 'About Me',
                     'skills'       => 'Skills & Expertise',
                     'projects'     => 'Projects & Work',
@@ -924,12 +936,18 @@ class ProfessionConfig
                 color: {$accent} !important;
             }
             body:not(.light-theme) .footer .social-links a {
-                background: rgba({$rgbAccent}, 0.08) !important;
-                color: {$accent} !important;
+                background: rgba({$rgbAccent}, 0.05) !important;
+                border: 1px solid rgba({$rgbAccent}, 0.2) !important;
+                color: #E2E8F0 !important;
+                border-radius: 12px !important;
+                text-decoration: none !important;
             }
             body:not(.light-theme) .footer .social-links a:hover {
                 background: {$accent} !important;
+                border-color: {$accent} !important;
                 color: {$c['bg_primary']} !important;
+                transform: translateY(-5px) !important;
+                box-shadow: 0 10px 20px rgba({$rgbAccent}, 0.3) !important;
             }
 
             /* --- وضع اللايت مود المخصص (أبيض خالص لكل المهن) --- */
@@ -1022,12 +1040,18 @@ class ProfessionConfig
                 color: {$accent} !important;
             }
             body.light-theme .footer .social-links a {
-                background: rgba({$rgbAccent}, 0.06) !important;
+                background: rgba({$rgbAccent}, 0.05) !important;
+                border: 1px solid rgba({$rgbAccent}, 0.2) !important;
                 color: {$accent} !important;
+                border-radius: 12px !important;
+                text-decoration: none !important;
             }
             body.light-theme .footer .social-links a:hover {
                 background: {$accent} !important;
+                border-color: {$accent} !important;
                 color: #ffffff !important;
+                transform: translateY(-5px) !important;
+                box-shadow: 0 10px 20px rgba({$rgbAccent}, 0.2) !important;
             }
             body.light-theme .lang-bar-wrapper {
                 background: rgba({$rgbAccent}, 0.08) !important;
