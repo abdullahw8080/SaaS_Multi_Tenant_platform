@@ -1,6 +1,6 @@
 :root {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
+    --bg-primary:#0f172a;
+    --bg-secondary: #351e3b;
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --accent-glow: #8b5cf6; /* Vibrant Purple */
@@ -334,13 +334,13 @@ body {
 }
 .arc-1 {
     inset: -12px;
-    border: 2px dashed rgba(139, 92, 246, 0.4);
-    animation: rotateClockwise 12s linear infinite;
+    border: 3px dashed rgba(121, 63, 255, 0.997);
+    animation: rotateClockwise 40s linear infinite;
 }
 .arc-2 {
     inset: -22px;
-    border: 2px dotted rgba(59, 130, 246, 0.3);
-    animation: rotateCounter 18s linear infinite;
+    border: 3.5px dotted rgb(0, 98, 255);
+    animation: rotateCounter 40s linear infinite;
 }
 
 @keyframes rotateClockwise {
