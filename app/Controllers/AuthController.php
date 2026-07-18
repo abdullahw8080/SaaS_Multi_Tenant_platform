@@ -164,6 +164,102 @@ class AuthController extends BaseController {
         Auth::logout();
         $this->redirect('/login');
     }
+
+    /**
+     * Verify email and profession for password reset.
+     */
+    public function forgotPasswordVerify(): void {
+        header('Content-Type: application/json');
+        
+        $email      = trim($_POST['email'] ?? '');
+        $profession = $_POST['profession_type'] ?? '';
+
+        if (empty($email) || empty($profession)) {
+            echo json_encode(['success' => false, 'error' => 'جميع الحقول مطلوبة.']);
+            exit;
+        }
+
+        // Search user by email
+        $db = \App\Core\Database::getInstance()->getConnection();
+        $stmtUser = $db->prepare("SELECT id FROM `users` WHERE `email` = :email AND `role` = 'client'");
+        $stmtUser->execute(['email' => $email]);
+        $user = $stmtUser->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            echo json_encode(['success' => false, 'error' => 'البريد الإلكتروني المدخل غير مسجل لدينا أو حساب مدير.']);
+            exit;
+        }
+
+        // Verify that the site matches this profession
+        $stmtSite = $db->prepare("SELECT COUNT(*) FROM `sites` WHERE `user_id` = :user_id AND `profession_type` = :profession");
+        $stmtSite->execute(['user_id' => $user['id'], 'profession' => $profession]);
+        
+        if ((int)$stmtSite->fetchColumn() === 0) {
+            echo json_encode(['success' => false, 'error' => 'المهنة/الوظيفة المحددة غير متطابقة مع هذا الحساب.']);
+            exit;
+        }
+
+        // Store reset state in session
+        $_SESSION['reset_user_id'] = $user['id'];
+        $_SESSION['reset_email']   = $email;
+
+        echo json_encode(['success' => true]);
+        exit;
+    }
+
+    /**
+     * Process password reset.
+     */
+    public function forgotPasswordReset(): void {
+        header('Content-Type: application/json');
+
+        if (empty($_SESSION['reset_user_id']) || empty($_SESSION['reset_email'])) {
+            echo json_encode(['success' => false, 'error' => 'غير مصرح لك بإجراء هذه العملية أو انتهت صلاحية الجلسة.']);
+            exit;
+        }
+
+        $userId = $_SESSION['reset_user_id'];
+        $email  = $_SESSION['reset_email'];
+
+        $password        = $_POST['password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
+
+        if (empty($password) || empty($confirmPassword)) {
+            echo json_encode(['success' => false, 'error' => 'يرجى إدخال كلمة المرور وتأكيدها.']);
+            exit;
+        }
+
+        if ($password !== $confirmPassword) {
+            echo json_encode(['success' => false, 'error' => 'كلمتا المرور غير متطابقتين.']);
+            exit;
+        }
+
+        if (strlen($password) < 6) {
+            echo json_encode(['success' => false, 'error' => 'يجب أن تكون كلمة المرور من 6 أحرف على الأقل.']);
+            exit;
+        }
+
+        $hash = password_hash($password, PASSWORD_BCRYPT);
+        
+        $db = \App\Core\Database::getInstance()->getConnection();
+        $stmtUpdate = $db->prepare("UPDATE `users` SET `password_hash` = :hash WHERE `id` = :id");
+        $success = $stmtUpdate->execute(['hash' => $hash, 'id' => $userId]);
+
+        if ($success) {
+            // Automatically log them in!
+            Auth::login($email, $password);
+
+            // Clean up session keys
+            unset($_SESSION['reset_user_id']);
+            unset($_SESSION['reset_email']);
+
+            echo json_encode(['success' => true, 'redirect' => BASE_URL . '/dashboard']);
+            exit;
+        } else {
+            echo json_encode(['success' => false, 'error' => 'فشل تحديث كلمة المرور، يرجى المحاولة لاحقاً.']);
+            exit;
+        }
+    }
 }
 
 // ✅ CHECKPOINT: AuthController.php — COMPLETE (المرحلة 6 من 8)

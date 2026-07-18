@@ -98,8 +98,13 @@ class ClientController extends BaseController {
             exit;
         }
 
+        // Fetch active templates
+        $stmtTemplates = $db->query("SELECT * FROM `templates` WHERE `is_active` = 1");
+        $templates = $stmtTemplates->fetchAll();
+
         $this->view('client/dashboard', [
             'siteData'   => $siteData,
+            'templates'  => $templates,
             'csrf_token' => $this->csrfToken()
         ]);
     }
@@ -378,6 +383,69 @@ class ClientController extends BaseController {
         }
 
         $_SESSION['flash_error'] = "فشل تصدير الموقع، يرجى المحاولة لاحقاً.";
+        $this->redirect('/dashboard');
+    }
+
+    /**
+     * Change site template from client dashboard.
+     * Note: Re-initializes default sections and resets approval status to draft.
+     */
+    public function changeTemplate(): void {
+        $this->verifyCsrf();
+        $siteId = $this->checkSite();
+        $templateId = (int)($_POST['template_id'] ?? 0);
+
+        $db = \App\Core\Database::getInstance()->getConnection();
+        $stmtTpl = $db->prepare("SELECT COUNT(*) FROM `templates` WHERE `id` = :template_id AND `is_active` = 1");
+        $stmtTpl->execute(['template_id' => $templateId]);
+        
+        if ($templateId > 0 && (int)$stmtTpl->fetchColumn() > 0) {
+            $siteModel = new Site();
+            $site = $siteModel->find($siteId);
+
+            $siteModel->update($siteId, [
+                'template_id' => $templateId,
+                'approval_status' => 'draft' // Reset to draft so it gets reviewed
+            ]);
+
+            // Re-initialize default sections for the new template
+            $sectionModel = new SiteSection();
+            $sectionModel->initializeDefaultSections($siteId, $templateId);
+
+            // Invalidate cache
+            \App\Services\ApprovalService::invalidateCache($site['slug']);
+
+            $_SESSION['flash_success'] = "تم تغيير مظهر القالب بنجاح وإعادة تهيئة الأقسام الافتراضية.";
+        } else {
+            $_SESSION['flash_error'] = "قالب غير صالح.";
+        }
+        $this->redirect('/dashboard');
+    }
+
+    /**
+     * Change site profession/color theme from client dashboard.
+     */
+    public function changeProfession(): void {
+        $this->verifyCsrf();
+        $siteId = $this->checkSite();
+        $profession = $_POST['profession_type'] ?? '';
+
+        $allowedProfessions = ['developer','engineer','doctor','pharmacist','lawyer','teacher','executive','accountant','student','other'];
+        
+        if (in_array($profession, $allowedProfessions)) {
+            $siteModel = new Site();
+            $site = $siteModel->find($siteId);
+            $siteModel->update($siteId, [
+                'profession_type' => $profession
+            ]);
+
+            // Invalidate cache
+            \App\Services\ApprovalService::invalidateCache($site['slug']);
+
+            $_SESSION['flash_success'] = "تم تغيير ألوان القالب بنجاح.";
+        } else {
+            $_SESSION['flash_error'] = "مجموعة ألوان غير صالحة.";
+        }
         $this->redirect('/dashboard');
     }
 }

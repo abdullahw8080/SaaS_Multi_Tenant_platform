@@ -462,23 +462,13 @@
                                             <!-- Profession Type — تغيير مستقل -->
                                             <form action="<?= BASE_URL ?>/admin/assign-profession/<?= $s['id'] ?>" method="POST" style="margin:4px 0 0;">
                                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
-                                                <select name="profession_type" class="select-mini" onchange="this.form.submit()" style="border-color: rgba(201,169,78,0.4); background: rgba(201,169,78,0.05);">
+                                                <select name="profession_type" class="select-mini" onchange="this.form.submit()" style="border-color: rgba(201,169,78,0.4); background: rgba(201,169,78,0.05); max-width: 100%;">
                                                     <?php
-                                                    $professions = [
-                                                        'developer'  => 'مطور برمجيات',
-                                                        'engineer'   => 'مهندس',
-                                                        'doctor'     => 'طبيب',
-                                                        'pharmacist' => 'صيدلي',
-                                                        'lawyer'     => 'محامي',
-                                                        'teacher'    => 'مدرس',
-                                                        'executive'  => 'تنفيذي',
-                                                        'accountant' => 'محاسب',
-                                                        'student'    => 'طالب',
-                                                        'other'      => 'أخرى',
-                                                    ];
+                                                    require_once dirname(__DIR__, 2) . '/Config/ProfessionConfig.php';
+                                                    $professions = ProfessionConfig::getAvailableProfessions('ar');
                                                     foreach ($professions as $key => $name): ?>
                                                         <option value="<?= $key ?>" <?= ($s['profession_type'] ?? 'developer') === $key ? 'selected' : '' ?>>
-                                                            <?= $name ?>
+                                                            <?= htmlspecialchars($name) ?>
                                                         </option>
                                                     <?php endforeach; ?>
                                                 </select>
@@ -561,16 +551,11 @@
                         <div class="form-group">
                             <label class="form-label">المهنة الافتراضية (مستقلة عن القالب)</label>
                             <select name="profession_type" class="form-input">
-                                <option value="developer">مطور برمجيات</option>
-                                <option value="engineer">مهندس</option>
-                                <option value="doctor">طبيب</option>
-                                <option value="pharmacist">صيدلي</option>
-                                <option value="lawyer">محامي</option>
-                                <option value="teacher">مدرس / أستاذ</option>
-                                <option value="executive">مدير أعمال / تنفيذي</option>
-                                <option value="accountant">محاسب</option>
-                                <option value="student">طالب</option>
-                                <option value="other">مهنة أخرى</option>
+                                <?php
+                                $professions = ProfessionConfig::getAvailableProfessions('ar');
+                                foreach ($professions as $key => $name): ?>
+                                    <option value="<?= $key ?>"><?= htmlspecialchars($name) ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 

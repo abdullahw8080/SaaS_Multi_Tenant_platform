@@ -49,6 +49,8 @@ $router->get('/login', 'AuthController@showLogin');
 $router->post('/login', 'AuthController@login');
 $router->get('/register', 'AuthController@showRegister');
 $router->post('/register', 'AuthController@register');
+$router->post('/forgot-password/verify', 'AuthController@forgotPasswordVerify');
+$router->post('/forgot-password/reset', 'AuthController@forgotPasswordReset');
 $router->get('/logout', 'AuthController@logout');
 
 // --- Admin Panel Routes (Protected) ---
@@ -68,6 +70,8 @@ $router->get('/admin/stop-impersonating', 'AdminController@stopImpersonating', [
 $clientMiddlewares = [AuthMiddleware::class, RoleMiddleware::class, SiteOwnershipMiddleware::class];
 $router->get('/dashboard', 'ClientController@index', [AuthMiddleware::class, RoleMiddleware::class]); // Landing doesn't need ownership check
 $router->post('/dashboard/save', 'ClientController@save', [AuthMiddleware::class, RoleMiddleware::class]); // Save checks ownership internally
+$router->post('/dashboard/change-template', 'ClientController@changeTemplate', [AuthMiddleware::class, RoleMiddleware::class]);
+$router->post('/dashboard/change-profession', 'ClientController@changeProfession', [AuthMiddleware::class, RoleMiddleware::class]);
 $router->post('/dashboard/submit-review', 'ClientController@submitReview', [AuthMiddleware::class, RoleMiddleware::class]);
 $router->get('/dashboard/export', 'ClientController@exportSite', [AuthMiddleware::class, RoleMiddleware::class]);
 

@@ -22,6 +22,11 @@
             --transition: all 0.2s ease-in-out;
         }
 
+        select option {
+            background-color: #111827 !important;
+            color: #f8fafc !important;
+        }
+
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
@@ -450,15 +455,23 @@
             <!-- Dashboard Header -->
             <div class="dashboard-header">
                 <div class="dashboard-title-area">
-                    <h1>تعديل محتوى موقعك</h1>
-                    <p>رابط موقعك الحالي: 
-                        <a href="<?= BASE_URL ?>/<?= htmlspecialchars($siteData['site']['slug']) ?>" target="_blank" style="color: var(--primary); font-weight: 600; text-decoration: none;">
-                            /<?= htmlspecialchars($siteData['site']['slug']) ?> <i class="fa-solid fa-external-link" style="font-size:0.8rem"></i>
-                        </a>
-                    </p>
+                    <h1>لوحة تحكم الموقع</h1>
                 </div>
-                <div>
-                    <a href="<?= BASE_URL ?>/<?= htmlspecialchars($siteData['site']['slug']) ?>" target="_blank" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.875rem;">
+                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: nowrap;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fa-solid fa-paint-roller" style="color:var(--primary)"></i> ألوان الموقع:</span>
+                        <select onchange="changeSiteColor(this.value)" style="width: 170px !important; padding: 6px 12px; font-size: 0.85rem; cursor: pointer; border-radius: 6px; border: 1px solid rgba(99,102,241,0.3); background: rgba(99,102,241,0.05); color: var(--text-main); height: 38px !important; margin: 0; display: inline-block !important; outline: none; font-family: inherit;">
+                            <?php
+                            require_once dirname(__DIR__, 2) . '/Config/ProfessionConfig.php';
+                            $professions = ProfessionConfig::getAvailableProfessions('ar');
+                            foreach ($professions as $key => $name): ?>
+                                <option value="<?= $key ?>" <?= ($siteData['site']['profession_type'] ?? 'developer') === $key ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($name) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <a href="<?= BASE_URL ?>/<?= htmlspecialchars($siteData['site']['slug']) ?>" target="_blank" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.875rem; display: inline-flex; align-items: center; gap: 6px; height: 38px;">
                         <i class="fa-solid fa-eye"></i> عرض المعاينة
                     </a>
                 </div>
@@ -607,6 +620,39 @@
                                 <label style="display: flex; align-items: center; gap: 8px;">
                                     <input type="checkbox" name="is_bilingual" value="1" <?= $siteData['site']['is_bilingual'] ? 'checked' : '' ?>> تفعيل الموقع باللغتين معاً (Arabic & English)
                                 </label>
+                            </div>
+                            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                                <label class="form-label" style="font-weight: 700; color: var(--text-main);"><i class="fa-solid fa-palette" style="color:var(--primary)"></i> ألوان وهيكل القالب الرئيسي</label>
+                                <select class="form-input" onchange="changeTemplateLayout(this.value)" style="cursor: pointer; margin-top: 8px;">
+                                    <?php foreach ($templates as $t): ?>
+                                        <?php
+                                        $tColor = '';
+                                        if ($t['id'] == 1) $tColor = 'بنفسجي داكن وأزرق';
+                                        elseif ($t['id'] == 2) $tColor = 'أزرق ناصع وأبيض';
+                                        elseif ($t['id'] == 3) $tColor = 'فضي ورمادي زجاجي';
+                                        else $tColor = htmlspecialchars($t['name']);
+                                        ?>
+                                        <option value="<?= $t['id'] ?>" <?= $siteData['site']['template_id'] == $t['id'] ? 'selected' : '' ?>>
+                                            <?= $tColor ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <small style="color: var(--text-muted); display: block; margin-top: 4px; font-size: 0.8rem;">تنبيه: تغيير القالب الرئيسي سيقوم بإعادة تهيئة الأقسام والترتيب الافتراضي لموقعك.</small>
+                            </div>
+
+                            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                                <label class="form-label" style="font-weight: 700; color: var(--text-main);"><i class="fa-solid fa-paint-roller" style="color:var(--primary)"></i> ألوان وتعديلات ثيم القالب الفرعية</label>
+                                <select name="profession_type" class="form-input" style="cursor: pointer; margin-top: 8px;">
+                                    <?php
+                                    require_once dirname(__DIR__, 2) . '/Config/ProfessionConfig.php';
+                                    $professions = ProfessionConfig::getAvailableProfessions('ar');
+                                    foreach ($professions as $key => $name): ?>
+                                        <option value="<?= $key ?>" <?= ($siteData['site']['profession_type'] ?? 'developer') === $key ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($name) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <small style="color: var(--text-muted); display: block; margin-top: 4px; font-size: 0.8rem;">تغيير هذا الاختيار سيقوم بتحديث جميع ألوان وأيقونات موقعك تلقائياً لتناسب السمة المختارة.</small>
                             </div>
                         </div>
                     </div>
@@ -1286,6 +1332,54 @@
             
             document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
+        }
+
+        // Programmatic template change submit
+        function changeTemplateLayout(templateId) {
+            if (!confirm('تنبيه: تغيير القالب الرئيسي سيقوم بإعادة تهيئة الأقسام والترتيب الافتراضي لموقعك. هل تريد الاستمرار؟')) {
+                window.location.reload();
+                return;
+            }
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '<?= BASE_URL ?>/dashboard/change-template';
+            
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            csrfInput.value = '<?= htmlspecialchars($csrf_token) ?>';
+            form.appendChild(csrfInput);
+            
+            const templateInput = document.createElement('input');
+            templateInput.type = 'hidden';
+            templateInput.name = 'template_id';
+            templateInput.value = templateId;
+            form.appendChild(templateInput);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Programmatic color change submit
+        function changeSiteColor(professionType) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '<?= BASE_URL ?>/dashboard/change-profession';
+            
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            csrfInput.value = '<?= htmlspecialchars($csrf_token) ?>';
+            form.appendChild(csrfInput);
+            
+            const professionInput = document.createElement('input');
+            professionInput.type = 'hidden';
+            professionInput.name = 'profession_type';
+            professionInput.value = professionType;
+            form.appendChild(professionInput);
+            
+            document.body.appendChild(form);
+            form.submit();
         }
 
         // Profile photo: live preview on file select
