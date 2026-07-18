@@ -22,6 +22,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 CREATE TABLE `users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `email` VARCHAR(255) NOT NULL UNIQUE,
+    `phone` VARCHAR(50) NULL,
     `password_hash` VARCHAR(255) NOT NULL,
     `role` ENUM('admin', 'client') NOT NULL DEFAULT 'client',
     `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active',

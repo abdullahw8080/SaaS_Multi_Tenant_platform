@@ -789,7 +789,7 @@ class ProfessionConfig
     /** جلب أيقونة Hero (Font Awesome class) */
     public static function getHeroIcon(string $profession): string
     {
-        return self::get($profession)['hero_icon'] ?? 'fa-star';
+        return '';
     }
 
     /**
@@ -821,6 +821,40 @@ class ProfessionConfig
                 'accountant' => 'Practical Navy & Emerald',
                 'student'    => 'Indigo & Youthful Violet',
                 'other'      => 'Classic Violet & Warm Yellow',
+            ],
+        ];
+        return $names[$lang] ?? $names['ar'];
+    }
+
+    /**
+     * مسميات المهن الفعلية بدلاً من مسميات الثيمات والألوان.
+     */
+    public static function getProfessionNames(string $lang = 'ar'): array
+    {
+        $names = [
+            'ar' => [
+                'developer'  => 'مطور برمجيات / تقني',
+                'engineer'   => 'مهندس',
+                'doctor'     => 'طبيب',
+                'pharmacist' => 'صيدلي',
+                'lawyer'     => 'محامي',
+                'teacher'    => 'مدرس / أستاذ',
+                'executive'  => 'مدير أعمال / تنفيذي',
+                'accountant' => 'محاسب',
+                'student'    => 'طالب',
+                'other'      => 'مهنة أخرى',
+            ],
+            'en' => [
+                'developer'  => 'Software Developer / Tech',
+                'engineer'   => 'Engineer',
+                'doctor'     => 'Doctor',
+                'pharmacist' => 'Pharmacist',
+                'lawyer'     => 'Lawyer',
+                'teacher'    => 'Teacher / Professor',
+                'executive'  => 'Business Manager / Executive',
+                'accountant' => 'Accountant',
+                'student'    => 'Student',
+                'other'      => 'Other Profession',
             ],
         ];
         return $names[$lang] ?? $names['ar'];

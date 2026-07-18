@@ -20,7 +20,7 @@ class User extends BaseModel {
      * Register a new client user.
      * Hashes password automatically.
      */
-    public function registerClient(string $email, string $password): int|bool {
+    public function registerClient(string $email, string $password, string $phone): int|bool {
         if ($this->emailExists($email)) {
             return false;
         }
@@ -29,6 +29,7 @@ class User extends BaseModel {
         
         return $this->create([
             'email'         => $email,
+            'phone'         => $phone,
             'password_hash' => $hash,
             'role'          => 'client',
             'status'        => 'active'

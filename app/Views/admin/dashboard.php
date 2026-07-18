@@ -442,11 +442,21 @@
                                 <?php foreach ($sites as $s): ?>
                                     <tr>
                                         <td class="td-user">
-                                            <strong><?= htmlspecialchars($s['full_name'] ?: 'غير محدد') ?></strong><br>
-                                            <span><?= htmlspecialchars($s['email']) ?></span><br>
-                                            <a href="<?= BASE_URL ?>/<?= htmlspecialchars($s['slug']) ?>" target="_blank">
-                                                /<?= htmlspecialchars($s['slug']) ?>
-                                            </a>
+                                            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                                <div>
+                                                    <strong><?= htmlspecialchars($s['full_name'] ?: 'غير محدد') ?></strong><br>
+                                                    <span><?= htmlspecialchars($s['email']) ?></span><br>
+                                                    <a href="<?= BASE_URL ?>/<?= htmlspecialchars($s['slug']) ?>" target="_blank">
+                                                        /<?= htmlspecialchars($s['slug']) ?>
+                                                    </a>
+                                                </div>
+                                                <i class="fa-solid fa-circle-user" onclick="showUserDetails(<?= htmlspecialchars(json_encode([
+                                                    'full_name' => $s['full_name'],
+                                                    'email' => $s['email'],
+                                                    'phone' => $s['phone'],
+                                                    'profession_type' => $s['profession_type']
+                                                ]), ENT_QUOTES, 'UTF-8') ?>)" style="font-size: 1.8rem; color: var(--primary); cursor: pointer; transition: transform 0.2s, color 0.2s;" onmouseover="this.style.transform='scale(1.15)';" onmouseout="this.style.transform='scale(1)';" title="عرض تفاصيل الحساب"></i>
+                                            </div>
                                         </td>
                                         <td>
                                             <form action="<?= BASE_URL ?>/admin/assign-template/<?= $s['id'] ?>" method="POST" style="margin:0;">
@@ -589,6 +599,40 @@
             </form>
         </div>
     </div>
+    <!-- User Details Modal -->
+    <div id="userDetailsModal" class="modal">
+        <div class="modal-content" style="max-width: 480px; position: relative;">
+            <div class="modal-title" style="color: var(--primary); font-size: 1.15rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px;">
+                <i class="fa-solid fa-circle-user"></i>
+                بيانات حساب المستخدم الشخصية
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">الاسم الكامل</label>
+                <input type="text" id="detail-full-name" class="form-input" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">البريد الإلكتروني</label>
+                <input type="email" id="detail-email" class="form-input ltr" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">رقم الهاتف</label>
+                <input type="text" id="detail-phone" class="form-input ltr" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">المهنة / الوظيفة</label>
+                <input type="text" id="detail-profession" class="form-input" readonly>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="action-btn" style="flex:1; justify-content:center; background:var(--primary); color:white; border:none; padding:8px;" onclick="closeUserDetailsModal()">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Delete Modal -->
     <div id="deleteModal" class="modal">
         <div class="modal-content">
@@ -654,12 +698,44 @@
         window.onclick = function(event) {
             const rejectModal = document.getElementById('rejectModal');
             const deleteModal = document.getElementById('deleteModal');
+            const userDetailsModal = document.getElementById('userDetailsModal');
             if (event.target == rejectModal) {
                 rejectModal.style.display = "none";
             }
             if (event.target == deleteModal) {
                 deleteModal.style.display = "none";
             }
+            if (event.target == userDetailsModal) {
+                userDetailsModal.style.display = "none";
+            }
+        }
+
+        const professionMap = {
+            'developer': 'مطور برمجيات / تقني',
+            'engineer': 'مهندس',
+            'doctor': 'طبيب',
+            'pharmacist': 'صيدلي',
+            'lawyer': 'محامي',
+            'teacher': 'مدرس / أستاذ',
+            'executive': 'مدير أعمال / تنفيذي',
+            'accountant': 'محاسب',
+            'student': 'طالب',
+            'other': 'مهنة أخرى'
+        };
+
+        function showUserDetails(userData) {
+            document.getElementById('detail-full-name').value = userData.full_name || 'غير محدد';
+            document.getElementById('detail-email').value = userData.email || '';
+            document.getElementById('detail-phone').value = userData.phone || 'غير مسجل';
+            
+            const professionKey = userData.profession_type || 'developer';
+            document.getElementById('detail-profession').value = professionMap[professionKey] || 'غير محدد';
+            
+            document.getElementById('userDetailsModal').style.display = 'flex';
+        }
+        
+        function closeUserDetailsModal() {
+            document.getElementById('userDetailsModal').style.display = 'none';
         }
     </script>
 </body>

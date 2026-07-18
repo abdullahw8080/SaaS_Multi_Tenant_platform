@@ -62,22 +62,14 @@ class AuthController extends BaseController {
     public function register(): void {
         $this->verifyCsrf();
 
-        $email           = trim($_POST['email'] ?? '');
-        $password        = $_POST['password'] ?? '';
-        $confirmPassword = $_POST['confirm_password'] ?? '';
-        $fullName        = trim($_POST['full_name'] ?? '');
+        $email    = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $phone    = trim($_POST['phone'] ?? '');
+        $fullName = trim($_POST['full_name'] ?? '');
 
-        if (empty($email) || empty($password) || empty($fullName)) {
+        if (empty($email) || empty($password) || empty($phone) || empty($fullName)) {
             $this->view('auth/register', [
                 'error'      => 'جميع الحقول مطلوبة.',
-                'csrf_token' => $this->csrfToken()
-            ]);
-            return;
-        }
-
-        if ($password !== $confirmPassword) {
-            $this->view('auth/register', [
-                'error'      => 'كلمتا المرور غير متطابقتين.',
                 'csrf_token' => $this->csrfToken()
             ]);
             return;
@@ -101,7 +93,7 @@ class AuthController extends BaseController {
         }
 
         // 1. Create client user
-        $userId = $userModel->registerClient($email, $password);
+        $userId = $userModel->registerClient($email, $password, $phone);
         if (!$userId) {
             $this->view('auth/register', [
                 'error'      => 'حدث خطأ أثناء إنشاء الحساب، يرجى المحاولة لاحقاً.',
@@ -171,31 +163,22 @@ class AuthController extends BaseController {
     public function forgotPasswordVerify(): void {
         header('Content-Type: application/json');
         
-        $email      = trim($_POST['email'] ?? '');
-        $profession = $_POST['profession_type'] ?? '';
+        $email = trim($_POST['email'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
 
-        if (empty($email) || empty($profession)) {
+        if (empty($email) || empty($phone)) {
             echo json_encode(['success' => false, 'error' => 'جميع الحقول مطلوبة.']);
             exit;
         }
 
-        // Search user by email
+        // Search user by email and phone
         $db = \App\Core\Database::getInstance()->getConnection();
-        $stmtUser = $db->prepare("SELECT id FROM `users` WHERE `email` = :email AND `role` = 'client'");
-        $stmtUser->execute(['email' => $email]);
+        $stmtUser = $db->prepare("SELECT id FROM `users` WHERE `email` = :email AND `phone` = :phone AND `role` = 'client'");
+        $stmtUser->execute(['email' => $email, 'phone' => $phone]);
         $user = $stmtUser->fetch(\PDO::FETCH_ASSOC);
 
         if (!$user) {
-            echo json_encode(['success' => false, 'error' => 'البريد الإلكتروني المدخل غير مسجل لدينا أو حساب مدير.']);
-            exit;
-        }
-
-        // Verify that the site matches this profession
-        $stmtSite = $db->prepare("SELECT COUNT(*) FROM `sites` WHERE `user_id` = :user_id AND `profession_type` = :profession");
-        $stmtSite->execute(['user_id' => $user['id'], 'profession' => $profession]);
-        
-        if ((int)$stmtSite->fetchColumn() === 0) {
-            echo json_encode(['success' => false, 'error' => 'المهنة/الوظيفة المحددة غير متطابقة مع هذا الحساب.']);
+            echo json_encode(['success' => false, 'error' => 'البريد الإلكتروني أو رقم الهاتف المدخل غير صحيح.']);
             exit;
         }
 
@@ -246,14 +229,11 @@ class AuthController extends BaseController {
         $success = $stmtUpdate->execute(['hash' => $hash, 'id' => $userId]);
 
         if ($success) {
-            // Automatically log them in!
-            Auth::login($email, $password);
-
             // Clean up session keys
             unset($_SESSION['reset_user_id']);
             unset($_SESSION['reset_email']);
 
-            echo json_encode(['success' => true, 'redirect' => BASE_URL . '/dashboard']);
+            echo json_encode(['success' => true, 'redirect' => BASE_URL . '/login?reset=success']);
             exit;
         } else {
             echo json_encode(['success' => false, 'error' => 'فشل تحديث كلمة المرور، يرجى المحاولة لاحقاً.']);

@@ -90,6 +90,12 @@
                 </div>
             <?php endif; ?>
 
+            <?php if (isset($_GET['reset']) && $_GET['reset'] === 'success'): ?>
+                <div class="alert alert-success">
+                    <span>تم إعادة تعيين كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول باستخدام كلمة المرور الجديدة.</span>
+                </div>
+            <?php endif; ?>
+
             <form action="<?= BASE_URL ?>/login" method="POST">
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 
@@ -134,15 +140,8 @@
                 </div>
                 
                 <div class="form-group" style="margin-bottom: 20px;">
-                    <label class="form-label">المهنة/الوظيفة المسجلة</label>
-                    <select id="forgot-profession" class="form-input" style="width: 100%; box-sizing: border-box; cursor: pointer; background: #1f2937; color: #fff;">
-                        <?php
-                        require_once dirname(__DIR__, 2) . '/Config/ProfessionConfig.php';
-                        $professions = \App\Config\ProfessionConfig::getAvailableProfessions('ar');
-                        foreach ($professions as $key => $name): ?>
-                            <option value="<?= $key ?>"><?= htmlspecialchars($name) ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <label class="form-label">رقم الهاتف المسجل</label>
+                    <input type="text" id="forgot-phone" class="form-input ltr" placeholder="05xxxxxxxx" required style="width: 100%; box-sizing: border-box;">
                 </div>
                 
                 <button type="button" class="btn btn-primary" id="btn-verify-identity" style="width: 100%;">
@@ -183,7 +182,7 @@
             const step2 = document.getElementById('forgot-step-2');
             
             const emailInput = document.getElementById('forgot-email');
-            const professionSelect = document.getElementById('forgot-profession');
+            const phoneInput = document.getElementById('forgot-phone');
             
             const verifyBtn = document.getElementById('btn-verify-identity');
             const resetBtn = document.getElementById('btn-reset-password');
@@ -203,6 +202,7 @@
                 error1.style.display = 'none';
                 error2.style.display = 'none';
                 emailInput.value = '';
+                phoneInput.value = '';
                 newPasswordInput.value = '';
                 confirmPasswordInput.value = '';
             });
@@ -220,10 +220,10 @@
             // Verify Step 1
             verifyBtn.addEventListener('click', function() {
                 const email = emailInput.value.trim();
-                const profession = professionSelect.value;
+                const phone = phoneInput.value.trim();
 
-                if (!email) {
-                    error1.textContent = 'يرجى إدخال البريد الإلكتروني.';
+                if (!email || !phone) {
+                    error1.textContent = 'يرجى إدخال البريد الإلكتروني ورقم الهاتف.';
                     error1.style.display = 'block';
                     return;
                 }
@@ -234,7 +234,7 @@
 
                 const formData = new FormData();
                 formData.append('email', email);
-                formData.append('profession_type', profession);
+                formData.append('phone', phone);
 
                 fetch('<?= BASE_URL ?>/forgot-password/verify', {
                     method: 'POST',

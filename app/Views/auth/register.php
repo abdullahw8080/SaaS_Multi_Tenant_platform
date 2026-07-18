@@ -40,24 +40,20 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="confirm_password">تأكيد كلمة المرور</label>
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-input ltr" placeholder="••••••••" required>
+                    <label class="form-label" for="phone">رقم الهاتف</label>
+                    <input type="text" id="phone" name="phone" class="form-input ltr" placeholder="05xxxxxxxx" required autocomplete="tel">
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="profession_type">مجال عملك / مهنتك</label>
                     <select id="profession_type" name="profession_type" class="form-input" required style="cursor: pointer;">
                         <option value="" disabled selected>اختر مهنتك لتخصيص موقعك تلقائياً</option>
-                        <option value="developer">مطور برمجيات / تقني</option>
-                        <option value="engineer">مهندس</option>
-                        <option value="doctor">طبيب</option>
-                        <option value="pharmacist">صيدلي</option>
-                        <option value="lawyer">محامي</option>
-                        <option value="teacher">مدرس / أستاذ</option>
-                        <option value="executive">مدير أعمال / تنفيذي</option>
-                        <option value="accountant">محاسب</option>
-                        <option value="student">طالب</option>
-                        <option value="other">مهنة أخرى</option>
+                        <?php
+                        require_once dirname(__DIR__, 2) . '/Config/ProfessionConfig.php';
+                        $professions = \ProfessionConfig::getProfessionNames('ar');
+                        foreach ($professions as $key => $name): ?>
+                            <option value="<?= $key ?>"><?= htmlspecialchars($name) ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 

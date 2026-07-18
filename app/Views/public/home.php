@@ -125,6 +125,25 @@
         </div>
     </section>
 
+    <!-- ATS CV Banner -->
+    <section style="padding: 40px 24px; max-width: 1200px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, var(--bg-card), rgba(99,102,241,0.1)); border: 1px solid rgba(99,102,241,0.25); border-radius: var(--radius-lg); padding: 40px; text-align: center; box-shadow: var(--shadow-md); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%); pointer-events: none;"></div>
+            <div style="font-size: 2.5rem; color: var(--accent); margin-bottom: 16px;">
+                <i class="fa-solid fa-file-circle-check"></i>
+            </div>
+            <h2 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 12px; color: #ffffff;">خدمة تصميم السيرة الذاتية الاحترافية (ATS CV)</h2>
+            <p style="color: var(--text-muted); max-width: 750px; margin: 0 auto 24px auto; font-size: 1rem; line-height: 1.7;">
+                هل تبحث عن سيرة ذاتية تضمن لك المقابلات الشخصية؟ أقدم خدمة إنشاء وكتابة سير ذاتية احترافية متوافقة 100% مع أنظمة الفرز الآلي للتوظيف (ATS) في كبرى الشركات، مع تنظيم وتنسيق محتواك المهني بطريقة تبرز مهاراتك بشكل احترافي.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                <a href="https://wa.me/qr/O7TJJCCZBPGXD1" target="_blank" class="btn btn-primary" style="width: auto; padding: 10px 24px; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fa-brands fa-whatsapp"></i> طلب الخدمة عبر واتساب
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Features -->
     <section class="features">
         <h2 style="text-align: center; font-size: 2rem; font-weight: 800;">لماذا تختار بورتفوليو Hub؟</h2>
@@ -161,6 +180,31 @@
                 <h3>أمان وعزل متكامل</h3>
                 <p>نظام حماية من ثغرات XSS و CSRF مع عزل تام للعملاء وضمان عدم تداخل البيانات بين المستأجرين.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section style="padding: 60px 24px; max-width: 1000px; margin: 0 auto; text-align: center; border-top: 1px solid var(--border-color);">
+        <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">تواصل معي مباشرة</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px;">يسعدني تواصلكم معي للاستفسار أو طلب الخدمات الشخصية</p>
+        
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+            <a href="tel:00967784224565" class="btn btn-secondary" style="width: auto; padding: 10px 20px; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; text-decoration: none;">
+                <i class="fa-solid fa-phone" style="color: var(--primary);"></i>
+                اتصال: 00967784224565
+            </a>
+            <a href="https://wa.me/qr/O7TJJCCZBPGXD1" target="_blank" class="btn btn-secondary" style="width: auto; padding: 10px 20px; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; text-decoration: none;">
+                <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i>
+                واتساب
+            </a>
+            <a href="https://www.facebook.com/share/1GHDCEhXRF/" target="_blank" class="btn btn-secondary" style="width: auto; padding: 10px 20px; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; text-decoration: none;">
+                <i class="fa-brands fa-facebook" style="color: #1877f2;"></i>
+                فيسبوك
+            </a>
+            <a href="mailto:abdullahw8080@gmail.com" class="btn btn-secondary" style="width: auto; padding: 10px 20px; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; text-decoration: none;">
+                <i class="fa-solid fa-envelope" style="color: var(--primary);"></i>
+                البريد الإلكتروني
+            </a>
         </div>
     </section>
 

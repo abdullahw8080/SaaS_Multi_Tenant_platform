@@ -17,7 +17,7 @@ class AdminController extends BaseController {
         $db = Database::getInstance()->getConnection();
         
         // Fetch all sites with their owner details and templates
-        $sql = "SELECT s.*, u.email, u.status as user_status, t.name as template_name, p.full_name 
+        $sql = "SELECT s.*, u.email, u.phone, u.status as user_status, t.name as template_name, p.full_name 
                 FROM `sites` s
                 JOIN `users` u ON s.user_id = u.id
                 JOIN `templates` t ON s.template_id = t.id

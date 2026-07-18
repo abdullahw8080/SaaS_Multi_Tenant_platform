@@ -114,7 +114,7 @@ if (!function_exists('getSocialIconClass')) {
                 <div class="header-content hero-mobile-reverse">
                     <!-- Right Side: Text -->
                     <div class="hero-text-content">
-                        <div class="hero-welcome-badge"><i class="fas <?= $heroIcon ?>"></i> <?= htmlspecialchars($labels['hero_badge']) ?></div>
+                        <div class="hero-welcome-badge"><?= htmlspecialchars($labels['hero_badge']) ?></div>
                         <h2><?= $lang === 'en' ? 'I am' : 'أنا' ?> <span class="highlight-text"><?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang)) ?></span></h2>
 
                         <div class="job-title-wrapper">
