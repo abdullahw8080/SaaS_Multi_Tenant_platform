@@ -105,6 +105,15 @@ class SiteController extends BaseController {
         $stmtMedia->execute(['project_id' => $project['id']]);
         $project['media'] = $stmtMedia->fetchAll();
 
+        // Fetch profile to populate full_name in project detail header
+        $stmtProf = $db->prepare("SELECT * FROM `profiles` WHERE `site_id` = :site_id LIMIT 1");
+        $stmtProf->execute(['site_id' => $site['id']]);
+        $profile = $stmtProf->fetch();
+        if ($profile) {
+            $site['full_name'] = $profile['full_name'];
+            $site['full_name_en'] = $profile['full_name_en'];
+        }
+
         // Get language settings
         $lang = BilingualHelper::getCurrentLanguage($site['default_lang']);
         if (!$site['is_bilingual']) {

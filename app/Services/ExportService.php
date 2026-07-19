@@ -19,8 +19,8 @@ class ExportService {
     public function export(int $siteId, string $renderedHtml, string $templateFolder): ?string {
         $db = Database::getInstance()->getConnection();
         
-        // 1. Fetch site slug
-        $stmt = $db->prepare("SELECT `slug` FROM `sites` WHERE `id` = :id LIMIT 1");
+        // 1. Fetch site details
+        $stmt = $db->prepare("SELECT * FROM `sites` WHERE `id` = :id LIMIT 1");
         $stmt->execute(['id' => $siteId]);
         $site = $stmt->fetch();
         if (!$site) {
@@ -89,7 +89,105 @@ class ExportService {
             $processedHtml
         );
 
-        // 5. Save the modified HTML as index.html in the root of the export folder
+        // Rewrite project detail links on the main page to point to local projects folder
+        $processedHtml = preg_replace(
+            '#/[a-zA-Z0-9_\-]+/projects/([a-zA-Z0-9_\-]+)/?#',
+            'projects/$1.html',
+            $processedHtml
+        );
+
+        // 5. Generate and export static Project Detail pages
+        $lang = \App\Services\BilingualHelper::getCurrentLanguage($site['default_lang']);
+        if (!$site['is_bilingual']) {
+            $lang = $site['default_lang'];
+        }
+        $dir = \App\Services\BilingualHelper::direction($lang);
+
+        // Fetch profile to populate full_name in project detail header
+        $stmtProf = $db->prepare("SELECT * FROM `profiles` WHERE `site_id` = :site_id LIMIT 1");
+        $stmtProf->execute(['site_id' => $siteId]);
+        $profile = $stmtProf->fetch();
+        if ($profile) {
+            $site['full_name'] = $profile['full_name'];
+            $site['full_name_en'] = $profile['full_name_en'];
+        }
+
+        // Fetch all projects
+        $stmtProj = $db->prepare("SELECT * FROM `projects` WHERE `site_id` = :site_id ORDER BY `sort_order` ASC");
+        $stmtProj->execute(['site_id' => $siteId]);
+        $projects = $stmtProj->fetchAll();
+
+        if (!empty($projects)) {
+            mkdir($exportDir . '/projects', 0755, true);
+            $detailTemplate = $baseDir . "/templates/{$templateFolder}/sections/project_detail.php";
+            
+            foreach ($projects as $project) {
+                // Fetch media
+                $stmtMedia = $db->prepare("SELECT * FROM `project_media` WHERE `project_id` = :project_id ORDER BY `sort_order` ASC");
+                $stmtMedia->execute(['project_id' => $project['id']]);
+                $project['media'] = $stmtMedia->fetchAll();
+
+                $projectHtml = '';
+                if (file_exists($detailTemplate)) {
+                    ob_start();
+                    $data = [
+                        'site'    => $site,
+                        'project' => $project,
+                        'lang'    => $lang,
+                        'dir'     => $dir
+                    ];
+                    extract($data);
+                    include $detailTemplate;
+                    $projectHtml = ob_get_clean();
+                } else {
+                    $projectHtml = "<h1>" . htmlspecialchars($project['title']) . "</h1>";
+                }
+
+                // Process URLs in project detail page to make them relative
+                $processedProjHtml = str_replace(BASE_URL, '', $projectHtml);
+
+                // Rewrite template assets to local assets/ folder (../assets/ from projects/)
+                $processedProjHtml = preg_replace(
+                    '#/(?:templates|public/templates)/' . preg_quote($templateFolder, '#') . '/([^"\'\?]+)(?:\?[^"\']*)?#',
+                    '../assets/$1',
+                    $processedProjHtml
+                );
+
+                // Rewrite user uploaded document paths to 'uploads/docs/'
+                $processedProjHtml = preg_replace(
+                    '#/uploads/sites/' . $siteId . '/docs/([^"\'\?]+)(?:\?[^"\']*)?#',
+                    '../uploads/docs/$1',
+                    $processedProjHtml
+                );
+
+                // Rewrite user uploaded general paths to 'uploads/'
+                $processedProjHtml = preg_replace(
+                    '#/uploads/sites/' . $siteId . '/([^"\'\?]+)(?:\?[^"\']*)?#',
+                    '../uploads/$1',
+                    $processedProjHtml
+                );
+
+                // Rewrite home link back to index.html
+                $processedProjHtml = preg_replace(
+                    '#href=["\']/' . preg_quote($slug, '#') . '/?["\']#',
+                    'href="../index.html"',
+                    $processedProjHtml
+                );
+
+                // Rewrite links to other projects
+                $processedProjHtml = preg_replace(
+                    '#/[a-zA-Z0-9_\-]+/projects/([a-zA-Z0-9_\-]+)/?#',
+                    '$1.html',
+                    $processedProjHtml
+                );
+
+                // Save static page
+                $projectSlug = $project['slug'];
+                file_put_contents($exportDir . '/projects/' . $projectSlug . '.html', $processedProjHtml);
+            }
+        }
+
+        // 6. Save the modified HTML as index.html in the root of the export folder
         file_put_contents($exportDir . '/index.html', $processedHtml);
 
         // 6. Zip the directory

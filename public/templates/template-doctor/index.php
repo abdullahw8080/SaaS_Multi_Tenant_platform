@@ -7,8 +7,8 @@ if (!isset($data) || empty($data)) {
 
 use App\Services\BilingualHelper;
 
-$lang = $_GET['lang'] ?? $data['site']['default_lang'] ?? 'ar';
-$dir  = ($lang === 'ar') ? 'rtl' : 'ltr';
+$lang = $lang ?? $_GET['lang'] ?? $data['site']['default_lang'] ?? 'ar';
+$dir  = $dir ?? (($lang === 'ar') ? 'rtl' : 'ltr');
 
 $profession = $data['site']['profession_type'] ?? 'developer';
 require_once __DIR__ . '/../../app/Config/ProfessionConfig.php';

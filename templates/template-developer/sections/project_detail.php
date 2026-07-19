@@ -717,6 +717,11 @@ $darkDocCardBg = ($profession === 'doctor') ? 'rgba(255, 255, 255, 0.03)' : Prof
                 <button id="themeToggleBtn" class="theme-btn" aria-label="Toggle Theme" style="border: 1px solid var(--border-color); background: rgba(255,255,255,0.05); color: var(--text-primary); cursor: pointer; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
                     <i class="fa-solid fa-moon"></i>
                 </button>
+                <?php if ($site['is_bilingual']): ?>
+                    <a href="?lang=<?= BilingualHelper::opposite($lang) ?>" class="lang-btn">
+                        <?= $lang === 'en' ? 'AR' : 'EN' ?>
+                    </a>
+                <?php endif; ?>
                 <a href="<?= BASE_URL ?>/<?= htmlspecialchars($site['slug']) ?>" class="lang-btn">
                     <?= $lang === 'en' ? 'Back to Site' : 'العودة للموقع' ?>
                 </a>

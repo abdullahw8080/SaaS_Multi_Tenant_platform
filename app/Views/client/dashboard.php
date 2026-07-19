@@ -499,14 +499,6 @@
                         </div>
                     <?php endif; ?>
                 </div>
-                <?php if (in_array($status, ['draft', 'pending', 'rejected'])): ?>
-                    <form action="<?= BASE_URL ?>/dashboard/submit-review" method="POST" class="inline-form">
-                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
-                        <button type="submit" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.875rem; background-color: var(--accent);">
-                            إرسال للمراجعة والنشر <i class="fa-solid fa-paper-plane"></i>
-                        </button>
-                    </form>
-                <?php endif; ?>
             </div>
 
             <!-- Flash Messages -->
