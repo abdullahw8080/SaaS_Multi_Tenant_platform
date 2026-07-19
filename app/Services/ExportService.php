@@ -62,48 +62,18 @@ class ExportService {
             $this->copyUserUploads($userUploadsSourceDir, $exportDir . '/uploads');
         }
 
-        // 4. Rewrite URLs in HTML
-        // Remove BASE_URL prefix from all URLs to make them relative
-        $processedHtml = str_replace(BASE_URL, '', $renderedHtml);
+        // 4. Render main HTML pages and project detail pages for each available language
+        require_once $baseDir . '/templates/TemplateRenderer.php';
+        $renderer = new \Templates\TemplateRenderer();
 
-        // Rewrite template assets to local assets/ folder
-        // Matches "/templates/template-developer/style.css" or "/public/templates/template-developer/style.css"
-        // and strips query parameters (like ?v=178330) for clean offline links
-        $processedHtml = preg_replace(
-            '#/(?:templates|public/templates)/' . preg_quote($templateFolder, '#') . '/([^"\'\?]+)(?:\?[^"\']*)?#',
-            'assets/$1',
-            $processedHtml
-        );
-
-        // Rewrite user uploaded document paths to 'uploads/docs/'
-        $processedHtml = preg_replace(
-            '#/uploads/sites/' . $siteId . '/docs/([^"\'\?]+)(?:\?[^"\']*)?#',
-            'uploads/docs/$1',
-            $processedHtml
-        );
-
-        // Rewrite user uploaded general paths to 'uploads/'
-        $processedHtml = preg_replace(
-            '#/uploads/sites/' . $siteId . '/([^"\'\?]+)(?:\?[^"\']*)?#',
-            'uploads/$1',
-            $processedHtml
-        );
-
-        // Rewrite project detail links on the main page to point to local projects folder
-        $processedHtml = preg_replace(
-            '#/[a-zA-Z0-9_\-]+/projects/([a-zA-Z0-9_\-]+)/?#',
-            'projects/$1.html',
-            $processedHtml
-        );
-
-        // 5. Generate and export static Project Detail pages
-        $lang = \App\Services\BilingualHelper::getCurrentLanguage($site['default_lang']);
-        if (!$site['is_bilingual']) {
-            $lang = $site['default_lang'];
+        $languagesToRender = [];
+        if ($site['is_bilingual']) {
+            $languagesToRender = ['ar', 'en'];
+        } else {
+            $languagesToRender = [$site['default_lang']];
         }
-        $dir = \App\Services\BilingualHelper::direction($lang);
 
-        // Fetch profile to populate full_name in project detail header
+        // Fetch profile to populate full_name in project headers
         $stmtProf = $db->prepare("SELECT * FROM `profiles` WHERE `site_id` = :site_id LIMIT 1");
         $stmtProf->execute(['site_id' => $siteId]);
         $profile = $stmtProf->fetch();
@@ -112,83 +82,167 @@ class ExportService {
             $site['full_name_en'] = $profile['full_name_en'];
         }
 
-        // Fetch all projects
+        // Fetch all projects for rendering
         $stmtProj = $db->prepare("SELECT * FROM `projects` WHERE `site_id` = :site_id ORDER BY `sort_order` ASC");
         $stmtProj->execute(['site_id' => $siteId]);
         $projects = $stmtProj->fetchAll();
 
         if (!empty($projects)) {
             mkdir($exportDir . '/projects', 0755, true);
-            $detailTemplate = $baseDir . "/templates/{$templateFolder}/sections/project_detail.php";
+        }
+
+        $detailTemplate = $baseDir . "/templates/{$templateFolder}/sections/project_detail.php";
+
+        // Store rendered landing pages to save them in steps
+        $landingPages = [];
+
+        foreach ($languagesToRender as $lang) {
+            $dir = \App\Services\BilingualHelper::direction($lang);
+            $rawLandingHtml = $renderer->render($siteId, $lang);
+
+            // Process URLs in landing page
+            $processedHtml = str_replace(BASE_URL, '', $rawLandingHtml);
             
-            foreach ($projects as $project) {
-                // Fetch media
-                $stmtMedia = $db->prepare("SELECT * FROM `project_media` WHERE `project_id` = :project_id ORDER BY `sort_order` ASC");
-                $stmtMedia->execute(['project_id' => $project['id']]);
-                $project['media'] = $stmtMedia->fetchAll();
+            // Rewrite template assets path to local assets/ folder
+            $processedHtml = preg_replace(
+                '#/(?:templates|public/templates)/' . preg_quote($templateFolder, '#') . '/([^"\'\?]+)(?:\?[^"\']*)?#',
+                'assets/$1',
+                $processedHtml
+            );
 
-                $projectHtml = '';
-                if (file_exists($detailTemplate)) {
-                    ob_start();
-                    $data = [
-                        'site'    => $site,
-                        'project' => $project,
-                        'lang'    => $lang,
-                        'dir'     => $dir
-                    ];
-                    extract($data);
-                    include $detailTemplate;
-                    $projectHtml = ob_get_clean();
-                } else {
-                    $projectHtml = "<h1>" . htmlspecialchars($project['title']) . "</h1>";
-                }
+            // Rewrite user uploaded document paths to 'uploads/docs/'
+            $processedHtml = preg_replace(
+                '#/uploads/sites/' . $siteId . '/docs/([^"\'\?]+)(?:\?[^"\']*)?#',
+                'uploads/docs/$1',
+                $processedHtml
+            );
 
-                // Process URLs in project detail page to make them relative
-                $processedProjHtml = str_replace(BASE_URL, '', $projectHtml);
+            // Rewrite user uploaded general paths to 'uploads/'
+            $processedHtml = preg_replace(
+                '#/uploads/sites/' . $siteId . '/([^"\'\?]+)(?:\?[^"\']*)?#',
+                'uploads/$1',
+                $processedHtml
+            );
 
-                // Rewrite template assets to local assets/ folder (../assets/ from projects/)
-                $processedProjHtml = preg_replace(
-                    '#/(?:templates|public/templates)/' . preg_quote($templateFolder, '#') . '/([^"\'\?]+)(?:\?[^"\']*)?#',
-                    '../assets/$1',
-                    $processedProjHtml
-                );
-
-                // Rewrite user uploaded document paths to 'uploads/docs/'
-                $processedProjHtml = preg_replace(
-                    '#/uploads/sites/' . $siteId . '/docs/([^"\'\?]+)(?:\?[^"\']*)?#',
-                    '../uploads/docs/$1',
-                    $processedProjHtml
-                );
-
-                // Rewrite user uploaded general paths to 'uploads/'
-                $processedProjHtml = preg_replace(
-                    '#/uploads/sites/' . $siteId . '/([^"\'\?]+)(?:\?[^"\']*)?#',
-                    '../uploads/$1',
-                    $processedProjHtml
-                );
-
-                // Rewrite home link back to index.html
-                $processedProjHtml = preg_replace(
-                    '#href=["\']/' . preg_quote($slug, '#') . '/?["\']#',
-                    'href="../index.html"',
-                    $processedProjHtml
-                );
-
-                // Rewrite links to other projects
-                $processedProjHtml = preg_replace(
+            // Rewrite project detail links on the main page
+            if ($site['is_bilingual']) {
+                $processedHtml = preg_replace(
                     '#/[a-zA-Z0-9_\-]+/projects/([a-zA-Z0-9_\-]+)/?#',
-                    '$1.html',
-                    $processedProjHtml
+                    'projects/$1_' . $lang . '.html',
+                    $processedHtml
                 );
+                // Language switcher links in landing
+                $processedHtml = preg_replace('#href=["\']\?lang=en["\']#', 'href="index_en.html"', $processedHtml);
+                $processedHtml = preg_replace('#href=["\']\?lang=ar["\']#', 'href="index_ar.html"', $processedHtml);
+            } else {
+                $processedHtml = preg_replace(
+                    '#/[a-zA-Z0-9_\-]+/projects/([a-zA-Z0-9_\-]+)/?#',
+                    'projects/$1.html',
+                    $processedHtml
+                );
+            }
 
-                // Save static page
-                $projectSlug = $project['slug'];
-                file_put_contents($exportDir . '/projects/' . $projectSlug . '.html', $processedProjHtml);
+            $landingPages[$lang] = $processedHtml;
+
+            // Render project detail pages for this language
+            if (!empty($projects)) {
+                foreach ($projects as $project) {
+                    // Fetch media
+                    $stmtMedia = $db->prepare("SELECT * FROM `project_media` WHERE `project_id` = :project_id ORDER BY `sort_order` ASC");
+                    $stmtMedia->execute(['project_id' => $project['id']]);
+                    $project['media'] = $stmtMedia->fetchAll();
+
+                    $projectHtml = '';
+                    if (file_exists($detailTemplate)) {
+                        ob_start();
+                        $data = [
+                            'site'    => $site,
+                            'project' => $project,
+                            'lang'    => $lang,
+                            'dir'     => $dir
+                        ];
+                        extract($data);
+                        include $detailTemplate;
+                        $projectHtml = ob_get_clean();
+                    } else {
+                        $projectHtml = "<h1>" . htmlspecialchars($project['title']) . "</h1>";
+                    }
+
+                    // Process URLs in project detail page to make them relative
+                    $processedProjHtml = str_replace(BASE_URL, '', $projectHtml);
+
+                    // Rewrite template assets to local assets/ folder (../assets/ from projects/)
+                    $processedProjHtml = preg_replace(
+                        '#/(?:templates|public/templates)/' . preg_quote($templateFolder, '#') . '/([^"\'\?]+)(?:\?[^"\']*)?#',
+                        '../assets/$1',
+                        $processedProjHtml
+                    );
+
+                    // Rewrite user uploaded document paths to 'uploads/docs/'
+                    $processedProjHtml = preg_replace(
+                        '#/uploads/sites/' . $siteId . '/docs/([^"\'\?]+)(?:\?[^"\']*)?#',
+                        '../uploads/docs/$1',
+                        $processedProjHtml
+                    );
+
+                    // Rewrite user uploaded general paths to 'uploads/'
+                    $processedProjHtml = preg_replace(
+                        '#/uploads/sites/' . $siteId . '/([^"\'\?]+)(?:\?[^"\']*)?#',
+                        '../uploads/$1',
+                        $processedProjHtml
+                    );
+
+                    // Rewrite links back to home and links to other projects
+                    if ($site['is_bilingual']) {
+                        // Back to Home
+                        $processedProjHtml = preg_replace(
+                            '#href=["\']/' . preg_quote($slug, '#') . '/?["\']#',
+                            'href="../index_' . $lang . '.html"',
+                            $processedProjHtml
+                        );
+                        // Other projects
+                        $processedProjHtml = preg_replace(
+                            '#/[a-zA-Z0-9_\-]+/projects/([a-zA-Z0-9_\-]+)/?#',
+                            '$1_' . $lang . '.html',
+                            $processedProjHtml
+                        );
+                        // Language switcher links in project detail page
+                        $processedProjHtml = preg_replace('#href=["\']\?lang=en["\']#', 'href="' . $project['slug'] . '_en.html"', $processedProjHtml);
+                        $processedProjHtml = preg_replace('#href=["\']\?lang=ar["\']#', 'href="' . $project['slug'] . '_ar.html"', $processedProjHtml);
+                    } else {
+                        // Back to Home
+                        $processedProjHtml = preg_replace(
+                            '#href=["\']/' . preg_quote($slug, '#') . '/?["\']#',
+                            'href="../index.html"',
+                            $processedProjHtml
+                        );
+                        // Other projects
+                        $processedProjHtml = preg_replace(
+                            '#/[a-zA-Z0-9_\-]+/projects/([a-zA-Z0-9_\-]+)/?#',
+                            '$1.html',
+                            $processedProjHtml
+                        );
+                    }
+
+                    // Save static project page
+                    $projectFilename = $project['slug'] . ($site['is_bilingual'] ? '_' . $lang : '') . '.html';
+                    file_put_contents($exportDir . '/projects/' . $projectFilename, $processedProjHtml);
+                }
             }
         }
 
-        // 6. Save the modified HTML as index.html in the root of the export folder
-        file_put_contents($exportDir . '/index.html', $processedHtml);
+        // Save landing pages to export directory
+        if ($site['is_bilingual']) {
+            file_put_contents($exportDir . '/index_ar.html', $landingPages['ar']);
+            file_put_contents($exportDir . '/index_en.html', $landingPages['en']);
+            
+            // index.html serves as a copy of the default language entry point
+            $defaultLang = $site['default_lang'];
+            copy($exportDir . '/index_' . $defaultLang . '.html', $exportDir . '/index.html');
+        } else {
+            $defaultLang = $site['default_lang'];
+            file_put_contents($exportDir . '/index.html', $landingPages[$defaultLang]);
+        }
 
         // 6. Zip the directory
         $zip = new ZipArchive();

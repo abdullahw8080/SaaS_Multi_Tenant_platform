@@ -26,15 +26,13 @@ class ImageCompressor {
             }
             
             $jpgPath = $destPathNoExt . '.jpg';
-            $webpPath = $destPathNoExt . '.webp';
             
-            // Just copy the original uploaded file directly
+            // Just copy the original uploaded file directly to JPG
             copy($sourcePath, $jpgPath);
-            copy($sourcePath, $webpPath);
             
             return [
                 'jpg'  => $jpgPath,
-                'webp' => $webpPath
+                'webp' => $jpgPath
             ];
         }
 
@@ -117,17 +115,9 @@ class ImageCompressor {
             mkdir($dir, 0755, true);
         }
 
-        // 5. Save as JPEG version
+        // 5. Save as JPEG version only
         $jpgPath = $destPathNoExt . '.jpg';
         imagejpeg($newImage, $jpgPath, self::JPEG_QUALITY);
-
-        // Save as WebP version (if system supports it)
-        $webpPath = $destPathNoExt . '.webp';
-        if (function_exists('imagewebp')) {
-            imagewebp($newImage, $webpPath, self::WEBP_QUALITY);
-        } else {
-            $webpPath = $jpgPath; // Fallback to JPEG path if WebP not supported by GD
-        }
 
         // Clean up resources
         imagedestroy($sourceImage);
@@ -135,7 +125,7 @@ class ImageCompressor {
 
         return [
             'jpg'  => $jpgPath,
-            'webp' => $webpPath
+            'webp' => $jpgPath
         ];
     }
 }

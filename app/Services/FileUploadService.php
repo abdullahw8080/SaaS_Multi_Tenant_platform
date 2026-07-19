@@ -70,10 +70,8 @@ class FileUploadService {
             return null;
         }
 
-        // Return relative path from public root without extension
-        // e.g., "/uploads/sites/1/general_5f9..."
-        // In the HTML, we can append .jpg or .webp dynamically
-        return '/uploads/sites/' . $siteId . '/' . $fileName;
+        // Return relative path from public root with extension
+        return '/uploads/sites/' . $siteId . '/' . $fileName . '.jpg';
     }
 
     /**
