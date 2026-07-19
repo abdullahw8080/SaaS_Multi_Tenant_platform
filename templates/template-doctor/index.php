@@ -79,17 +79,7 @@ if (!function_exists('getMedicalIconSvg')) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="<?= htmlspecialchars(substr(BilingualHelper::get($data['profile'], 'bio', $lang), 0, 160), ENT_QUOTES, 'UTF-8') ?>">
-  
-  <!-- Open Graph -->
-  <meta property="og:title" content="<?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang), ENT_QUOTES, 'UTF-8') ?> | <?= htmlspecialchars(BilingualHelper::get($data['profile'], 'title', $lang), ENT_QUOTES, 'UTF-8') ?>">
-  <meta property="og:description" content="<?= htmlspecialchars(substr(BilingualHelper::get($data['profile'], 'bio', $lang), 0, 200), ENT_QUOTES, 'UTF-8') ?>">
-  <?php if (!empty($data['profile']['photo'])): ?>
-    <meta property="og:image" content="<?= htmlspecialchars(BASE_URL . '/' . ltrim($data['profile']['photo'], '/'), ENT_QUOTES, 'UTF-8') ?>">
-  <?php endif; ?>
-  <meta property="og:type" content="profile">
-  
-  <title><?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang), ENT_QUOTES, 'UTF-8') ?> | <?= htmlspecialchars(BilingualHelper::get($data['profile'], 'title', $lang), ENT_QUOTES, 'UTF-8') ?></title>
+  <?php include dirname(__DIR__) . '/seo_tags.php'; ?>
   
   <!-- Preconnect Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -102,20 +92,7 @@ if (!function_exists('getMedicalIconSvg')) {
   <!-- [PROFESSION COLORS] — CSS Variable Override per Profession -->
   <style>:root { <?= $cssVars ?> } <?= $extraCss ?></style>
 
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Physician",
-    "name": "<?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang), ENT_QUOTES, 'UTF-8') ?>",
-    "medicalSpecialty": "<?= htmlspecialchars(BilingualHelper::get($data['profile'], 'title', $lang), ENT_QUOTES, 'UTF-8') ?>",
-    "description": "<?= htmlspecialchars(BilingualHelper::get($data['profile'], 'bio', $lang), ENT_QUOTES, 'UTF-8') ?>",
-    <?php if(!empty($data['profile']['photo'])): ?>
-    "image": "<?= htmlspecialchars(BASE_URL . '/' . ltrim($data['profile']['photo'], '/'), ENT_QUOTES, 'UTF-8') ?>",
-    <?php endif; ?>
-    "url": "<?= htmlspecialchars(BASE_URL . '/' . $data['site']['slug'], ENT_QUOTES, 'UTF-8') ?>"
-  }
-  </script>
+
 </head>
 <body>
 

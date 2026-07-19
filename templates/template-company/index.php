@@ -11,10 +11,7 @@ $extraCss     = ProfessionConfig::getExtraCss($profession);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang)) ?> | <?= htmlspecialchars(BilingualHelper::get($data['profile'], 'title', $lang) ?: 'Corporate Website') ?></title>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="<?= htmlspecialchars(mb_substr(BilingualHelper::get($data['profile'], 'bio', $lang), 0, 160)) ?>">
+    <?php include dirname(__DIR__) . '/seo_tags.php'; ?>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/templates/template-company/style.css">

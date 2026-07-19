@@ -33,6 +33,11 @@ class Site extends BaseModel {
      * Check if slug exists, optionally ignoring a specific site ID.
      */
     public function slugExists(string $slug, ?int $excludeSiteId = null): bool {
+        $reserved = ['admin', 'dashboard', 'login', 'register', 'logout', 'assets', 'public', 'uploads', 'cache', 'api'];
+        if (in_array(strtolower(trim($slug)), $reserved, true)) {
+            return true;
+        }
+
         $sql = "SELECT COUNT(*) FROM `{$this->table}` WHERE `slug` = :slug";
         $params = ['slug' => $slug];
         

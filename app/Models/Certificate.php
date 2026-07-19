@@ -25,6 +25,7 @@ class Certificate extends BaseModel {
                 'issuer'     => $cert['issuer'] ?? '',
                 'issuer_en'  => !empty($cert['issuer_en']) ? $cert['issuer_en'] : null,
                 'file_url'   => $cert['file_url'] ?? null,
+                'link'       => !empty($cert['link']) ? $cert['link'] : null,
                 'year'       => $cert['year'] ?? null,
                 'sort_order' => $index
             ]);

@@ -41,6 +41,12 @@ class AdminController extends BaseController {
      * Approve a site, publishing it live.
      */
     public function approve(array $params): void {
+        $csrfToken = $_GET['csrf_token'] ?? '';
+        if (!\App\Core\Auth::verifyCsrfToken($csrfToken)) {
+            header($_SERVER["SERVER_PROTOCOL"] . " 400 Bad Request");
+            echo "<h1>400 Bad Request</h1><p>CSRF verification failed.</p>";
+            exit;
+        }
         $siteId = (int)($params['id'] ?? 0);
         
         $approvalService = new ApprovalService();
@@ -78,6 +84,12 @@ class AdminController extends BaseController {
      * Toggle a user account status (active / inactive).
      */
     public function toggleUserStatus(array $params): void {
+        $csrfToken = $_GET['csrf_token'] ?? '';
+        if (!\App\Core\Auth::verifyCsrfToken($csrfToken)) {
+            header($_SERVER["SERVER_PROTOCOL"] . " 400 Bad Request");
+            echo "<h1>400 Bad Request</h1><p>CSRF verification failed.</p>";
+            exit;
+        }
         $userId = (int)($params['id'] ?? 0);
         
         $userModel = new User();
@@ -238,6 +250,12 @@ class AdminController extends BaseController {
      * Impersonate a client user to edit their profile directly.
      */
     public function impersonate(array $params): void {
+        $csrfToken = $_GET['csrf_token'] ?? '';
+        if (!\App\Core\Auth::verifyCsrfToken($csrfToken)) {
+            header($_SERVER["SERVER_PROTOCOL"] . " 400 Bad Request");
+            echo "<h1>400 Bad Request</h1><p>CSRF verification failed.</p>";
+            exit;
+        }
         $userId = (int)($params['id'] ?? 0);
         
         $userModel = new User();

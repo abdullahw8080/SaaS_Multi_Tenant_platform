@@ -762,13 +762,17 @@ class ProfessionConfig
     public static function getCssVariables(string $profession): string
     {
         $c = self::get($profession)['colors'];
+        $accentGlowRgb = self::hexToRgb($c['accent_glow']);
+        $accentGlowSecondaryRgb = self::hexToRgb($c['accent_glow_secondary']);
         return "
             --bg-primary: {$c['bg_primary']};
             --bg-secondary: {$c['bg_secondary']};
             --text-primary: {$c['text_primary']};
             --text-secondary: {$c['text_secondary']};
             --accent-glow: {$c['accent_glow']};
+            --accent-glow-rgb: {$accentGlowRgb};
             --accent-glow-secondary: {$c['accent_glow_secondary']};
+            --accent-glow-secondary-rgb: {$accentGlowSecondaryRgb};
             --border-color: {$c['border_color']};
         ";
     }

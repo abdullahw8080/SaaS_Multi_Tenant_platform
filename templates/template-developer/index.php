@@ -46,7 +46,7 @@ if (!function_exists('getSocialIconClass')) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang)) ?> | <?= htmlspecialchars(BilingualHelper::get($data['profile'], 'title', $lang) ?: 'Sash') ?></title>
+    <?php include dirname(__DIR__) . '/seo_tags.php'; ?>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

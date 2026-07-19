@@ -77,7 +77,7 @@ $darkDocCardBg = ($profession === 'doctor') ? 'rgba(255, 255, 255, 0.03)' : Prof
     <title><?= htmlspecialchars(BilingualHelper::get($project, 'title', $lang)) ?> - <?= htmlspecialchars(BilingualHelper::get($site, 'full_name', $lang)) ?></title>
     
     <!-- CSS -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>/templates/template-developer/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/templates/template-developer/style.css?v=<?= time() ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
@@ -859,8 +859,8 @@ $darkDocCardBg = ($profession === 'doctor') ? 'rgba(255, 255, 255, 0.03)' : Prof
                         </span>
                     </div>
                     <a href="<?= $pdfUrl ?>" target="_blank" class="pd-doc-download">
-                        <i class="fa-solid fa-download"></i>
-                        <?= $lang === 'en' ? 'Download' : 'تحميل' ?>
+                        <i class="fa-solid fa-eye"></i>
+                        <?= $lang === 'en' ? 'View' : 'عرض' ?>
                     </a>
                 </div>
                 <?php endforeach; ?>
@@ -902,9 +902,16 @@ $darkDocCardBg = ($profession === 'doctor') ? 'rgba(255, 255, 255, 0.03)' : Prof
             if (track) track.style.transform = `translateX(-${currentIdx * 100}%)`;
             if (counter) counter.textContent = `${currentIdx + 1} / ${totalSlides}`;
             thumbs.forEach((t, i) => t.classList.toggle('active', i === currentIdx));
-            // Scroll the active thumb into view
+            // Scroll thumbnail strip horizontally WITHOUT scrolling the page
             if (thumbs[currentIdx]) {
-                thumbs[currentIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                const thumbContainer = document.getElementById('pdThumbnails');
+                if (thumbContainer) {
+                    const thumb = thumbs[currentIdx];
+                    const containerLeft = thumbContainer.getBoundingClientRect().left;
+                    const thumbLeft = thumb.getBoundingClientRect().left;
+                    const offset = thumbLeft - containerLeft - (thumbContainer.offsetWidth / 2) + (thumb.offsetWidth / 2);
+                    thumbContainer.scrollLeft += offset;
+                }
             }
         }
 

@@ -621,41 +621,10 @@
                                     <input type="checkbox" name="is_bilingual" value="1" <?= $siteData['site']['is_bilingual'] ? 'checked' : '' ?>> تفعيل الموقع باللغتين معاً (Arabic & English)
                                 </label>
                             </div>
-                            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-                                <label class="form-label" style="font-weight: 700; color: var(--text-main);"><i class="fa-solid fa-palette" style="color:var(--primary)"></i> ألوان وهيكل القالب الرئيسي</label>
-                                <select class="form-input" onchange="changeTemplateLayout(this.value)" style="cursor: pointer; margin-top: 8px;">
-                                    <?php foreach ($templates as $t): ?>
-                                        <?php
-                                        $tColor = '';
-                                        if ($t['id'] == 1) $tColor = 'بنفسجي داكن وأزرق';
-                                        elseif ($t['id'] == 2) $tColor = 'أزرق ناصع وأبيض';
-                                        elseif ($t['id'] == 3) $tColor = 'فضي ورمادي زجاجي';
-                                        else $tColor = htmlspecialchars($t['name']);
-                                        ?>
-                                        <option value="<?= $t['id'] ?>" <?= $siteData['site']['template_id'] == $t['id'] ? 'selected' : '' ?>>
-                                            <?= $tColor ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <small style="color: var(--text-muted); display: block; margin-top: 4px; font-size: 0.8rem;">تنبيه: تغيير القالب الرئيسي سيقوم بإعادة تهيئة الأقسام والترتيب الافتراضي لموقعك.</small>
-                            </div>
-
-                            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-                                <label class="form-label" style="font-weight: 700; color: var(--text-main);"><i class="fa-solid fa-paint-roller" style="color:var(--primary)"></i> ألوان وتعديلات ثيم القالب الفرعية</label>
-                                <select name="profession_type" class="form-input" style="cursor: pointer; margin-top: 8px;">
-                                    <?php
-                                    require_once dirname(__DIR__, 2) . '/Config/ProfessionConfig.php';
-                                    $professions = ProfessionConfig::getAvailableProfessions('ar');
-                                    foreach ($professions as $key => $name): ?>
-                                        <option value="<?= $key ?>" <?= ($siteData['site']['profession_type'] ?? 'developer') === $key ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($name) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <small style="color: var(--text-muted); display: block; margin-top: 4px; font-size: 0.8rem;">تغيير هذا الاختيار سيقوم بتحديث جميع ألوان وأيقونات موقعك تلقائياً لتناسب السمة المختارة.</small>
-                            </div>
                         </div>
                     </div>
+                    <!-- Hidden: preserve profession_type (changed via site colors dropdown in header) -->
+                    <input type="hidden" name="profession_type" id="hidden_profession_type" value="<?= htmlspecialchars($siteData['site']['profession_type'] ?? 'developer') ?>">
 
                         <div class="form-group" style="margin-top: 15px;">
                             <label class="form-label">ملف السيرة الذاتية (PDF)</label>
@@ -779,7 +748,7 @@
                         <?php endforeach; ?>
                     </div>
                     <button type="button" class="add-row-btn" onclick="addSkillRow()" style="margin-bottom: 40px;">
-                        <i class="fa-solid fa-plus"></i> إضافة مهارة تقنية جديدة
+                        <i class="fa-solid fa-plus"></i> إضافة مهارة جديدة
                     </button>
 
                     <div class="section-title" style="margin-top: 40px; border-top: 1px solid var(--border-color); padding-top: 30px;"><i class="fa-solid fa-user-check" style="color:var(--primary)"></i> إدارة المهارات الشخصية (مثل التواصل، العمل الجماعي، إلخ)</div>
@@ -1362,6 +1331,10 @@
 
         // Programmatic color change submit
         function changeSiteColor(professionType) {
+            // Update hidden input so the profession_type is saved with the main form too
+            const hiddenInput = document.getElementById('hidden_profession_type');
+            if (hiddenInput) hiddenInput.value = professionType;
+
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '<?= BASE_URL ?>/dashboard/change-profession';
@@ -1847,7 +1820,7 @@
                                 <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
                                     <label style="font-size:0.75rem; color:var(--primary); cursor:pointer; background:rgba(99,102,241,0.1); padding:5px 12px; border-radius:4px; border:1px solid rgba(99,102,241,0.3); display:inline-flex; align-items:center; gap:4px;">
                                         <i class="fa-solid fa-cloud-arrow-up"></i> اختيار ملف
-                                        <input type="file" name="project_media_file_${projectIndex}_${mediaIndex}" accept="image/*,.pdf" style="display:none;" required onchange="previewNewMedia(this, '${projectIndex}', '${mediaIndex}')">
+                                        <input type="file" name="project_media_file_${projectIndex}_${mediaIndex}" accept="image/*,.pdf" style="display:none;" onchange="previewNewMedia(this, '${projectIndex}', '${mediaIndex}')">
                                     </label>
                                     <button type="button" onclick="this.closest('.gallery-item').remove()" style="font-size:0.75rem; color:var(--danger); cursor:pointer; background:rgba(239,68,68,0.1); padding:5px 12px; border-radius:4px; border:1px solid rgba(239,68,68,0.3); display:inline-flex; align-items:center; gap:4px;">
                                         <i class="fa-solid fa-trash"></i> حذف
@@ -1871,6 +1844,7 @@
             if (!previewEl) return;
             const file = input.files[0];
             if (!file) return;
+
             if (file.type === 'application/pdf') {
                 previewEl.innerHTML = '<i class="fa-solid fa-file-pdf" style="color:#ef4444; font-size:1.8rem;"></i>';
                 previewEl.style.background = 'rgba(239,68,68,0.1)';
@@ -1883,22 +1857,23 @@
                 };
                 reader.readAsDataURL(file);
             }
-            // Update label
-            const label = input.parentElement;
-            label.innerHTML = '<i class="fa-solid fa-check"></i> ' + file.name.substring(0,18) + '...';
-            label.style.color = 'var(--accent)';
-            label.style.borderColor = 'var(--accent)';
-            label.style.background = 'rgba(16,185,129,0.1)';
-            // Re-append the file input (since we replaced innerHTML)
-            const newInput = document.createElement('input');
-            newInput.type = 'file';
-            newInput.name = 'project_media_file_' + projIdx + '_' + mediaIdx;
-            newInput.accept = 'image/*,.pdf';
-            newInput.required = true;
-            newInput.style.display = 'none';
-            newInput.onchange = function() { previewNewMedia(this, projIdx, mediaIdx); };
-            label.appendChild(newInput);
-            // Transfer the file to the new input (not possible directly, so just keep original input hidden inside)
+
+            // Update the label text WITHOUT destroying the input element
+            // Find a sibling span for status, or create one
+            const labelEl = input.closest('label');
+            if (labelEl) {
+                // Update the label's visible text
+                let statusSpan = labelEl.querySelector('.upload-status-text');
+                if (!statusSpan) {
+                    statusSpan = document.createElement('span');
+                    statusSpan.className = 'upload-status-text';
+                    labelEl.insertBefore(statusSpan, labelEl.firstChild);
+                }
+                statusSpan.innerHTML = '<i class="fa-solid fa-check"></i> ' + file.name.substring(0, 18) + (file.name.length > 18 ? '...' : '');
+                labelEl.style.color = 'var(--accent)';
+                labelEl.style.borderColor = 'var(--accent)';
+                labelEl.style.background = 'rgba(16,185,129,0.1)';
+            }
         }
 
         // AJAX Form Submission (Prevent page reloads and retain inputs)

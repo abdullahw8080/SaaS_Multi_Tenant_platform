@@ -5,12 +5,14 @@ namespace App\Core;
 use PDO;
 
 class Auth {
-    /**
-     * Start session safely if not already started.
-     */
     public static function startSession(): void {
         if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+            session_start([
+                'cookie_httponly' => true,
+                'cookie_secure'   => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+                'cookie_samesite' => 'Strict',
+                'use_strict_mode' => true,
+            ]);
         }
     }
 

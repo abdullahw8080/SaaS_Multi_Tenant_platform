@@ -11,8 +11,12 @@
                 </div>
                 
                 <div class="cert-buttons">
-                    <?php if (!empty($cert['file'])): ?>
-                        <a href="<?= BASE_URL ?>/<?= ltrim(htmlspecialchars($cert['file']), '/') ?>" target="_blank" class="btn-cert primary">
+                    <?php
+                    // Support both 'file' and 'file_url' keys for backwards compatibility
+                    $certFile = $cert['file_url'] ?? $cert['file'] ?? '';
+                    ?>
+                    <?php if (!empty($certFile)): ?>
+                        <a href="<?= BASE_URL ?>/<?= ltrim(htmlspecialchars($certFile), '/') ?>" target="_blank" class="btn-cert primary">
                             <i class="fas fa-image"></i> <?= $lang === 'en' ? 'View' : 'عرض' ?>
                         </a>
                     <?php endif; ?>

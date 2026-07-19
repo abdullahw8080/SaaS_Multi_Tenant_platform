@@ -10,6 +10,25 @@ use App\Services\BilingualHelper;
 $lang = $_GET['lang'] ?? $data['site']['default_lang'] ?? 'ar';
 $dir  = ($lang === 'ar') ? 'rtl' : 'ltr';
 
+$profession = $data['site']['profession_type'] ?? 'developer';
+require_once __DIR__ . '/../../app/Config/ProfessionConfig.php';
+$labels       = ProfessionConfig::getLabels($profession, $lang);
+$cssVars      = ProfessionConfig::getCssVariables($profession);
+$extraCss     = ProfessionConfig::getExtraCss($profession);
+
+$secData = [];
+foreach ($data['sections'] as $s) {
+    $secData[$s['type_key']] = $s;
+}
+
+$skillsTitle = isset($secData['skills']) ? BilingualHelper::get($secData['skills'], 'title', $lang) : ($labels['skills'] ?? ($lang === 'ar' ? 'التخصصات والخدمات الطبية' : 'Medical Specializations'));
+$expTitle = isset($secData['experiences']) ? BilingualHelper::get($secData['experiences'], 'title', $lang) : ($labels['experiences'] ?? ($lang === 'ar' ? 'المسيرة والخبرات المهنية' : 'Professional Journey'));
+$eduTitle = isset($secData['education']) ? BilingualHelper::get($secData['education'], 'title', $lang) : ($labels['education'] ?? ($lang === 'ar' ? 'المؤهلات العلمية والتعليم' : 'Education & Credentials'));
+$certTitle = isset($secData['certificates']) ? BilingualHelper::get($secData['certificates'], 'title', $lang) : ($labels['certificates'] ?? ($lang === 'ar' ? 'الزمالات والاعتمادات المهنية' : 'Fellowships & Certifications'));
+$projTitle = isset($secData['projects']) ? BilingualHelper::get($secData['projects'], 'title', $lang) : ($labels['projects'] ?? ($lang === 'ar' ? 'الأبحاث والمشاريع' : 'Research & Projects'));
+$langTitle = isset($secData['languages']) ? BilingualHelper::get($secData['languages'], 'title', $lang) : ($labels['languages'] ?? ($lang === 'ar' ? 'اللغات' : 'Languages'));
+$refTitle = isset($secData['references']) ? BilingualHelper::get($secData['references'], 'title', $lang) : ($labels['references'] ?? ($lang === 'ar' ? 'المراجع' : 'References'));
+
 // دالة لجلب الفولت أيقون المناسب للشبكات الاجتماعية
 if (!function_exists('getSocialIconSvg')) {
     function getSocialIconSvg($platform) {
@@ -60,17 +79,7 @@ if (!function_exists('getMedicalIconSvg')) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="<?= htmlspecialchars(substr(BilingualHelper::get($data['profile'], 'bio', $lang), 0, 160), ENT_QUOTES, 'UTF-8') ?>">
-  
-  <!-- Open Graph -->
-  <meta property="og:title" content="<?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang), ENT_QUOTES, 'UTF-8') ?> | <?= htmlspecialchars(BilingualHelper::get($data['profile'], 'title', $lang), ENT_QUOTES, 'UTF-8') ?>">
-  <meta property="og:description" content="<?= htmlspecialchars(substr(BilingualHelper::get($data['profile'], 'bio', $lang), 0, 200), ENT_QUOTES, 'UTF-8') ?>">
-  <?php if (!empty($data['profile']['photo'])): ?>
-    <meta property="og:image" content="<?= htmlspecialchars(BASE_URL . '/' . ltrim($data['profile']['photo'], '/'), ENT_QUOTES, 'UTF-8') ?>">
-  <?php endif; ?>
-  <meta property="og:type" content="profile">
-  
-  <title><?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang), ENT_QUOTES, 'UTF-8') ?> | <?= htmlspecialchars(BilingualHelper::get($data['profile'], 'title', $lang), ENT_QUOTES, 'UTF-8') ?></title>
+  <?php include dirname(__DIR__) . '/seo_tags.php'; ?>
   
   <!-- Preconnect Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,21 +89,10 @@ if (!function_exists('getMedicalIconSvg')) {
   <!-- Stylesheets -->
   <link rel="stylesheet" href="<?= htmlspecialchars(BASE_URL, ENT_QUOTES, 'UTF-8') ?>/templates/template-doctor/style.css?v=<?= time() ?>">
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <!-- [PROFESSION COLORS] — CSS Variable Override per Profession -->
+  <style>:root { <?= $cssVars ?> } <?= $extraCss ?></style>
 
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Physician",
-    "name": "<?= htmlspecialchars(BilingualHelper::get($data['profile'], 'full_name', $lang), ENT_QUOTES, 'UTF-8') ?>",
-    "medicalSpecialty": "<?= htmlspecialchars(BilingualHelper::get($data['profile'], 'title', $lang), ENT_QUOTES, 'UTF-8') ?>",
-    "description": "<?= htmlspecialchars(BilingualHelper::get($data['profile'], 'bio', $lang), ENT_QUOTES, 'UTF-8') ?>",
-    <?php if(!empty($data['profile']['photo'])): ?>
-    "image": "<?= htmlspecialchars(BASE_URL . '/' . ltrim($data['profile']['photo'], '/'), ENT_QUOTES, 'UTF-8') ?>",
-    <?php endif; ?>
-    "url": "<?= htmlspecialchars(BASE_URL . '/' . $data['site']['slug'], ENT_QUOTES, 'UTF-8') ?>"
-  }
-  </script>
+
 </head>
 <body>
 
@@ -117,22 +115,22 @@ if (!function_exists('getMedicalIconSvg')) {
       <div class="navbar__links" id="navbarLinks">
         <a href="#objective" class="navbar__link"><?= $lang === 'ar' ? 'الرئيسية' : 'Home' ?></a>
         <?php if (!empty(BilingualHelper::get($data['profile'], 'bio', $lang))): ?>
-          <a href="#about" class="navbar__link"><?= $lang === 'ar' ? 'عن الطبيب' : 'About' ?></a>
+          <a href="#about" class="navbar__link"><?= htmlspecialchars($labels['about'] ?? ($lang === 'ar' ? 'عن الطبيب' : 'About')) ?></a>
         <?php endif; ?>
-        <?php if (!empty($data['skills'])): ?>
-          <a href="#skills" class="navbar__link"><?= $lang === 'ar' ? 'التخصصات' : 'Specialties' ?></a>
+        <?php if (!empty($data['skills']) && (!isset($secData['skills']) || $secData['skills']['is_visible'])): ?>
+          <a href="#skills" class="navbar__link"><?= htmlspecialchars($skillsTitle) ?></a>
         <?php endif; ?>
-        <?php if (!empty($data['experiences'])): ?>
-          <a href="#experience" class="navbar__link"><?= $lang === 'ar' ? 'المسيرة المهنية' : 'Experience' ?></a>
+        <?php if (!empty($data['experiences']) && (!isset($secData['experiences']) || $secData['experiences']['is_visible'])): ?>
+          <a href="#experience" class="navbar__link"><?= htmlspecialchars($expTitle) ?></a>
         <?php endif; ?>
-        <?php if (!empty($data['education'])): ?>
-          <a href="#education" class="navbar__link"><?= $lang === 'ar' ? 'التعليم' : 'Education' ?></a>
+        <?php if (!empty($data['education']) && (!isset($secData['education']) || $secData['education']['is_visible'])): ?>
+          <a href="#education" class="navbar__link"><?= htmlspecialchars($eduTitle) ?></a>
         <?php endif; ?>
-        <?php if (!empty($data['certificates'])): ?>
-          <a href="#certificates" class="navbar__link"><?= $lang === 'ar' ? 'الشهادات' : 'Certificates' ?></a>
+        <?php if (!empty($data['certificates']) && (!isset($secData['certificates']) || $secData['certificates']['is_visible'])): ?>
+          <a href="#certificates" class="navbar__link"><?= htmlspecialchars($certTitle) ?></a>
         <?php endif; ?>
-        <?php if (!empty($data['projects'])): ?>
-          <a href="#projects" class="navbar__link"><?= $lang === 'ar' ? 'الأبحاث' : 'Research' ?></a>
+        <?php if (!empty($data['projects']) && (!isset($secData['projects']) || $secData['projects']['is_visible'])): ?>
+          <a href="#projects" class="navbar__link"><?= htmlspecialchars($projTitle) ?></a>
         <?php endif; ?>
         <a href="#contact" class="navbar__link"><?= $lang === 'ar' ? 'تواصل' : 'Contact' ?></a>
       </div>
@@ -179,9 +177,13 @@ if (!function_exists('getMedicalIconSvg')) {
 
       <div class="hero__actions" data-aos="fade-up">
         <a href="#contact" class="btn btn--primary"><?= $lang === 'ar' ? 'تواصل معي' : 'Get In Touch' ?></a>
-        <?php if (!empty($data['profile']['cv_pdf'])): ?>
-          <a href="<?= htmlspecialchars(BASE_URL . '/' . ltrim($data['profile']['cv_pdf'], '/'), ENT_QUOTES, 'UTF-8') ?>" download class="btn btn--ghost">
-            <i class="fas fa-file-download"></i> <?= $lang === 'ar' ? 'تحميل السيرة الذاتية' : 'Download CV' ?>
+        <?php if (!empty($data['profile']['cv_url'])): ?>
+          <?php 
+              $cvUrl = BASE_URL . '/' . ltrim($data['profile']['cv_url'], '/');
+              $isPdf = (strtolower(pathinfo($cvUrl, PATHINFO_EXTENSION)) === 'pdf');
+          ?>
+          <a href="<?= htmlspecialchars($cvUrl, ENT_QUOTES, 'UTF-8') ?>" <?= $isPdf ? 'target="_blank"' : 'download' ?> class="btn btn--ghost">
+            <i class="fas <?= $isPdf ? 'fa-file-pdf' : 'fa-file-download' ?>"></i> <?= $isPdf ? ($lang === 'ar' ? 'عرض السيرة الذاتية' : 'View CV') : ($lang === 'ar' ? 'تحميل السيرة الذاتية' : 'Download CV') ?>
           </a>
         <?php endif; ?>
       </div>
@@ -231,14 +233,14 @@ if (!function_exists('getMedicalIconSvg')) {
     <section class="section container" id="about">
       <div class="section-title" data-aos="fade-up">
         <i class="fa-solid fa-user-doctor"></i>
-        <h2><?= $lang === 'ar' ? 'ملخص نبذة الطبيب' : 'About the Doctor' ?></h2>
+        <h2><?= htmlspecialchars($labels['about'] ?? ($lang === 'ar' ? 'نبذة تعريفية' : 'About Me')) ?></h2>
       </div>
       <div class="about-card glass-card fade-in-up">
         <p class="about-bio"><?= nl2br(htmlspecialchars(BilingualHelper::get($data['profile'], 'bio', $lang), ENT_QUOTES, 'UTF-8')) ?></p>
         
         <?php if (!empty(BilingualHelper::get($data['profile'], 'references', $lang))): ?>
           <div class="about-references">
-            <div class="about-references__title"><?= $lang === 'ar' ? 'التوصيات والمراجع' : 'References' ?></div>
+            <div class="about-references__title"><?= htmlspecialchars($refTitle) ?></div>
             <div class="about-references__text"><?= htmlspecialchars(BilingualHelper::get($data['profile'], 'references', $lang), ENT_QUOTES, 'UTF-8') ?></div>
           </div>
         <?php endif; ?>
@@ -251,7 +253,7 @@ if (!function_exists('getMedicalIconSvg')) {
     <section class="section container" id="skills">
       <div class="section-title" data-aos="fade-up">
         <i class="fa-solid fa-stethoscope"></i>
-        <h2><?= $lang === 'ar' ? 'التخصصات والخدمات الطبية' : 'Medical Specializations' ?></h2>
+        <h2><?= htmlspecialchars($skillsTitle) ?></h2>
       </div>
       <div class="skills-grid">
         <?php foreach ($data['skills'] as $index => $skill): ?>
@@ -289,7 +291,7 @@ if (!function_exists('getMedicalIconSvg')) {
     <section class="section container" id="experience">
       <div class="section-title" data-aos="fade-up">
         <i class="fa-solid fa-hospital"></i>
-        <h2><?= $lang === 'ar' ? 'المسيرة والخبرات المهنية' : 'Professional Journey' ?></h2>
+        <h2><?= htmlspecialchars($expTitle) ?></h2>
       </div>
       
       <div class="timeline">
@@ -324,7 +326,7 @@ if (!function_exists('getMedicalIconSvg')) {
     <section class="section container" id="education">
       <div class="section-title" data-aos="fade-up">
         <i class="fa-solid fa-user-graduate"></i>
-        <h2><?= $lang === 'ar' ? 'المؤهلات العلمية والتعليم' : 'Education & Credentials' ?></h2>
+        <h2><?= htmlspecialchars($eduTitle) ?></h2>
       </div>
       
       <div class="timeline">
@@ -354,7 +356,7 @@ if (!function_exists('getMedicalIconSvg')) {
     <section class="section container" id="certificates">
       <div class="section-title" data-aos="fade-up">
         <i class="fa-solid fa-award"></i>
-        <h2><?= $lang === 'ar' ? 'الزمالات والاعتمادات المهنية' : 'Fellowships & Certifications' ?></h2>
+        <h2><?= htmlspecialchars($certTitle) ?></h2>
       </div>
       
       <div class="cert-grid">
@@ -406,7 +408,7 @@ if (!function_exists('getMedicalIconSvg')) {
     <section class="section container" id="projects">
       <div class="section-title" data-aos="fade-up">
         <i class="fa-solid fa-book-medical"></i>
-        <h2><?= htmlspecialchars($projectSectionTitle, ENT_QUOTES, 'UTF-8') ?></h2>
+        <h2><?= htmlspecialchars($projTitle) ?></h2>
       </div>
       
       <div class="projects-grid">
@@ -470,7 +472,7 @@ if (!function_exists('getMedicalIconSvg')) {
     <section class="section container" id="languages">
       <div class="section-title" data-aos="fade-up">
         <i class="fa-solid fa-language"></i>
-        <h2><?= $lang === 'ar' ? 'اللغات' : 'Languages' ?></h2>
+        <h2><?= htmlspecialchars($langTitle) ?></h2>
       </div>
       <div class="languages-list" data-aos="fade-up">
         <?php foreach ($data['languages'] as $langObj): ?>

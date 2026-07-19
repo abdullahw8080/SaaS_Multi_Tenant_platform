@@ -36,8 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Sticky Navbar & Scroll to Top effect on scroll
-    const scrollToTopBtn = document.getElementById('scrollToTop');
+    // 3. Sticky Navbar effect on scroll
     window.addEventListener('scroll', () => {
         const navbar = document.getElementById('navbar');
         if (navbar) {
@@ -47,24 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 navbar.classList.remove('scrolled');
             }
         }
-        
-        if (scrollToTopBtn) {
-            if (window.scrollY > 300) {
-                scrollToTopBtn.classList.add('show');
-            } else {
-                scrollToTopBtn.classList.remove('show');
-            }
-        }
     });
-
-    if (scrollToTopBtn) {
-        scrollToTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    }
 
     // 4. Smooth scroll for internal links & close mobile menu
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

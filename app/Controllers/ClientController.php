@@ -128,6 +128,13 @@ class ClientController extends BaseController {
      * Save/Sync all site data (Profile, Skills, Projects, Experiences, Education, Certificates).
      */
     public function save(): void {
+        // Early check: if POST is empty but request method is POST, limits were exceeded
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && empty($_POST)) {
+            $_SESSION['flash_error'] = "خطأ: تجاوز حجم البيانات المرسلة الحد المسموح. يرجى تقليل عدد الصور أو الملفات في المعرض ثم المحاولة مرة أخرى.";
+            $this->redirect('/dashboard');
+            return;
+        }
+
         $this->verifyCsrf();
         $siteId = $this->checkSite();
         
@@ -345,7 +352,8 @@ class ClientController extends BaseController {
      * Export site as static ZIP.
      */
     public function exportSite(): void {
-        if (\App\Core\Auth::role() !== 'admin') {
+        $isAdmin = \App\Core\Auth::role() === 'admin' || !empty($_SESSION['admin_user_id']);
+        if (!$isAdmin) {
             header($_SERVER["SERVER_PROTOCOL"] . " 403 Forbidden");
             echo "<h1>403 Forbidden</h1><p>غير مسموح للمستخدمين بتصدير الموقع كملف ZIP. هذه الصلاحية مخصصة للمدير (Admin) فقط.</p>";
             exit;
@@ -358,10 +366,10 @@ class ClientController extends BaseController {
         $renderer = new \Templates\TemplateRenderer();
         
         $siteModel = new Site();
-        $site = $siteModel->find($siteId);
-        $templateFolder = $db = \App\Core\Database::getInstance()->getConnection()
-            ->query("SELECT t.folder_name FROM `sites` s JOIN `templates` t ON s.template_id = t.id WHERE s.id = {$siteId}")
-            ->fetchColumn();
+        $db = \App\Core\Database::getInstance()->getConnection();
+        $stmtTplFolder = $db->prepare("SELECT t.folder_name FROM `sites` s JOIN `templates` t ON s.template_id = t.id WHERE s.id = :site_id");
+        $stmtTplFolder->execute(['site_id' => $siteId]);
+        $templateFolder = $stmtTplFolder->fetchColumn();
 
         // Render twice: once for Arabic, once for English if bilingual
         // For simplicity, we export the default rendering, or we can compile them together

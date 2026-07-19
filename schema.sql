@@ -1,6 +1,7 @@
 -- MySQL Database Schema for SaaS Multi-Tenant Portfolio Platform
 
 SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `site_references`;
 DROP TABLE IF EXISTS `languages`;
 DROP TABLE IF EXISTS `project_media`;
 DROP TABLE IF EXISTS `projects`;
@@ -199,6 +200,7 @@ CREATE TABLE `certificates` (
     `issuer` VARCHAR(255) NOT NULL,
     `issuer_en` VARCHAR(255) NULL,
     `file_url` VARCHAR(255) NULL,
+    `link` VARCHAR(500) NULL,
     `year` VARCHAR(50) NULL,
     `sort_order` INT DEFAULT 0,
     CONSTRAINT `fk_certificates_sites` FOREIGN KEY (`site_id`) REFERENCES `sites` (`id`) ON DELETE CASCADE
@@ -215,6 +217,21 @@ CREATE TABLE `languages` (
     `percentage` INT NOT NULL DEFAULT 100, -- e.g. 100, 75
     `sort_order` INT DEFAULT 0,
     CONSTRAINT `fk_languages_sites` FOREIGN KEY (`site_id`) REFERENCES `sites` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16. Site References Table
+CREATE TABLE `site_references` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `site_id` INT NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `name_en` VARCHAR(255) NULL,
+    `photo` VARCHAR(255) NULL,
+    `description` TEXT NULL,
+    `description_en` TEXT NULL,
+    `phone` VARCHAR(50) NULL,
+    `email` VARCHAR(255) NULL,
+    `sort_order` INT DEFAULT 0,
+    CONSTRAINT `fk_site_references_sites` FOREIGN KEY (`site_id`) REFERENCES `sites` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ==========================================

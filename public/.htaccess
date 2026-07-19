@@ -1,12 +1,48 @@
-# Enable URL rewriting
-RewriteEngine On
+Options -Indexes
+ServerSignature Off
 
-# Ensure the request isn't for an actual physical file or directory
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+<IfModule mod_rewrite.c>
+  RewriteEngine On
 
-# Route everything else through index.php
-RewriteRule ^(.*)$ index.php [L,QSA]
+  # HTTPS Redirect (uncomment for hosting if needed, enabled by default)
+  # RewriteCond %{HTTPS} off
+  # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# ✅ CHECKPOINT: .htaccess — COMPLETE (المرحلة 8 من 8)
-# التالي: index.php (في جذر المشروع كتحويل تلقائي لـ public/)
+  # Block access to sensitive directories
+  RewriteRule ^(app|cache|uploads/temp)/ - [F,L]
+
+  # Route everything else through index.php
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
+# Protect sensitive file extensions
+<FilesMatch "\.(env|sql|log|json|md)$">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>
+
+# Security Headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# PHP Limits — needed for large dashboard forms with project media galleries
+<IfModule mod_php.c>
+  php_value max_input_vars 5000
+  php_value max_file_uploads 50
+  php_value post_max_size 80M
+  php_value upload_max_filesize 40M
+  php_value memory_limit 256M
+</IfModule>
+<IfModule mod_php8.c>
+  php_value max_input_vars 5000
+  php_value max_file_uploads 50
+  php_value post_max_size 80M
+  php_value upload_max_filesize 40M
+  php_value memory_limit 256M
+</IfModule>

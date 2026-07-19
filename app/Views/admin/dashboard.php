@@ -498,20 +498,20 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="<?= BASE_URL ?>/admin/toggle-status/<?= $s['user_id'] ?>" class="action-btn action-toggle" title="تفعيل / تعطيل">
+                                            <a href="<?= BASE_URL ?>/admin/toggle-status/<?= $s['user_id'] ?>?csrf_token=<?= htmlspecialchars($csrf_token) ?>" class="action-btn action-toggle" title="تفعيل / تعطيل">
                                                 <?= $s['user_status'] === 'active' ? '<i class="fa-solid fa-unlock" style="color:#34d399;"></i>' : '<i class="fa-solid fa-lock" style="color:#f87171;"></i>' ?>
                                             </a>
                                         </td>
                                         <td>
                                             <div class="action-flex">
-                                                <a href="<?= BASE_URL ?>/admin/impersonate/<?= $s['user_id'] ?>" class="action-btn action-edit" title="دخول وتعديل">
+                                                <a href="<?= BASE_URL ?>/admin/impersonate/<?= $s['user_id'] ?>?csrf_token=<?= htmlspecialchars($csrf_token) ?>" class="action-btn action-edit" title="دخول وتعديل">
                                                     <i class="fa-solid fa-pen"></i>
                                                 </a>
                                                 <button type="button" class="action-btn action-delete" onclick="confirmDeleteUser(<?= $s['user_id'] ?>, '<?= htmlspecialchars($s['email'], ENT_QUOTES, 'UTF-8') ?>')" title="حذف المستخدم نهائياً">
                                                     <i class="fa-solid fa-trash"></i>
                                                 </button>
                                                 <?php if ($s['approval_status'] !== 'approved'): ?>
-                                                    <a href="<?= BASE_URL ?>/admin/approve/<?= $s['id'] ?>" class="action-btn action-approve" title="موافقة">
+                                                    <a href="<?= BASE_URL ?>/admin/approve/<?= $s['id'] ?>?csrf_token=<?= htmlspecialchars($csrf_token) ?>" class="action-btn action-approve" title="موافقة">
                                                         <i class="fa-solid fa-check"></i>
                                                     </a>
                                                 <?php endif; ?>

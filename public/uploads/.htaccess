@@ -1,0 +1,12 @@
+# Disable PHP script execution in the uploads directory
+RemoveHandler .php
+RemoveType .php
+<FilesMatch "\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from all
+    </IfModule>
+</FilesMatch>

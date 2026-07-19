@@ -902,9 +902,16 @@ $darkDocCardBg = ($profession === 'doctor') ? 'rgba(255, 255, 255, 0.03)' : Prof
             if (track) track.style.transform = `translateX(-${currentIdx * 100}%)`;
             if (counter) counter.textContent = `${currentIdx + 1} / ${totalSlides}`;
             thumbs.forEach((t, i) => t.classList.toggle('active', i === currentIdx));
-            // Scroll the active thumb into view
+            // Scroll thumbnail strip horizontally WITHOUT scrolling the page
             if (thumbs[currentIdx]) {
-                thumbs[currentIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                const thumbContainer = document.getElementById('pdThumbnails');
+                if (thumbContainer) {
+                    const thumb = thumbs[currentIdx];
+                    const containerLeft = thumbContainer.getBoundingClientRect().left;
+                    const thumbLeft = thumb.getBoundingClientRect().left;
+                    const offset = thumbLeft - containerLeft - (thumbContainer.offsetWidth / 2) + (thumb.offsetWidth / 2);
+                    thumbContainer.scrollLeft += offset;
+                }
             }
         }
 
