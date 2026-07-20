@@ -23,6 +23,15 @@ spl_autoload_register(function ($class) {
 // 2. Constants & Environment
 define('DEBUG', true); // Toggle to false in production
 
+if (DEBUG) {
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+    error_reporting(E_ALL);
+} else {
+    ini_set('display_errors', '0');
+    error_reporting(0);
+}
+
 // Detect subdirectory path dynamically for asset paths
 $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
 $basePath = dirname(dirname($scriptName));

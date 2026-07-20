@@ -1,4 +1,4 @@
-Options -Indexes
+# Options -Indexes
 ServerSignature Off
 
 <IfModule mod_rewrite.c>
@@ -32,17 +32,18 @@ ServerSignature Off
 </IfModule>
 
 # PHP Limits — needed for large dashboard forms with project media galleries
-<IfModule mod_php.c>
-  php_value max_input_vars 5000
-  php_value max_file_uploads 50
-  php_value post_max_size 80M
-  php_value upload_max_filesize 40M
-  php_value memory_limit 256M
-</IfModule>
-<IfModule mod_php8.c>
-  php_value max_input_vars 5000
-  php_value max_file_uploads 50
-  php_value post_max_size 80M
-  php_value upload_max_filesize 40M
-  php_value memory_limit 256M
-</IfModule>
+# (Commented out for hosting compatibility. You can increase these in cPanel Select PHP Version if needed)
+# <IfModule mod_php.c>
+#   php_value max_input_vars 5000
+#   php_value max_file_uploads 50
+#   php_value post_max_size 80M
+#   php_value upload_max_filesize 40M
+#   php_value memory_limit 256M
+# </IfModule>
+# <IfModule mod_php8.c>
+#   php_value max_input_vars 5000
+#   php_value max_file_uploads 50
+#   php_value post_max_size 80M
+#   php_value upload_max_filesize 40M
+#   php_value memory_limit 256M
+# </IfModule>

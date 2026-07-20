@@ -330,16 +330,56 @@ class AdminController extends BaseController {
 
         $db = Database::getInstance()->getConnection();
         
-        // Delete user (cascade will handle sites, profiles, sections, etc.)
+        // 1. Fetch all sites of the user to clear their files and cache
+        $stmtSites = $db->prepare("SELECT `id`, `slug` FROM `sites` WHERE `user_id` = :user_id");
+        $stmtSites->execute(['user_id' => $userId]);
+        $userSites = $stmtSites->fetchAll();
+
+        foreach ($userSites as $site) {
+            $siteId = $site['id'];
+            $slug = $site['slug'];
+
+            // Clear static cache for the site slug
+            \App\Services\ApprovalService::invalidateCache($slug);
+
+            // Delete site's uploads directory from the server
+            $uploadsDir = dirname(__DIR__, 2) . '/public/uploads/sites/' . $siteId;
+            if (is_dir($uploadsDir)) {
+                $this->deleteDirectory($uploadsDir);
+            }
+        }
+        
+        // 2. Delete user (cascade will handle sites, profiles, sections, education, certificates, etc. in DB)
         $stmt = $db->prepare("DELETE FROM `users` WHERE `id` = :id");
         $success = $stmt->execute(['id' => $userId]);
 
         if ($success) {
-            $_SESSION['flash_success'] = "تم حذف المستخدم وكافة بياناته ومواقعه التابعة له بنجاح.";
+            $_SESSION['flash_success'] = "تم حذف المستخدم وكافة بياناته، ملفاته، ومواقعه التابعة له بالكامل من السيرفر وقاعدة البيانات.";
         } else {
             $_SESSION['flash_error'] = "فشلت عملية حذف المستخدم.";
         }
         $this->redirect('/admin');
+    }
+
+    /**
+     * Helper to recursively delete a directory on the server.
+     */
+    private function deleteDirectory(string $dir): bool {
+        if (!file_exists($dir)) {
+            return true;
+        }
+        if (!is_dir($dir)) {
+            return unlink($dir);
+        }
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+            if (!$this->deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                return false;
+            }
+        }
+        return rmdir($dir);
     }
 }
 
